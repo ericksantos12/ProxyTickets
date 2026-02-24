@@ -5,6 +5,8 @@
 **Status**: Draft  
 **Input**: User description: "$ARGUMENTS"
 
+**Constitution Alignment**: This specification supports Principle V (User Story Independence) and Principle IV (Test-First Development). Each user story must be independently testable with clear acceptance criteria.
+
 ## User Scenarios & Testing *(mandatory)*
 
 <!--
@@ -12,12 +14,12 @@
   Each user story/journey must be INDEPENDENTLY TESTABLE - meaning if you implement just ONE of them,
   you should still have a viable MVP (Minimum Viable Product) that delivers value.
   
+  Per Constitution Principle V, each story must:
+  - Be developed, tested, and deployed independently
+  - Provide standalone business value
+  - Have clear acceptance criteria (Principle IV)
+  
   Assign priorities (P1, P2, P3, etc.) to each story, where P1 is the most critical.
-  Think of each story as a standalone slice of functionality that can be:
-  - Developed independently
-  - Tested independently
-  - Deployed independently
-  - Demonstrated to users independently
 -->
 
 ### User Story 1 - [Brief Title] (Priority: P1)

@@ -31,7 +31,15 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Based on `.specify/memory/constitution.md`:
+
+- [ ] **Unit Testing**: Feature includes comprehensive unit tests with ≥80% coverage
+- [ ] **Simplicity First**: Solution uses simplest approach; any complexity is justified in Complexity Tracking
+- [ ] **Best Practices**: Code follows language conventions, SOLID principles, and industry standards
+- [ ] **Test-First Development**: Tests designed before implementation, acceptance criteria clear
+- [ ] **User Story Independence**: User stories are independently testable and deliverable
+
+**Status**: [PASS / PENDING / VIOLATIONS TO JUSTIFY]
 
 ## Project Structure
 
