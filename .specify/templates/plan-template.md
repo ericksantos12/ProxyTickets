@@ -33,10 +33,10 @@
 
 Based on `.specify/memory/constitution.md`:
 
-- [ ] **Unit Testing**: Feature includes comprehensive unit tests with ≥80% coverage
+- [ ] **Unit Testing**: Feature may include unit tests (encouraged but optional)
 - [ ] **Simplicity First**: Solution uses simplest approach; any complexity is justified in Complexity Tracking
 - [ ] **Best Practices**: Code follows language conventions, SOLID principles, and industry standards
-- [ ] **Test-First Development**: Tests designed before implementation, acceptance criteria clear
+- [ ] **Test-First Development**: Tests designed before implementation when tests are included (optional workflow)
 - [ ] **User Story Independence**: User stories are independently testable and deliverable
 
 **Status**: [PASS / PENDING / VIOLATIONS TO JUSTIFY]

@@ -8,7 +8,7 @@ description: "Task list template for feature implementation"
 **Input**: Design documents from `/specs/[###-feature-name]/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-**Constitution Compliance**: Per Principle I (Unit Testing - NON-NEGOTIABLE) and Principle IV (Test-First Development), unit tests are MANDATORY for all features. Tests must be written before or during implementation, following the test-first workflow.
+**Constitution Compliance**: Per Principle I (Unit Testing - Encouraged), unit tests are optional but recommended for quality assurance. If including tests, follow test-first development workflow per Principle IV.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story (Principle V).
 
@@ -79,9 +79,9 @@ Examples of foundational tasks (adjust based on your project):
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 1 (MANDATORY - Test-First Development) ✅
+### Tests for User Story 1 (Optional - Recommended for Quality) ✓
 
-> **CONSTITUTION REQUIREMENT**: Write these tests FIRST per Principle IV (Test-First Development). Tests must FAIL before implementation begins. Achieve ≥80% code coverage per Principle I.
+> **CONSTITUTION GUIDANCE**: While tests are optional per Constitution v2.0.0, they are strongly encouraged for production features. If writing tests, follow test-first development (write tests before implementation) for better design and coverage.
 
 - [ ] T010 [P] [US1] Unit tests for [component] in tests/unit/test_[name].py
 - [ ] T011 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py (if API/interface)
@@ -89,13 +89,13 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Implementation for User Story 1
 
-- [ ] T013 [P] [US1] Create [Entity1] model in src/models/[entity1].py (tests must fail for this first)
-- [ ] T014 [P] [US1] Create [Entity2] model in src/models/[entity2].py (tests must fail for this first)
+- [ ] T013 [P] [US1] Create [Entity1] model in src/models/[entity1].py
+- [ ] T014 [P] [US1] Create [Entity2] model in src/models/[entity2].py
 - [ ] T015 [US1] Implement [Service] in src/services/[service].py (depends on T013, T014)
 - [ ] T016 [US1] Implement [endpoint/feature] in src/[location]/[file].py
 - [ ] T017 [US1] Add validation and error handling per best practices (Principle III)
 - [ ] T018 [US1] Add logging for user story 1 operations
-- [ ] T019 [US1] Verify all tests pass and coverage ≥80%
+- [ ] T019 [US1] Verify implementation works as expected (manual testing or automated tests if included)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
