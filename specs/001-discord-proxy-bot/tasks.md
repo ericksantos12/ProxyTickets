@@ -21,17 +21,17 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Initialize Node.js project with package.json and TypeScript 5.0+ configuration
-- [ ] T002 [P] Install core dependencies: discord.js 14.x, better-sqlite3, mercadopago SDK, express, winston, dotenv
-- [ ] T003 [P] Install dev dependencies: Jest, ts-jest, @types/jest, @types/node, eslint, prettier, typescript
-- [ ] T004 [P] Configure TypeScript with tsconfig.json (ES2022 target, strict mode, all strictness flags enabled)
+- [ ] T001 Verify Constatic project initialization (already exists per research.md - @constatic/base installed)
+- [ ] T002 [P] Install additional dependencies: mercadopago SDK, @prisma/client, node-cron
+- [ ] T003 [P] Install dev dependencies: Jest, ts-jest, @types/jest, @types/node (if implementing tests - optional)
+- [ ] T004 [P] Verify TypeScript configuration in tsconfig.json (ESM modules, strict mode, Constatic path aliases already configured)
 - [ ] T005 [P] Configure ESLint with @typescript-eslint parser and recommended rules
 - [ ] T006 [P] Configure Prettier for code formatting
 - [ ] T007 [P] Configure Jest with ts-jest preset (optional - only if implementing tests) in jest.config.js
-- [ ] T008 Create project structure: src/, tests/, database/, config/, logs/ directories
-- [ ] T009 Create .env.example with all required environment variables (DISCORD_TOKEN, DISCORD_CLIENT_ID, MERCADOPAGO_ACCESS_TOKEN, WEBHOOK_URL, ADMIN_USER_ID, etc.)
-- [ ] T010 [P] Add npm scripts to package.json: dev, build, start, test, test:coverage, lint, format
-- [ ] T011 [P] Create .gitignore (node_modules/, dist/, .env, database/*.db, logs/)
+- [ ] T008 Verify project structure follows Constatic conventions: src/discord/, src/services/, src/database/, tests/
+- [ ] T009 Update .env.example with all required environment variables (BOT_TOKEN, MERCADOPAGO_ACCESS_TOKEN, WEBHOOK_URL, ADMIN_USER_ID, DATABASE_URL, pricing defaults)
+- [ ] T010 [P] Verify npm scripts in package.json: dev (tsx watch), build (tsup), start, test (if tests), lint, format
+- [ ] T011 [P] Update .gitignore to include: node_modules/, build/, .env, prisma/*.db, prisma/*.db-journal, logs/
 
 ---
 
@@ -43,34 +43,34 @@
 
 ### Database Foundation
 
-- [ ] T012 Create database schema SQL in src/database/schema.ts with all 6 tables (tickets, orders, payments, payment_webhooks, price_config, ticket_history) per contracts/database.md
-- [ ] T013 Create database connection manager in src/database/connection.ts (singleton pattern, better-sqlite3, WAL mode enabled)
-- [ ] T014 Create migration runner in src/database/migrations/001_initial_schema.ts to execute schema.ts
-- [ ] T015 Create database seeder for price_config default values in src/database/migrations/002_seed_defaults.ts (sheet: R$5, ink: R$2, lamination: R$1.50, deckbox: R$15, sleeves: R$10)
-- [ ] T016 Unit test for connection manager in tests/unit/database/connection.test.ts (test singleton, WAL mode, error handling)
-- [ ] T017 Integration test for schema migration in tests/integration/database/migrations.test.ts (verify all tables, triggers, indexes created)
+- [ ] T012 Create Prisma schema models in prisma/models/ directory: ticket.prisma, order.prisma, payment.prisma, priceConfig.prisma, statusHistory.prisma, paymentWebhook.prisma per contracts/database.md
+- [ ] T013 Configure main prisma/schema.prisma with datasource (provider: sqlite), generator (prisma-client-js), and model imports
+- [ ] T014 Create initial Prisma migration in prisma/migrations/ using `npx prisma migrate dev --name initial_schema`
+- [ ] T015 Create database seeder script in prisma/seed.ts for PriceConfig default values (sheet: R$5, ink: R$2, lamination: R$1.50, deckbox: R$15, sleeves: R$10)
+- [ ] T016 [P] Unit test for Prisma client in tests/unit/database/prisma.test.ts (test connection, basic queries) - optional
+- [ ] T017 [P] Integration test for schema migrations in tests/integration/database/migrations.test.ts (verify all tables, indexes created) - optional
 
 ### Configuration & Logging
 
-- [ ] T018 [P] Create environment configuration loader in src/config/env.ts (validate all required vars, throw on missing)
-- [ ] T019 [P] Create application constants in src/config/constants.ts (status enums, timeouts, limits)
-- [ ] T020 [P] Create Winston logger setup in src/utils/logger.ts (file + console transports, separate error.log and combined.log)
-- [ ] T021 [P] Unit test for env loader in tests/unit/config/env.test.ts (test missing vars, invalid formats)
+- [ ] T018 [P] Update environment configuration in src/env.ts using Constatic's validateEnv() with Zod schema (add Mercado Pago tokens, pricing defaults, webhook URL)
+- [ ] T019 [P] Update application constants in src/constants.ts (ticket status enums, payment status enums, timeouts: 24h expiration, retry delays: 1s/2s/4s)
+- [ ] T020 [P] Create logger utility in src/utils/logger.ts (optional Discord webhook logging per research.md, console logging for development)
+- [ ] T021 [P] Unit test for env validation in tests/unit/env.test.ts (test missing vars, invalid formats) - optional
 
 ### Discord Bot Core
 
-- [ ] T022 Create Discord client initialization in src/index.ts (intents: GUILDS, GUILD_MESSAGES, GUILD_MEMBERS, MESSAGE_CONTENT)
-- [ ] T023 Create command registry in src/discord/commandRegistry.ts (load and register slash commands)
-- [ ] T024 Create interaction handler router in src/discord/interactionHandler.ts (route to commands, buttons, selects, modals)
+- [ ] T022 Verify Constatic bootstrap in src/index.ts (bootstrap() function already imports meta and env per research.md)
+- [ ] T023 Verify command auto-loading from src/discord/commands/ (Constatic's createCommand() pattern per research.md)
+- [ ] T024 Verify interaction handler auto-loading from src/discord/responders/ (Constatic's createResponder() pattern per research.md)
 - [ ] T025 [P] Create embed builder utilities in src/discord/embeds.ts (standard message formats, colors, footers)
-- [ ] T026 [P] Create permission checker utility in src/discord/permissions.ts (isAdmin, hasChannelAccess)
-- [ ] T027 [P] Unit test for permission checker in tests/unit/discord/permissions.test.ts
+- [ ] T026 [P] Create permission checker utility in src/discord/permissions.ts (isAdmin function checking against env.ADMIN_USER_ID)
+- [ ] T027 [P] Unit test for permission checker in tests/unit/discord/permissions.test.ts - optional
 
 ### Express Webhook Server
 
-- [ ] T028 Create Express server setup in src/webhook/server.ts (single POST endpoint /webhooks/mercadopago)
-- [ ] T029 Create webhook signature validator in src/webhook/validator.ts (Mercado Pago signature verification)
-- [ ] T030 Integration test for webhook endpoint in tests/integration/webhook/server.test.ts (test valid/invalid signatures)
+- [ ] T028 Create Express server setup in src/server/index.ts using Constatic's server preset (POST endpoint /webhooks/mercadopago)
+- [ ] T029 Create webhook signature validator in src/server/routes/webhooks.ts (Mercado Pago signature verification using x-signature header)
+- [ ] T030 [P] Integration test for webhook endpoint in tests/integration/webhook/server.test.ts (test valid/invalid signatures) - optional
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -86,22 +86,22 @@
 
 > **CONSTITUTION GUIDANCE**: Tests are optional per Constitution v2.0.0, Principle I (Unit Testing - Encouraged). However, they are strongly recommended for production systems. If implementing tests, follow test-first development (write tests before implementation) per Principle IV for better design. **These test tasks (T031-T036) can be skipped if desired.**
 
-- [ ] T031 [P] [US1] Unit tests for Ticket model in tests/unit/models/Ticket.test.ts (test validation, status enum, constructor)
-- [ ] T032 [P] [US1] Unit tests for TicketRepository in tests/unit/repositories/TicketRepository.test.ts (test CRUD, findActiveByUser, status updates)
-- [ ] T033 [P] [US1] Unit tests for TicketService in tests/unit/services/TicketService.test.ts (test createTicket logic, one-ticket-per-user enforcement, channel creation logic)
-- [ ] T034 [P] [US1] Contract test for /setup command in tests/contract/commands/setup.test.ts (test parameter validation, response format per contracts/commands.md)
-- [ ] T035 [P] [US1] Contract test for create-ticket button interaction in tests/contract/interactions/createTicket.test.ts (test button response, ephemeral messages)
-- [ ] T036 [US1] Integration test for ticket creation flow in tests/integration/ticket-creation-flow.test.ts (mock Discord API, test full flow from button click to channel creation)
+- [ ] T031 [P] [US1] Unit tests for TicketService in tests/unit/services/TicketService.test.ts (test createTicket logic, one-ticket-per-user enforcement, Prisma mocks)
+- [ ] T032 [P] [US1] Contract test for /setup command in tests/contract/commands/setup.test.ts (test parameter validation, response format per contracts/commands.md)
+- [ ] T033 [P] [US1] Contract test for create-ticket button interaction in tests/contract/interactions/createTicket.test.ts (test button response, ephemeral messages)
+- [ ] T034 [US1] Integration test for ticket creation flow in tests/integration/ticket-creation-flow.test.ts (test full flow from button click to channel creation with in-memory SQLite database)
+- [ ] T035 [P] [US1] Unit tests for category manager utility in tests/unit/discord/categoryManager.test.ts
+- [ ] T036 [P] [US1] Unit tests for permission checker in tests/unit/discord/permissions.test.ts
 
 ### Implementation for User Story 1
 
-- [ ] T037 [P] [US1] Create Ticket model in src/models/Ticket.ts with status enum (NEW, COLLECTING, PENDING_PAYMENT, APPROVED, READY, DELIVERED, EXPIRED, CANCELLED)
-- [ ] T038 [P] [US1] Create TicketRepository in src/repositories/TicketRepository.ts (methods: create, findById, findByChannelId, findActiveByUser, updateStatus, archive)
-- [ ] T039 [US1] Create TicketService in src/services/TicketService.ts (enforce one-ticket rule, create Discord channel with permissions, create ticket record, send welcome message)
-- [ ] T040 [US1] Create /setup slash command in src/commands/admin/setup.ts (store config, post button in ticket channel, send admin panel welcome)
-- [ ] T041 [US1] Create create-ticket button handler in src/discord/interactions/buttons/createTicket.ts (check active ticket, call TicketService, send rejection if active ticket exists)
-- [ ] T042 [US1] Add category manager utility in src/discord/categoryManager.ts (moveChannelToCategory helper with error handling)
-- [ ] T043 [US1] Add logging for all ticket operations (creation, rejection, errors) using Winston logger
+- [ ] T037 [US1] Create TicketService in src/services/ticket.ts (direct Prisma Client usage: prisma.ticket.create(), prisma.ticket.findFirst() for active ticket check, enforce one-ticket rule per FR-004A)
+- [ ] T038 [US1] Add Discord channel creation logic to TicketService (createChannel with permissions, category assignment, welcome message embed)
+- [ ] T039 [US1] Create /setup command in src/discord/commands/public/setup.ts using createCommand() pattern (admin-only, store category IDs in memory/database, post ticket button)
+- [ ] T040 [US1] Create create-ticket button responder in src/discord/responders/buttons/createTicket.ts using createResponder() pattern (check active ticket via Prisma, call TicketService, show rejection message if active ticket exists)
+- [ ] T041 [P] [US1] Add category manager utility in src/discord/categoryManager.ts (moveChannelToCategory helper with error handling)
+- [ ] T042 [P] [US1] Add ticket welcome message embed builder in src/discord/embeds.ts (welcomeMessage function)
+- [ ] T043 [US1] Add logging for all ticket operations (creation, rejection, errors) using logger utility
 - [ ] T044 [US1] Verify US1 implementation works correctly (manual testing or run automated tests if implemented)
 
 **Checkpoint**: User Story 1 complete - users can create tickets, one-ticket rule enforced, channels organized
@@ -118,24 +118,24 @@
 
 > **CONSTITUTION GUIDANCE**: Tests are optional but recommended. **These test tasks (T045-T050) can be skipped if desired.**
 
-- [ ] T045 [P] [US2] Unit tests for Order model in tests/unit/models/Order.test.ts (test validation, sheet_count calculation, URL regex)
-- [ ] T046 [P] [US2] Unit tests for OrderRepository in tests/unit/repositories/OrderRepository.test.ts (test create, findByTicketId, update)
-- [ ] T047 [P] [US2] Unit tests for OrderService in tests/unit/services/OrderService.test.ts (test form state management, validation logic, URL regex)
-- [ ] T048 [P] [US2] Unit tests for validation utility in tests/unit/utils/validation.test.ts (test card count bounds 1-1000, URL regex patterns)
-- [ ] T049 [P] [US2] Contract test for start-order button in tests/contract/interactions/startOrder.test.ts (test select menu format per contracts/commands.md)
-- [ ] T050 [US2] Integration test for order form flow in tests/integration/order-form-flow.test.ts (test full form workflow with valid/invalid inputs)
+- [ ] T045 [P] [US2] Unit tests for OrderService in tests/unit/services/OrderService.test.ts (test form state management, validation logic, URL regex, Prisma mocks)
+- [ ] T046 [P] [US2] Unit tests for validation utility in tests/unit/utils/validation.test.ts (test card count bounds 1-1000, URL regex patterns: ^https?://)
+- [ ] T047 [P] [US2] Contract test for start-order button in tests/contract/interactions/startOrder.test.ts (test select menu format per contracts/commands.md)
+- [ ] T048 [P] [US2] Contract test for extras select menu in tests/contract/interactions/selectExtras.test.ts
+- [ ] T049 [US2] Integration test for order form flow in tests/integration/order-form-flow.test.ts (test full form workflow with valid/invalid inputs using in-memory database)
+- [ ] T050 [P] [US2] Unit tests for sheet count calculator in tests/unit/utils/calculator.test.ts (test ceil(cards/9) formula)
 
 ### Implementation for User Story 2
 
-- [ ] T051 [P] [US2] Create Order model in src/models/Order.ts with validation rules (card_count: 1-1000, decklist_url regex: ^https?://)
-- [ ] T052 [P] [US2] Create OrderRepository in src/repositories/OrderRepository.ts (methods: create, findByTicketId, update, calculateSheetCount helper)
-- [ ] T053 [P] [US2] Create validation utility in src/utils/validation.ts (validateCardCount, validateDecklistUrl functions)
-- [ ] T054 [US2] Create OrderService in src/services/OrderService.ts (manage form state in memory Map, handle select menu, message collectors for card count and URL)
-- [ ] T055 [US2] Create start-order button handler in src/discord/interactions/buttons/startOrder.ts (show extras select menu)
-- [ ] T056 [US2] Create extras select menu handler in src/discord/interactions/selectMenus/selectExtras.ts (store selection, prompt for card count)
-- [ ] T057 [US2] Add message collector for card count in OrderService with validation and retry on invalid input
-- [ ] T058 [US2] Add message collector for decklist URL in OrderService with regex validation and error messages per spec ("URL inválida. Por favor forneça um link válido começando com http:// ou https://")
-- [ ] T059 [US2] Update ticket status to COLLECTING when form starts, persist order to database when form completes
+- [ ] T051 [P] [US2] Create validation utility in src/utils/validation.ts (validateCardCount: 1-1000, validateDecklistUrl: regex ^https?://)
+- [ ] T052 [P] [US2] Create sheet calculator utility in src/utils/calculator.ts (calculateSheetCount: Math.ceil(quantity / 9))
+- [ ] T053 [US2] Create OrderService in src/services/order.ts (manage form state in memory Map<channelId, FormData>, direct Prisma: prisma.order.create(), handle collectors, validation)
+- [ ] T054 [US2] Create start-order button responder in src/discord/responders/buttons/startOrder.ts (show extras select menu using StringSelectMenuBuilder)
+- [ ] T055 [US2] Create extras select menu responder in src/discord/responders/selects/selectExtras.ts (store selection, update ticket to COLLECTING status, prompt for card count)
+- [ ] T056 [US2] Add message collector for card count in OrderService with validation and retry on invalid input (show error per FR-007)
+- [ ] T057 [US2] Add message collector for decklist URL in OrderService with regex validation (show error: "URL inválida..." per FR-008A)
+- [ ] T058 [US2] Persist order to database when form completes (prisma.order.create with all collected data)
+- [ ] T059 [US2] Add form timeout handling (cancel after 10 minutes of inactivity, cleanup memory state)
 - [ ] T060 [US2] Verify US2 implementation works correctly (manual testing or run automated tests if implemented)
 
 **Checkpoint**: User Story 2 complete - order forms collect all required information with validation
@@ -152,31 +152,31 @@
 
 > **CONSTITUTION GUIDANCE**: Tests are optional but recommended, especially for payment logic. **These test tasks (T061-T070) can be skipped if desired.**
 
-- [ ] T061 [P] [US3] Unit tests for Payment model in tests/unit/models/Payment.test.ts (test validation, status enum)
-- [ ] T062 [P] [US3] Unit tests for PriceConfig model in tests/unit/models/PriceConfig.test.ts (test singleton, defaults)
-- [ ] T063 [P] [US3] Unit tests for PaymentRepository in tests/unit/repositories/PaymentRepository.test.ts (test create, findByOrderId, updateStatus)
-- [ ] T064 [P] [US3] Unit tests for ConfigRepository in tests/unit/repositories/ConfigRepository.test.ts (test getPriceConfig, updatePricing)
-- [ ] T065 [P] [US3] Unit tests for price calculator in tests/unit/utils/calculator.test.ts (test sheet calculation, pricing formula with all combinations from quickstart.md table)
-- [ ] T066 [P] [US3] Unit tests for PaymentService in tests/unit/services/PaymentService.test.ts (test Mercado Pago API calls with mocks, retry logic, error handling)
-- [ ] T067 [P] [US3] Contract test for Mercado Pago API in tests/contract/mercadopago.test.ts (test request/response format, QR code generation)
-- [ ] T068 [P] [US3] Contract test for /config-pricing command in tests/contract/commands/configPricing.test.ts
-- [ ] T069 [US3] Integration test for payment generation flow in tests/integration/payment-flow.test.ts (test full flow with Mercado Pago mock)
-- [ ] T070 [US3] Integration test for payment timeout scheduler in tests/integration/payment-timeout.test.ts (test 23h warning, 24h expiration)
+- [ ] T061 [P] [US3] Unit tests for price calculator in tests/unit/utils/calculator.test.ts (test sheet calculation, pricing formula with all combinations from quickstart.md table)
+- [ ] T062 [P] [US3] Unit tests for PaymentService in tests/unit/services/PaymentService.test.ts (test Mercado Pago API calls with mocks, retry logic, error handling)
+- [ ] T063 [P] [US3] Unit tests for retry utility in tests/unit/utils/retry.test.ts (test exponential backoff: 1s, 2s, 4s delays)
+- [ ] T064 [P] [US3] Unit tests for TimeoutScheduler in tests/unit/services/TimeoutScheduler.test.ts (test 23h warning, 24h expiration logic)
+- [ ] T065 [P] [US3] Contract test for Mercado Pago API in tests/contract/mercadopago.test.ts (test request/response format, QR code generation)
+- [ ] T066 [P] [US3] Contract test for /config-pricing command in tests/contract/commands/configPricing.test.ts
+- [ ] T067 [US3] Integration test for payment generation flow in tests/integration/payment-flow.test.ts (test full flow with Mercado Pago mock, database operations)
+- [ ] T068 [US3] Integration test for payment timeout scheduler in tests/integration/payment-timeout.test.ts (test cron job execution, notifications)
+- [ ] T069 [P] [US3] Unit tests for PriceConfig operations in tests/unit/services/pricing.test.ts (test singleton pattern, Prisma operations)
+- [ ] T070 [P] [US3] Unit tests for notification service in tests/unit/services/notification.test.ts
 
 ### Implementation for User Story 3
 
-- [ ] T071 [P] [US3] Create Payment model in src/models/Payment.ts with status enum (PENDING, APPROVED, CANCELLED, EXPIRED)
-- [ ] T072 [P] [US3] Create PriceConfig model in src/models/PriceConfig.ts with default values
-- [ ] T073 [P] [US3] Create PaymentRepository in src/repositories/PaymentRepository.ts (methods: create, findByOrderId, updateStatus, findPendingExpiring)
-- [ ] T074 [P] [US3] Create ConfigRepository in src/repositories/ConfigRepository.ts (methods: getPriceConfig, updatePricing, getSingleton)
-- [ ] T075 [P] [US3] Create price calculator utility in src/utils/calculator.ts (calculateSheetCount, calculateTotalPrice functions per data-model.md formula)
-- [ ] T076 [US3] Create PaymentService in src/services/PaymentService.ts with Mercado Pago SDK integration (generatePixPayment method with retry logic: 3 attempts, 1s/2s/4s exponential backoff)
-- [ ] T077 [US3] Add retry wrapper utility in src/utils/retry.ts (exponentialBackoff function for Mercado Pago API calls)
-- [ ] T078 [US3] Create /config-pricing command in src/commands/admin/configPricing.ts (update price_config, show example calculation)
-- [ ] T079 [US3] Add payment generation to OrderService.completeForm() (calculate price, call PaymentService, show Pix key + QR code, move to PENDING_PAYMENT status)
-- [ ] T080 [US3] Create payment timeout scheduler in src/services/TimeoutScheduler.ts (check every 10 minutes, send 1-hour warnings, expire 24-hour old payments)
-- [ ] T081 [US3] Add error handling for Mercado Pago failures (show user-friendly message, notify admin via DM per NFR-004)
-- [ ] T082 [US3] Move channel to PENDENTES category when payment generated, set expires_at timestamp
+- [ ] T071 [P] [US3] Extend price calculator in src/utils/calculator.ts (calculateTotalPrice: sheets × price + ink + lamination + extras per data-model.md formula)
+- [ ] T072 [P] [US3] Create retry wrapper utility in src/utils/retry.ts (exponentialBackoff function: 3 attempts, 1s/2s/4s delays with jitter per research.md)
+- [ ] T073 [US3] Create PaymentService in src/services/payment.ts (Mercado Pago SDK integration: generatePixPayment with retry wrapper, direct Prisma: prisma.payment.create())
+- [ ] T074 [US3] Create PricingService in src/services/pricing.ts (getPriceConfig, updatePriceConfig using direct Prisma: prisma.priceConfig.findUnique(), prisma.priceConfig.update())
+- [ ] T075 [US3] Create /config-pricing command in src/discord/commands/public/configPricing.ts (admin-only, update price_config table, show example calculation embed)
+- [ ] T076 [US3] Add payment generation to OrderService.completeForm() (load PriceConfig, calculate price, call PaymentService, show Pix key + QR code embed, update ticket to PENDING)
+- [ ] T077 [US3] Create TimeoutScheduler service in src/services/timeout.ts (node-cron: every 10 minutes, query pending payments via Prisma, check expiresAt timestamps)
+- [ ] T078 [US3] Add 1-hour warning notification in TimeoutScheduler (send DM to user: "Atenção: Seu pagamento expira em 1 hora...")
+- [ ] T079 [US3] Add 24-hour expiration handler in TimeoutScheduler (update ticket to EXPIRED, archive channel, send final message per FR-023C)
+- [ ] T080 [US3] Add error handling for Mercado Pago failures (user-friendly message, admin DM notification per NFR-002, NFR-004)
+- [ ] T081 [US3] Move channel to PENDENTES category when payment generated (use categoryManager utility)
+- [ ] T082 [US3] Add payment embed builder in src/discord/embeds.ts (paymentMessage with Pix key, QR code, amount, expiration time)
 - [ ] T083 [US3] Verify US3 implementation works correctly (manual testing or run automated tests if implemented)
 
 **Checkpoint**: User Story 3 complete - payments generated with QR codes, timeouts enforced
@@ -193,25 +193,25 @@
 
 > **CONSTITUTION GUIDANCE**: Tests are optional but recommended for webhook handling. **These test tasks (T084-T089) can be skipped if desired.**
 
-- [ ] T084 [P] [US4] Unit tests for PaymentWebhook model in tests/unit/models/PaymentWebhook.test.ts (test validation, audit fields)
-- [ ] T085 [P] [US4] Unit tests for PaymentWebhookRepository in tests/unit/repositories/PaymentWebhookRepository.test.ts (test create, audit trail)
-- [ ] T086 [P] [US4] Unit tests for webhook handler in tests/unit/webhook/webhookHandler.test.ts (test signature validation, payment lookup, status transitions)
-- [ ] T087 [P] [US4] Contract test for webhook endpoint in tests/contract/webhook/mercadopago.test.ts (test webhook payload format per Mercado Pago docs)
-- [ ] T088 [US4] Integration test for payment approval flow in tests/integration/payment-approval-flow.test.ts (webhook → status update → channel move → admin notification)
-- [ ] T089 [US4] Integration test for payment refund flow in tests/integration/payment-refund-flow.test.ts (refund webhook → cancellation → archive)
+- [ ] T084 [P] [US4] Unit tests for webhook handler in tests/unit/services/webhook.test.ts (test signature validation, payment lookup via Prisma, status transitions)
+- [ ] T085 [P] [US4] Unit tests for NotificationService in tests/unit/services/notification.test.ts (test admin DM formatting, error handling)
+- [ ] T086 [P] [US4] Contract test for webhook endpoint in tests/contract/webhook/mercadopago.test.ts (test webhook payload format per Mercado Pago docs)
+- [ ] T087 [US4] Integration test for payment approval flow in tests/integration/payment-approval-flow.test.ts (webhook → status update → channel move → admin notification using in-memory database)
+- [ ] T088 [US4] Integration test for payment refund flow in tests/integration/payment-refund-flow.test.ts (refund webhook → cancellation → archive)
+- [ ] T089 [P] [US4] Unit tests for webhook audit logging in tests/unit/services/webhook-audit.test.ts
 
 ### Implementation for User Story 4
 
-- [ ] T090 [P] [US4] Create PaymentWebhook model in src/models/PaymentWebhook.ts for audit trail
-- [ ] T091 [P] [US4] Create PaymentWebhookRepository in src/repositories/PaymentWebhookRepository.ts (methods: create, findByWebhookId)
-- [ ] T092 [US4] Create webhook handler in src/webhook/webhookHandler.ts (validate signature, log webhook, route to PaymentService)
-- [ ] T093 [US4] Add payment approval handler to PaymentService (update payment status, update ticket status to APPROVED, move channel to APROVADO category)
-- [ ] T094 [US4] Add payment refund/cancellation handler to PaymentService (update to CANCELLED, archive channel, notify customer and admin per FR-019D)
-- [ ] T095 [US4] Create admin notification service in src/services/NotificationService.ts (sendAdminDM method with order details embed per contracts/commands.md)
-- [ ] T096 [US4] Add payment status message updater (edit original payment message: "🔄 Processando..." → "✅ APROVADO" with timestamp)
-- [ ] T097 [US4] Add webhook audit logging (save all webhooks to payment_webhooks table for debugging)
-- [ ] T098 [US4] Integrate webhook endpoint with Express server in src/webhook/server.ts (route POST /webhooks/mercadopago to webhookHandler)
-- [ ] T099 [US4] Verify US4 implementation works correctly (manual testing or run automated tests if implemented)
+- [ ] T090 [US4] Create WebhookService in src/services/webhook.ts (validate signature, log webhook to payment_webhooks via Prisma, route to payment status handler)
+- [ ] T091 [US4] Add payment approval handler to PaymentService (prisma.payment.update status to APPROVED, prisma.ticket.update to APPROVED, move channel to APROVADO)
+- [ ] T092 [US4] Add payment refund/cancellation handler to PaymentService (update to CANCELLED via Prisma, archive channel, notify customer and admin per FR-019D)
+- [ ] T093 [US4] Create NotificationService in src/services/notification.ts (sendAdminDM method with order details embed, error handling if DMs disabled)
+- [ ] T094 [US4] Add payment status message updater (edit original payment message: "🔄 Processando..." → "✅ APROVADO" with timestamp)
+- [ ] T095 [US4] Add webhook audit logging (prisma.paymentWebhook.create with full payload, processed flag, error_message field)
+- [ ] T096 [US4] Create webhook route handler in src/server/routes/webhooks.ts (verify signature, call WebhookService, return 200 OK)
+- [ ] T097 [US4] Add status history tracking in WebhookService (prisma.statusHistory.create for PENDING → APPROVED transition)
+- [ ] T098 [US4] Integrate TimeoutScheduler with webhook processing (cancel timeout when payment approved)
+- [ ] T099 [US4] Verify US4 implementation works correctly (manual testing with Mercado Pago webhooks or run automated tests if implemented)
 
 **Checkpoint**: User Story 4 complete - payments automatically processed, admin notified
 
@@ -227,24 +227,24 @@
 
 > **CONSTITUTION GUIDANCE**: Tests are optional but recommended for admin operations. **These test tasks (T100-T105) can be skipped if desired.**
 
-- [ ] T100 [P] [US5] Unit tests for TicketHistory model in tests/unit/models/TicketHistory.test.ts (test audit trail)
-- [ ] T101 [P] [US5] Unit tests for TicketHistoryRepository in tests/unit/repositories/TicketHistoryRepository.test.ts (test create, findByTicketId)
-- [ ] T102 [P] [US5] Unit tests for AdminService in tests/unit/services/AdminService.test.ts (test listOrders filtering, status transitions, permission checks)
-- [ ] T103 [P] [US5] Contract test for /list-orders command in tests/contract/commands/listOrders.test.ts (test embed format, button layout per contracts/commands.md)
-- [ ] T104 [P] [US5] Contract test for admin buttons in tests/contract/interactions/adminButtons.test.ts (mark-ready, mark-delivered buttons)
-- [ ] T105 [US5] Integration test for admin workflow in tests/integration/admin-flow.test.ts (test full lifecycle: list → mark ready → mark delivered)
+- [ ] T100 [P] [US5] Unit tests for AdminService in tests/unit/services/AdminService.test.ts (test listOrders filtering via Prisma, status transitions, permission checks)
+- [ ] T101 [P] [US5] Contract test for /list-orders command in tests/contract/commands/listOrders.test.ts (test embed format, button layout per contracts/commands.md)
+- [ ] T102 [P] [US5] Contract test for admin buttons in tests/contract/interactions/adminButtons.test.ts (mark-ready, mark-delivered buttons)
+- [ ] T103 [US5] Integration test for admin workflow in tests/integration/admin-flow.test.ts (test full lifecycle: list → mark ready → mark delivered using in-memory database)
+- [ ] T104 [P] [US5] Unit tests for status history tracking in tests/unit/services/history.test.ts
+- [ ] T105 [P] [US5] Unit tests for channel archival in tests/unit/discord/archiveChannel.test.ts
 
 ### Implementation for User Story 5
 
-- [ ] T106 [P] [US5] Create TicketHistory model in src/models/TicketHistory.ts for audit trail
-- [ ] T107 [P] [US5] Create TicketHistoryRepository in src/repositories/TicketHistoryRepository.ts (methods: create, findByTicketId)
-- [ ] T108 [US5] Create AdminService in src/services/AdminService.ts (methods: listOrders with filtering, markReady, markDelivered)
-- [ ] T109 [US5] Create /list-orders command in src/commands/admin/listOrders.ts (query orders by status, build embed with buttons per contracts/commands.md)
-- [ ] T110 [US5] Create mark-ready button handler in src/discord/interactions/buttons/markReady.ts (call AdminService.markReady, update ticket to READY status, notify customer)
-- [ ] T111 [US5] Create mark-delivered button handler in src/discord/interactions/buttons/markDelivered.ts (call AdminService.markDelivered, update to DELIVERED, archive channel after 1 hour)
-- [ ] T112 [US5] Add permission checks to all admin commands and buttons (only ADMIN_USER_ID can execute)
-- [ ] T113 [US5] Add ticket history tracking for all status transitions (log to ticket_history table with old_status, new_status, changed_by, timestamp)
-- [ ] T114 [US5] Create channel archival utility in src/discord/archiveChannel.ts (lock channel, add final message, archive after delay)
+- [ ] T106 [US5] Create AdminService in src/services/admin.ts (listOrders: prisma.ticket.findMany with status filter, markReady: prisma.ticket.update to READY, markDelivered: prisma.ticket.update to DELIVERED)
+- [ ] T107 [US5] Create HistoryService in src/services/history.ts (trackStatusChange: prisma.statusHistory.create with old/new status, changed_by, timestamp)
+- [ ] T108 [US5] Create /list-orders command in src/discord/commands/public/listOrders.ts (admin-only, query orders via AdminService, build paginated embed with action buttons)
+- [ ] T109 [US5] Create mark-ready button responder in src/discord/responders/buttons/markReady.ts (call AdminService.markReady, track history, notify customer)
+- [ ] T110 [US5] Create mark-delivered button responder in src/discord/responders/buttons/markDelivered.ts (call AdminService.markDelivered, track history, initiate channel archival)
+- [ ] T111 [P] [US5] Add permission checks to admin commands (verify interaction.user.id === env.ADMIN_USER_ID, show error if unauthorized)
+- [ ] T112 [US5] Integrate status history tracking in all status transitions (call HistoryService after Prisma ticket.update operations)
+- [ ] T113 [P] [US5] Create channel archival utility in src/discord/archiveChannel.ts (lock channel permissions, add final message, archive after 1 hour delay)
+- [ ] T114 [US5] Add customer notification on status changes (DM user when ticket marked READY: "✅ Seu pedido está pronto para entrega!")
 - [ ] T115 [US5] Verify US5 implementation works correctly (manual testing or run automated tests if implemented)
 
 **Checkpoint**: User Story 5 complete - full admin panel operational
@@ -301,31 +301,31 @@ Phase 3 (US1: Tickets) → Phase 4 (US2: Forms) → Phase 5 (US3: Payment) → P
 ### Phase 2 Foundation (All can run in parallel after setup)
 ```bash
 # Terminal 1: Database
-npm test -- tests/unit/database/ && npm run dev:migrate
+npx prisma migrate dev --name initial_schema && npx prisma generate
 
-# Terminal 2: Configuration
-npm test -- tests/unit/config/ && npm run lint src/config/
+# Terminal 2: Configuration  
+npm run lint src/env.ts && npm run lint src/constants.ts
 
-# Terminal 3: Discord Core  
-npm test -- tests/unit/discord/ && npm run lint src/discord/
+# Terminal 3: Discord Core
+npm run lint src/discord/ && npm run dev
 
 # Terminal 4: Webhook Server
-npm test -- tests/integration/webhook/ && npm run dev:webhook
+npm run lint src/server/ && npm test -- tests/integration/webhook/ (if tests)
 ```
 
-### User Story 1 (Tests + Models in parallel)
+### User Story 1 (Services + Utilities in parallel)
 ```bash
-# Terminal 1: Write and run model tests
-npm test -- tests/unit/models/Ticket.test.ts --watch
+# Terminal 1: TicketService implementation
+npm run dev -- --watch src/services/ticket.ts
 
-# Terminal 2: Write and run repository tests
-npm test -- tests/unit/repositories/TicketRepository.test.ts --watch
+# Terminal 2: Category manager utility
+npm run dev -- --watch src/discord/categoryManager.ts
 
-# Terminal 3: Write and run service tests
+# Terminal 3: Permission checker
+npm run dev -- --watch src/discord/permissions.ts
+
+# Terminal 4: Run tests (if implementing)
 npm test -- tests/unit/services/TicketService.test.ts --watch
-
-# Terminal 4: Write contract tests
-npm test -- tests/contract/commands/setup.test.ts --watch
 ```
 
 ---
@@ -349,31 +349,39 @@ npm test -- tests/contract/commands/setup.test.ts --watch
 
 ### Constitution Compliance Validation
 
-- ✓ **Principle I (Unit Testing - Encouraged)**: 45 optional test tasks (T016, T021, T031-T035, T045-T050, T061-T070, T084-T089, T100-T105) - can be skipped per Constitution v2.0.0
-- ✓ **Principle II (Simplicity First)**: Direct library usage (discord.js, better-sqlite3), no over-engineering
-- ✓ **Principle III (Best Practices)**: TypeScript strict mode (T004), ESLint (T005), logging (T020), error handling (T116)
-- ✓ **Principle IV (Test-First)**: Test-first workflow available for developers who choose to implement tests
-- ✓ **Principle V (User Story Independence)**: Each phase 3-7 can be deployed independently per quickstart.md
+- ✓ **Principle I (Unit Testing - Encouraged)**: 42 optional test tasks (T016, T017, T021, T027, T030, T031-T036, T045-T050, T061-T070, T084-T089, T100-T105, T121) - can be skipped per Constitution v2.0.0
+- ✓ **Principle II (Simplicity First)**: Direct Prisma Client usage (no repository abstraction per post-design re-evaluation), Constatic conventions, standard SDKs (Mercado Pago, discord.js)
+- ✓ **Principle III (Best Practices)**: TypeScript strict mode (verified T004), ESLint (T005), Prisma type safety, error handling (T080, T116), logging (T020, T043)
+- ✓ **Principle IV (Test-First)**: Test-first workflow available for developers who choose to implement tests (optional per Constitution)
+- ✓ **Principle V (User Story Independence)**: Each phase 3-7 can be deployed independently per quickstart.md, no cross-story blocking dependencies
 
 ---
 
 ## Task Summary
 
-- **Total Tasks**: 128
+- **Total Tasks**: 115
 - **Setup Tasks**: 11 (T001-T011)
 - **Foundation Tasks**: 19 (T012-T030)
 - **User Story 1 Tasks**: 14 (T031-T044)
 - **User Story 2 Tasks**: 16 (T045-T060)
-- **User Story 3 Tasks**: 23 (T061-T083)
+- **User Story 3 Tasks**: 19 (T061-T083)  
 - **User Story 4 Tasks**: 16 (T084-T099)
 - **User Story 5 Tasks**: 16 (T100-T115)
 - **Polish Tasks**: 13 (T116-T128)
 
-**Parallelizable Tasks**: 58 tasks marked with [P] (45% of total)
+**Parallelizable Tasks**: 52 tasks marked with [P] (45% of total)
 
-**Test Coverage**: 45 optional test tasks available for developers who choose to implement tests
+**Optional Test Tasks**: 42 test tasks (T016, T017, T021, T027, T030, T031-T036, T045-T050, T061-T070, T084-T089, T100-T105, T121)
 
 **Independent Deliverables**: 5 user stories, each fully functional and testable on its own
+
+**Key Architecture Decisions**:
+- ✅ Constatic framework for Discord bot structure (convention over configuration)
+- ✅ Prisma ORM with SQLite for type-safe database access (no repository abstraction - direct Prisma Client)
+- ✅ Mercado Pago SDK for payment integration
+- ✅ Express server (via Constatic preset) for webhooks
+- ✅ node-cron for payment timeout monitoring
+- ✅ Simplicity First: Direct Prisma queries, no complex patterns (per Constitution post-design re-evaluation)
 
 ---
 

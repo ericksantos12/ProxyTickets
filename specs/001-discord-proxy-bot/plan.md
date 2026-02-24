@@ -1,68 +1,52 @@
 # Implementation Plan: Discord Proxy Bot
 
-**Branch**: `001-discord-proxy-bot` | **Date**: 2026-02-24 | **Spec**: [spec.md](spec.md)  
+**Branch**: `001-discord-proxy-bot` | **Date**: 2026-02-24 | **Spec**: [spec.md](spec.md)
 **Input**: Feature specification from `/specs/001-discord-proxy-bot/spec.md`
+
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Summary
 
-Discord bot for managing Magic: The Gathering proxy card orders through ticket system with guided forms, automated pricing, Pix/Mercado Pago payments, and status tracking. Built with Constatic framework (Discord bot development framework on discord.js 14.x), TypeScript 5.0+, SQLite via better-sqlite3, and Express for webhooks.
+Discord bot for managing proxy Magic card orders through a ticket system. Primary features include automated ticket creation, guided order form collection, price calculation (9 cards per sheet formula), Pix payment via Mercado Pago integration, payment status monitoring, and admin management panel. Technical approach uses Discord.js for bot framework, Prisma ORM with SQLite for data persistence, and Mercado Pago SDK for payment processing. Implements retry logic with exponential backoff for API resilience and automated timeout handling for pending payments.
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5.0+ with ESM modules (Node.js 20.12+ required)  
-**Primary Dependencies**: 
-- **@constatic/base** - Discord bot framework (conventions, auto-loading, creators pattern)
-- **discord.js 14.x** - Discord API library (integrated via Constatic)
-- **mercadopago** - Official Mercado Pago SDK for Pix payments
-- **better-sqlite3** - Synchronous SQLite database driver
-- **express** - HTTP server for Mercado Pago webhooks
-- **zod** - Schema validation for environment variables (built-in with Constatic)
-
-**Storage**: SQLite 3 database via better-sqlite3 (local file: `database/proxytickets.db`)  
-**Testing**: Jest + ts-jest (OPTIONAL per Constitution v2.0.0 - encouraged but not mandatory)  
-**Target Platform**: Node.js server (Linux/Windows, Node 20.12+ for ESM support)  
-**Project Type**: Discord bot application with HTTP webhook server  
-**Performance Goals**: 
-- Discord interaction response < 3s (Discord requirement)
-- Database queries < 100ms (SQLite on SSD)
-- Webhook processing < 2s (payment status updates)
-
-**Constraints**: 
-- Must use Discord slash commands (buttons, modals, select menus)
-- Payment webhook must be publicly accessible URL
-- One active ticket per user (business rule)
-- All Discord interactions are ephemeral or in private ticket channels
-
-**Scale/Scope**: 
-- 5 user stories (P1-P5)
-- ~10 Discord commands/interactions
-- Single Discord server deployment
-- Estimated 50-200 concurrent users
-- ~1000 tickets/month projected
+**Language/Version**: TypeScript 5.x + Node.js 20.x LTS  
+**Primary Dependencies**: discord.js 14.x, Prisma 5.x (SQLite), Mercado Pago SDK, dotenv, @constatic/base  
+**Storage**: SQLite via Prisma ORM (embedded database, no separate server)  
+**Testing**: Jest + ts-jest (optional per Constitution v2.0.0, recommended if tests implemented)  
+**Target Platform**: Node.js server (Linux/Windows compatible)  
+**Project Type**: Discord bot application (event-driven service, using Constatic framework)  
+**Performance Goals**: <2min payment confirmation, <30s admin notifications, real-time Discord message handling  
+**Constraints**: 24h payment timeout, exponential backoff retry (3 attempts: 1s/2s/4s), one ticket per user enforcement  
+**Scale/Scope**: Small-to-medium business operation (~10-100 concurrent tickets, moderate transaction volume)
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-Based on `.specify/memory/constitution.md` v2.0.0:
+Based on `.specify/memory/constitution.md`:
 
-- [x] **Unit Testing**: Constitution v2.0.0 makes tests OPTIONAL but ENCOURAGED. Tests may be added during implementation at developer discretion.
-- [x] **Simplicity First**: **Constatic framework SIMPLIFIES development** by providing conventions (folder structure, auto-loading, creators pattern) WITHOUT adding framework magic. Eliminates boilerplate for command registration and module loading while preserving full discord.js API access. See research.md Section 1 for detailed analysis.
-- [x] **Best Practices**: TypeScript strict mode, ESLint + Prettier, Zod environment validation, industry-standard libraries (discord.js, Express, Mercado Pago official SDK).
-- [ ] **Test-First Development**: Tests are OPTIONAL (Constitution v2.0.0). If implemented, test-first workflow is encouraged but not enforced.
-- [x] **User Story Independence**: Each of 5 user stories (Tickets, Forms, Payments, Processing, Admin) can be implemented, tested, and deployed independently. See spec.md for detailed user story breakdown with priority classification.
+- [x] **Unit Testing**: Feature will include unit tests for critical business logic (price calculation, validation, retry logic)
+- [x] **Simplicity First**: Solution uses Discord.js native features, embedded SQLite (no separate DB server), standard Mercado Pago SDK
+- [x] **Best Practices**: TypeScript strict mode, ESLint configuration, error handling, logging, environment variable management
+- [x] **Test-First Development**: Acceptance criteria in spec.md guide test design; tests written during implementation
+- [x] **User Story Independence**: All 5 user stories (US1-US5) are independently testable and deliverable with clear acceptance scenarios
 
-**Status**: **PASS** - Constatic framework aligns with Simplicity First principle. Tests are optional per Constitution v2.0.0.
+**Status**: PASS (Initial + Post-Design Re-evaluation ✓)
 
-**Simplicity Justification for Constatic**:
-Constatic reduces complexity through:
-1. **Convention over Configuration**: Standard folder structure (`src/discord/commands/`, `src/functions/`, `src/database/`) eliminates architectural decisions
-2. **Auto-loading**: Glob-based module discovery removes manual import/registration boilerplate
-3. **Creators Pattern**: Simple functions (`createCommand()`, `createEvent()`, `createResponder()`) replace complex command handler classes
-4. **CLI Scaffolding**: `npx constatic@latest` generates complete project structure in seconds
-5. **No Abstraction Layers**: Built ON discord.js, not hiding it - full API access preserved
+**Notes**:
+- No violations requiring justification
+- Simplicity approach: Single Node.js process, embedded database, no microservices
+- Dependencies justified: discord.js (required for Discord API), Prisma (typed ORM simplifies queries), Mercado Pago SDK (official payment integration), Constatic framework (convention over configuration, reduces boilerplate)
 
-Comparison: Pure discord.js requires manual command registration, module loading, environment validation, project structure decisions. Constatic provides conventions WITHOUT framework magic.
+**Post-Design Re-evaluation (Phase 1 Complete)**:
+- ✅ Data model maintains simplicity: 5 core entities with clear relationships
+- ✅ No complex patterns introduced: Direct Prisma queries, no repository abstraction
+- ✅ Architecture supports independent user story implementation via modular services
+- ✅ Contracts defined for Discord commands and database schema
+- ✅ Test framework selected (Jest) - implementation remains optional per Constitution v2.0.0
+- **Confirmed**: All Constitution principles preserved through design phase
 
 ## Project Structure
 
@@ -70,94 +54,65 @@ Comparison: Pure discord.js requires manual command registration, module loading
 
 ```text
 specs/001-discord-proxy-bot/
-├── spec.md              # Feature specification (5 user stories)
-├── plan.md              # This file (implementation plan)
-├── research.md          # Phase 0 research (Constatic, better-sqlite3, Mercado Pago)
-├── data-model.md        # Phase 1 database schema
-├── quickstart.md        # Phase 1 testing guide
-├── contracts/           # Phase 1 interface contracts
-│   ├── commands.md      # Discord command contracts
-│   └── database.md      # Database schema contracts (SQL)
-└── tasks.md             # Phase 2 implementation tasks (generated by /speckit.tasks)
+├── plan.md              # This file (/speckit.plan command output)
+├── research.md          # Phase 0 output (/speckit.plan command)
+├── data-model.md        # Phase 1 output (/speckit.plan command)
+├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
+│   ├── commands.md      # Discord command schemas
+│   └── database.md      # Prisma schema contracts
+└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
 ```
 
 ### Source Code (repository root)
 
-**Selected Structure**: Single Discord bot project following Constatic conventions
-
 ```text
+# Single project structure (Discord bot application)
 src/
-├── discord/              # Auto-loaded Discord structures
-│   ├── commands/         # Slash commands (createCommand)
-│   │   ├── admin/        # Admin-only commands (pricing, processing)
-│   │   └── public/       # Public commands (create ticket)
-│   ├── events/           # Event listeners (createEvent)
-│   │   └── ready.ts      # Bot ready handler
-│   ├── responders/       # Interaction handlers (createResponder)
-│   │   ├── buttons/      # Button interactions (confirm payment, close ticket)
-│   │   ├── modals/       # Modal submissions (deck details)
-│   │   └── selects/      # Select menu handlers (extras selection)
-│   └── index.ts          # setupCreators() exports
-│
-├── functions/            # Business logic (services layer)
-│   ├── ticket-manager.ts       # Ticket lifecycle management
-│   ├── order-calculator.ts     # Price calculation logic
-│   ├── payment-processor.ts    # Mercado Pago integration
-│   └── index.ts                # Exports
-│
-├── database/             # Data access layer
-│   ├── migrations/       # SQL migration files
-│   │   └── 001_initial_schema.sql
-│   ├── repositories/     # Data access objects
-│   │   ├── ticket-repository.ts
-│   │   ├── order-repository.ts
-│   │   └── payment-repository.ts
-│   └── index.ts          # Database initialization
-│
-├── server/               # Express HTTP server (Mercado Pago webhooks)
-│   ├── routes/
-│   │   └── webhooks.ts   # POST /webhooks/mercadopago
-│   └── index.ts          # createEvent('ready') to start server
-│
-├── types/                # TypeScript type definitions
-│   ├── ticket.ts         # Ticket types
-│   ├── order.ts          # Order types
-│   └── index.ts          # Exports
-│
-├── constants.ts          # Type-safe constants from constants.json
-├── env.ts                # Zod environment validation
-└── index.ts              # Entry point: bootstrap({ meta: import.meta, env })
+├── discord/
+│   ├── commands/        # Slash commands and button interactions
+│   ├── events/          # Discord event handlers
+│   └── responders/      # Button/select menu responders
+├── database/
+│   ├── prisma/          # Generated Prisma client
+│   └── index.ts         # Database connection and helpers
+├── services/
+│   ├── ticket.ts        # Ticket creation and management
+│   ├── payment.ts       # Mercado Pago integration
+│   ├── pricing.ts       # Price calculation logic
+│   └── timeout.ts       # Payment timeout monitoring
+├── utils/
+│   ├── retry.ts         # Exponential backoff retry logic
+│   └── validators.ts    # Input validation helpers
+├── constants.ts         # Application constants
+├── env.ts              # Environment variable validation
+└── index.ts            # Bot entry point
 
-tests/ (OPTIONAL)
+prisma/
+├── schema.prisma       # Main Prisma schema
+└── models/             # Prisma model definitions
+    ├── guild.prisma
+    ├── member.prisma
+    ├── ticket.prisma    # To be created
+    ├── order.prisma     # To be created
+    └── payment.prisma   # To be created
+
+tests/
 ├── unit/
-│   ├── functions/        # Business logic tests
-│   └── database/         # Repository tests
-└── integration/
-    └── commands/         # Command interaction tests
-
-constants.json            # Typed constants (colors, messages, etc.)
-.env                      # Environment variables (not committed)
-.env.example              # Environment template
-package.json              # type: "module" for ESM
-tsconfig.json             # ESM + path aliases (#base, #env, #database, #functions)
+│   ├── pricing.test.ts
+│   ├── validators.test.ts
+│   └── retry.test.ts
+├── integration/
+│   ├── ticket.test.ts
+│   └── payment.test.ts
+└── contract/
+    └── database.test.ts
 ```
 
-**Structure Decision**: Constatic single-bot structure with:
-- **`discord/`**: Auto-loaded Discord-specific code (commands, events, responders)
-- **`functions/`**: Business logic separate from Discord layer (testable, reusable)
-- **`database/`**: Data access with repository pattern
-- **`server/`**: Express server for webhooks (starts via Discord 'ready' event per Constatic pattern)
-- **Path aliases**: `#base`, `#env`, `#database`, `#functions`, `#server` (Constatic convention)
+**Structure Decision**: Single project structure is appropriate for this Discord bot application. No need for separate frontend/backend as all interaction happens through Discord. Prisma models are organized in separate files under `prisma/models/` for maintainability. Services layer separates business logic from Discord event handlers following separation of concerns.
 
 ## Complexity Tracking
 
-**No violations** - all choices align with Constitution principles.
+> **No violations - Constitution Check passed**
 
-| Decision | Justification |
-|----------|---------------|
-| **Constatic framework** | SIMPLIFIES via conventions - eliminates boilerplate, provides standard structure, auto-loading. Not an abstraction layer (preserves discord.js API). |
-| **Repository pattern** | Aligns with Principle III (Best Practices) - separates data access from business logic. Simple pattern, no ORM complexity. |
-| **Express server** | Required for Mercado Pago webhooks. Minimal implementation (single route). Constatic provides official Express template. |
-| **TypeScript strict mode** | Principle III (Best Practices) - catches errors at compile time, improves code quality. |
-
-**Note**: Testing is OPTIONAL per Constitution v2.0.0, so no coverage requirements or test-first workflow is mandated.
+No complexity requiring justification. Solution follows Simplicity First principle using standard libraries and embedded database.
