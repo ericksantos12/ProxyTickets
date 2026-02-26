@@ -182,7 +182,6 @@ export type GuildChannelOrderByWithRelationInput = {
   url?: Prisma.SortOrder
   guildId?: Prisma.SortOrder
   guild?: Prisma.GuildOrderByWithRelationInput
-  _relevance?: Prisma.GuildChannelOrderByRelevanceInput
 }
 
 export type GuildChannelWhereUniqueInput = Prisma.AtLeast<{
@@ -274,12 +273,6 @@ export type GuildChannelOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type GuildChannelOrderByRelevanceInput = {
-  fields: Prisma.GuildChannelOrderByRelevanceFieldEnum | Prisma.GuildChannelOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
-}
-
 export type GuildChannelCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   id?: Prisma.SortOrder
@@ -362,7 +355,6 @@ export type GuildChannelCreateOrConnectWithoutGuildInput = {
 
 export type GuildChannelCreateManyGuildInputEnvelope = {
   data: Prisma.GuildChannelCreateManyGuildInput | Prisma.GuildChannelCreateManyGuildInput[]
-  skipDuplicates?: boolean
 }
 
 export type GuildChannelUpsertWithWhereUniqueWithoutGuildInput = {
@@ -425,7 +417,21 @@ export type GuildChannelSelect<ExtArgs extends runtime.Types.Extensions.Internal
   guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["guildChannel"]>
 
+export type GuildChannelSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  name?: boolean
+  id?: boolean
+  url?: boolean
+  guildId?: boolean
+  guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["guildChannel"]>
 
+export type GuildChannelSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  name?: boolean
+  id?: boolean
+  url?: boolean
+  guildId?: boolean
+  guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["guildChannel"]>
 
 export type GuildChannelSelectScalar = {
   name?: boolean
@@ -436,6 +442,12 @@ export type GuildChannelSelectScalar = {
 
 export type GuildChannelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"name" | "id" | "url" | "guildId", ExtArgs["result"]["guildChannel"]>
 export type GuildChannelInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
+}
+export type GuildChannelIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
+}
+export type GuildChannelIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
 }
 
@@ -567,6 +579,30 @@ export interface GuildChannelDelegate<ExtArgs extends runtime.Types.Extensions.I
   createMany<T extends GuildChannelCreateManyArgs>(args?: Prisma.SelectSubset<T, GuildChannelCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many GuildChannels and returns the data saved in the database.
+   * @param {GuildChannelCreateManyAndReturnArgs} args - Arguments to create many GuildChannels.
+   * @example
+   * // Create many GuildChannels
+   * const guildChannel = await prisma.guildChannel.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many GuildChannels and only return the `name`
+   * const guildChannelWithNameOnly = await prisma.guildChannel.createManyAndReturn({
+   *   select: { name: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends GuildChannelCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, GuildChannelCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GuildChannelPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a GuildChannel.
    * @param {GuildChannelDeleteArgs} args - Arguments to delete one GuildChannel.
    * @example
@@ -629,6 +665,36 @@ export interface GuildChannelDelegate<ExtArgs extends runtime.Types.Extensions.I
    * 
    */
   updateMany<T extends GuildChannelUpdateManyArgs>(args: Prisma.SelectSubset<T, GuildChannelUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more GuildChannels and returns the data updated in the database.
+   * @param {GuildChannelUpdateManyAndReturnArgs} args - Arguments to update many GuildChannels.
+   * @example
+   * // Update many GuildChannels
+   * const guildChannel = await prisma.guildChannel.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more GuildChannels and only return the `name`
+   * const guildChannelWithNameOnly = await prisma.guildChannel.updateManyAndReturn({
+   *   select: { name: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends GuildChannelUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, GuildChannelUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GuildChannelPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one GuildChannel.
@@ -1052,7 +1118,28 @@ export type GuildChannelCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many GuildChannels.
    */
   data: Prisma.GuildChannelCreateManyInput | Prisma.GuildChannelCreateManyInput[]
-  skipDuplicates?: boolean
+}
+
+/**
+ * GuildChannel createManyAndReturn
+ */
+export type GuildChannelCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GuildChannel
+   */
+  select?: Prisma.GuildChannelSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the GuildChannel
+   */
+  omit?: Prisma.GuildChannelOmit<ExtArgs> | null
+  /**
+   * The data used to create many GuildChannels.
+   */
+  data: Prisma.GuildChannelCreateManyInput | Prisma.GuildChannelCreateManyInput[]
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GuildChannelIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1097,6 +1184,36 @@ export type GuildChannelUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many GuildChannels to update.
    */
   limit?: number
+}
+
+/**
+ * GuildChannel updateManyAndReturn
+ */
+export type GuildChannelUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GuildChannel
+   */
+  select?: Prisma.GuildChannelSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the GuildChannel
+   */
+  omit?: Prisma.GuildChannelOmit<ExtArgs> | null
+  /**
+   * The data used to update GuildChannels.
+   */
+  data: Prisma.XOR<Prisma.GuildChannelUpdateManyMutationInput, Prisma.GuildChannelUncheckedUpdateManyInput>
+  /**
+   * Filter which GuildChannels to update
+   */
+  where?: Prisma.GuildChannelWhereInput
+  /**
+   * Limit how many GuildChannels to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GuildChannelIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

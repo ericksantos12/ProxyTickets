@@ -1,0 +1,19 @@
+model TicketHistory {
+  id            Int       @id @default(autoincrement())
+  ticketId      Int       @map("ticket_id")
+  oldStatus     TicketStatus? @map("old_status")
+  newStatus     TicketStatus  @map("new_status")
+  oldCategoryId String?   @map("old_category_id")
+  newCategoryId String    @map("new_category_id")
+  changedBy     String    @map("changed_by")
+  changedAt     DateTime  @default(now()) @map("changed_at")
+  notes         String?
+
+  // Relations
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId], map: "idx_history_ticket_id")
+  @@index([changedAt], map: "idx_history_changed_at")
+
+  @@map("ticket_history")
+}

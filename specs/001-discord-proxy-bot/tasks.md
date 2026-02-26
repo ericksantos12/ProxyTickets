@@ -21,17 +21,17 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Verify Constatic project initialization (already exists per research.md - @constatic/base installed)
-- [ ] T002 [P] Install additional dependencies: mercadopago SDK, @prisma/client, node-cron
+- [x] T001 Verify Constatic project initialization (already exists per research.md - @constatic/base installed)
+- [x] T002 [P] Install additional dependencies: mercadopago SDK, @prisma/client, node-cron
 - [ ] T003 [P] Install dev dependencies: Jest, ts-jest, @types/jest, @types/node (if implementing tests - optional)
-- [ ] T004 [P] Verify TypeScript configuration in tsconfig.json (ESM modules, strict mode, Constatic path aliases already configured)
-- [ ] T005 [P] Configure ESLint with @typescript-eslint parser and recommended rules
-- [ ] T006 [P] Configure Prettier for code formatting
+- [x] T004 [P] Verify TypeScript configuration in tsconfig.json (ESM modules, strict mode, Constatic path aliases already configured)
+- [x] T005 [P] Configure ESLint with @typescript-eslint parser and recommended rules
+- [x] T006 [P] Configure Prettier for code formatting
 - [ ] T007 [P] Configure Jest with ts-jest preset (optional - only if implementing tests) in jest.config.js
-- [ ] T008 Verify project structure follows Constatic conventions: src/discord/, src/services/, src/database/, tests/
-- [ ] T009 Update .env.example with all required environment variables (BOT_TOKEN, MERCADOPAGO_ACCESS_TOKEN, WEBHOOK_URL, ADMIN_USER_ID, DATABASE_URL, pricing defaults)
-- [ ] T010 [P] Verify npm scripts in package.json: dev (tsx watch), build (tsup), start, test (if tests), lint, format
-- [ ] T011 [P] Update .gitignore to include: node_modules/, build/, .env, prisma/*.db, prisma/*.db-journal, logs/
+- [x] T008 Verify project structure follows Constatic conventions: src/discord/, src/services/, src/database/, tests/
+- [x] T009 Update .env.example with all required environment variables (BOT_TOKEN, MERCADOPAGO_ACCESS_TOKEN, WEBHOOK_URL, ADMIN_USER_ID, DATABASE_URL, pricing defaults)
+- [x] T010 [P] Verify npm scripts in package.json: dev (tsx watch), build (tsup), start, test (if tests), lint, format
+- [x] T011 [P] Update .gitignore to include: node_modules/, build/, .env, prisma/*.db, prisma/*.db-journal, logs/
 
 ---
 
@@ -43,9 +43,9 @@
 
 ### Database Foundation
 
-- [ ] T012 Create Prisma schema models in prisma/models/ directory: ticket.prisma, order.prisma, payment.prisma, priceConfig.prisma, statusHistory.prisma, paymentWebhook.prisma per contracts/database.md
-- [ ] T013 Configure main prisma/schema.prisma with datasource (provider: sqlite), generator (prisma-client-js), and model imports
-- [ ] T014 Create initial Prisma migration in prisma/migrations/ using `npx prisma migrate dev --name initial_schema`
+- [x] T012 Create Prisma schema models in prisma/models/ directory: ticket.prisma, order.prisma, payment.prisma, priceConfig.prisma, statusHistory.prisma, paymentWebhook.prisma per contracts/database.md
+- [x] T013 Configure main prisma/schema.prisma with datasource (provider: sqlite), generator (prisma-client-js), and model imports
+- [x] T014 Create initial Prisma migration in prisma/migrations/ using `npx prisma migrate dev --name initial_schema`
 - [ ] T015 Create database seeder script in prisma/seed.ts for PriceConfig default values (sheet: R$5, ink: R$2, lamination: R$1.50, deckbox: R$15, sleeves: R$10)
 - [ ] T016 [P] Unit test for Prisma client in tests/unit/database/prisma.test.ts (test connection, basic queries) - optional
 - [ ] T017 [P] Integration test for schema migrations in tests/integration/database/migrations.test.ts (verify all tables, indexes created) - optional

@@ -56,5 +56,39 @@ export type GuildChannel = Prisma.GuildChannelModel
  * 
  */
 export type Member = Prisma.MemberModel
+/**
+ * Model Order
+ * 
+ */
+export type Order = Prisma.OrderModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
+ * Model PaymentWebhook
+ * 
+ */
+export type PaymentWebhook = Prisma.PaymentWebhookModel
+/**
+ * Model PriceConfig
+ * 
+ */
+export type PriceConfig = Prisma.PriceConfigModel
+/**
+ * Model TicketHistory
+ * 
+ */
+export type TicketHistory = Prisma.TicketHistoryModel
+/**
+ * Model Ticket
+ * 
+ */
+export type Ticket = Prisma.TicketModel
 
+export type PaymentStatus = $Enums.PaymentStatus
+export const PaymentStatus = $Enums.PaymentStatus
 
+export type TicketStatus = $Enums.TicketStatus
+export const TicketStatus = $Enums.TicketStatus

@@ -1,0 +1,33 @@
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  APPROVED
+  REJECTED
+  CANCELLED
+  REFUNDED
+}
+
+model Payment {
+  id                     Int           @id @default(autoincrement())
+  orderId                Int           @unique @map("order_id")
+  amount                 Float
+  pixKey                 String        @map("pix_key")
+  qrCodeUrl              String        @map("qr_code_url")
+  mercadopagoPaymentId   String?       @unique @map("mercadopago_payment_id")
+  mercadopagoPreferenceId String?      @unique @map("mercadopago_preference_id")
+  status                 PaymentStatus
+  createdAt              DateTime      @default(now()) @map("created_at")
+  approvedAt             DateTime?     @map("approved_at")
+  cancelledAt            DateTime?     @map("cancelled_at")
+  updatedAt              DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  order     Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  webhooks  PaymentWebhook[]
+
+  @@index([status], map: "idx_payments_status")
+  @@index([mercadopagoPaymentId], map: "idx_payments_mp_payment_id")
+  @@index([createdAt], map: "idx_payments_created_at")
+
+  @@map("payments")
+}

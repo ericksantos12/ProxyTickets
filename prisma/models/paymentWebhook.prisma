@@ -1,0 +1,19 @@
+model PaymentWebhook {
+  id                  Int      @id @default(autoincrement())
+  paymentId           Int      @map("payment_id")
+  mercadopagoEventType String  @map("mercadopago_event_type")
+  mercadopagoAction   String   @map("mercadopago_action")
+  payload             String
+  receivedAt          DateTime @default(now()) @map("received_at")
+  processed           Boolean  @default(false)
+  errorMessage        String?  @map("error_message")
+
+  // Relations
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@index([paymentId], map: "idx_webhooks_payment_id")
+  @@index([processed], map: "idx_webhooks_processed")
+  @@index([receivedAt], map: "idx_webhooks_received_at")
+
+  @@map("payment_webhooks")
+}

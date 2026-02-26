@@ -175,7 +175,6 @@ export type GuildOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   channels?: Prisma.GuildChannelOrderByRelationAggregateInput
   members?: Prisma.MemberOrderByRelationAggregateInput
-  _relevance?: Prisma.GuildOrderByRelevanceInput
 }
 
 export type GuildWhereUniqueInput = Prisma.AtLeast<{
@@ -255,12 +254,6 @@ export type GuildUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type GuildOrderByRelevanceInput = {
-  fields: Prisma.GuildOrderByRelevanceFieldEnum | Prisma.GuildOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type GuildCountOrderByAggregateInput = {
@@ -459,7 +452,17 @@ export type GuildSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   _count?: boolean | Prisma.GuildCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["guild"]>
 
+export type GuildSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+}, ExtArgs["result"]["guild"]>
 
+export type GuildSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+}, ExtArgs["result"]["guild"]>
 
 export type GuildSelectScalar = {
   id?: boolean
@@ -473,6 +476,8 @@ export type GuildInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   members?: boolean | Prisma.Guild$membersArgs<ExtArgs>
   _count?: boolean | Prisma.GuildCountOutputTypeDefaultArgs<ExtArgs>
 }
+export type GuildIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type GuildIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $GuildPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Guild"
@@ -602,6 +607,30 @@ export interface GuildDelegate<ExtArgs extends runtime.Types.Extensions.Internal
   createMany<T extends GuildCreateManyArgs>(args?: Prisma.SelectSubset<T, GuildCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Guilds and returns the data saved in the database.
+   * @param {GuildCreateManyAndReturnArgs} args - Arguments to create many Guilds.
+   * @example
+   * // Create many Guilds
+   * const guild = await prisma.guild.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Guilds and only return the `id`
+   * const guildWithIdOnly = await prisma.guild.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends GuildCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, GuildCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GuildPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Guild.
    * @param {GuildDeleteArgs} args - Arguments to delete one Guild.
    * @example
@@ -664,6 +693,36 @@ export interface GuildDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * 
    */
   updateMany<T extends GuildUpdateManyArgs>(args: Prisma.SelectSubset<T, GuildUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Guilds and returns the data updated in the database.
+   * @param {GuildUpdateManyAndReturnArgs} args - Arguments to update many Guilds.
+   * @example
+   * // Update many Guilds
+   * const guild = await prisma.guild.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Guilds and only return the `id`
+   * const guildWithIdOnly = await prisma.guild.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends GuildUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, GuildUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GuildPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Guild.
@@ -1087,7 +1146,24 @@ export type GuildCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Guilds.
    */
   data: Prisma.GuildCreateManyInput | Prisma.GuildCreateManyInput[]
-  skipDuplicates?: boolean
+}
+
+/**
+ * Guild createManyAndReturn
+ */
+export type GuildCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Guild
+   */
+  select?: Prisma.GuildSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Guild
+   */
+  omit?: Prisma.GuildOmit<ExtArgs> | null
+  /**
+   * The data used to create many Guilds.
+   */
+  data: Prisma.GuildCreateManyInput | Prisma.GuildCreateManyInput[]
 }
 
 /**
@@ -1120,6 +1196,32 @@ export type GuildUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
  * Guild updateMany
  */
 export type GuildUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The data used to update Guilds.
+   */
+  data: Prisma.XOR<Prisma.GuildUpdateManyMutationInput, Prisma.GuildUncheckedUpdateManyInput>
+  /**
+   * Filter which Guilds to update
+   */
+  where?: Prisma.GuildWhereInput
+  /**
+   * Limit how many Guilds to update.
+   */
+  limit?: number
+}
+
+/**
+ * Guild updateManyAndReturn
+ */
+export type GuildUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Guild
+   */
+  select?: Prisma.GuildSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Guild
+   */
+  omit?: Prisma.GuildOmit<ExtArgs> | null
   /**
    * The data used to update Guilds.
    */

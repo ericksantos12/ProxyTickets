@@ -1,0 +1,12 @@
+model PriceConfig {
+  // Singleton row (id=1) — enforce in app logic; Prisma can't enforce CHECK(id=1) at schema level.
+  id             Int      @id
+  pricePerSheet  Float    @map("price_per_sheet")
+  inkCost        Float    @map("ink_cost")
+  laminationCost Float    @map("lamination_cost")
+  deckboxPrice   Float    @map("deckbox_price")
+  sleevesPrice   Float    @map("sleeves_price")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("price_config")
+}

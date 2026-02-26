@@ -1,0 +1,31 @@
+enum TicketStatus {
+  NEW
+  COLLECTING
+  PENDING_PAYMENT
+  PAYMENT_PROCESSING
+  APPROVED
+  READY
+  DELIVERED
+  CANCELLED
+}
+
+model Ticket {
+  id         Int          @id @default(autoincrement())
+  channelId  String       @unique @map("channel_id")
+  userId     String       @map("user_id")
+  status     TicketStatus
+  categoryId String       @map("category_id")
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+  closedAt   DateTime?    @map("closed_at")
+
+  // Relations
+  order    Order?
+  history  TicketHistory[]
+
+  @@index([status], map: "idx_tickets_status")
+  @@index([userId], map: "idx_tickets_user_id")
+  @@index([createdAt], map: "idx_tickets_created_at")
+
+  @@map("tickets")
+}

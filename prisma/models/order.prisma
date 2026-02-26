@@ -1,0 +1,20 @@
+model Order {
+  id            Int      @id @default(autoincrement())
+  ticketId      Int      @unique @map("ticket_id")
+  cardCount     Int      @map("card_count")
+  decklistUrl   String   @map("decklist_url")
+  includeDeckbox Boolean @default(false) @map("include_deckbox")
+  includeSleeves Boolean @default(false) @map("include_sleeves")
+  sheetCount    Int      @map("sheet_count")
+  totalPrice    Float    @map("total_price")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  ticket   Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  payment  Payment?
+
+  @@index([ticketId], map: "idx_orders_ticket_id")
+
+  @@map("orders")
+}
