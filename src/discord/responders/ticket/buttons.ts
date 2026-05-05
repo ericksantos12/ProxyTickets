@@ -4,6 +4,7 @@ import { calculateCardOrderPrice, formatTicketChannelName, fromPrismaTicketOrder
 import { ResponderType } from "@constatic/base";
 import { ChannelType, PermissionFlagsBits } from "discord.js";
 import { createTicketDetailsModal, renderCancelConfirmation, renderCancelConfirmed, renderCancelKept, renderCardTypeSelection, renderInitialTicketMessage, renderMockPix, renderOrderReview, renderPendingConfirmation, renderSelectedCardType } from "../../menus/ticket-order.js";
+import { ensureTicketOwnerPermissions } from "../../shared/ticket-permissions.js";
 
 createResponder({
     customId: "ticket/create",
@@ -33,11 +34,7 @@ createResponder({
         });
 
         try {
-            await channel.permissionOverwrites.edit(interaction.user.id, {
-                ViewChannel: true,
-                SendMessages: true,
-                ReadMessageHistory: true,
-            }, { reason: "Adicionar usuario ao ticket" });
+            await ensureTicketOwnerPermissions(channel, interaction.user.id, "Adicionar usuario ao ticket");
 
             await prisma.ticketOrder.create({
                 data: {
@@ -361,7 +358,8 @@ createResponder({
         const user = await interaction.client.users.fetch(order.userId).catch(() => null);
         const nextChannelName = formatTicketChannelName("pending", user?.username ?? "usuario");
 
-        await channel.setParent(pendingCategory.id, { reason: "Pedido confirmado e aguardando pagamento" });
+        await channel.setParent(pendingCategory.id, { lockPermissions: false, reason: "Pedido confirmado e aguardando pagamento" });
+        await ensureTicketOwnerPermissions(channel, order.userId, "Manter acesso do usuario ao mover categoria");
         await channel.setName(nextChannelName, "Pedido confirmado e aguardando pagamento");
 
         await prisma.ticketOrder.update({
