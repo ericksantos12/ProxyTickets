@@ -1,0 +1,26 @@
+model GuildBotConfig {
+    oid String @id @default(auto()) @map("_id") @db.ObjectId
+
+    guild   Guild  @relation(fields: [guildId], references: [id])
+    guildId String @unique
+
+    paperPackPriceCents Int?
+    paperPackSheetCount Int?
+
+    laminationPackPriceCents Int?
+    laminationPackSheetCount Int?
+
+    holographicStickerPackPriceCents Int?
+    holographicStickerPackSheetCount Int?
+
+    cardstockPackPriceCents Int?
+    cardstockPackSheetCount Int?
+
+    photoLaminatedProductionEnabled Boolean? @default(true)
+    foilCardProductionEnabled       Boolean? @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("guild_bot_configs")
+}

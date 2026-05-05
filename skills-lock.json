@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "caveman": {
+      "source": "juliusbrussee/caveman",
+      "sourceType": "github",
+      "skillPath": "caveman/SKILL.md",
+      "computedHash": "c9bc6c69829953233bb175d1e3951a7bc53ebbf573bddcaadc3299ca8154bbb2"
+    },
+    "grill-with-docs": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/grill-with-docs/SKILL.md",
+      "computedHash": "e95d83038cb68774469932969b060438bc457973657269a479571321c93a9140"
+    }
+  }
+}
