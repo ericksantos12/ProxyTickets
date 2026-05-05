@@ -22,6 +22,14 @@ GUILD_ID=
 - `BOT_TOKEN` e `DATABASE_URL` sao obrigatorias.
 - `WEBHOOK_LOGS_URL` e `GUILD_ID` sao opcionais.
 
+### Detalhes do .env
+
+- `BOT_TOKEN`: token do bot do Discord.
+- `DATABASE_URL`: string de conexao do MongoDB usada pelo Prisma.
+- `NODE_OPTIONS`: opcoes adicionais do Node.js (ex: `--max-old-space-size=4096`).
+- `WEBHOOK_LOGS_URL`: webhook para logs do bot.
+- `GUILD_ID`: ID do servidor para registrar comandos em escopo de guild.
+
 ## Fluxo principal
 
 - `/config` define categorias e precos.
@@ -50,6 +58,14 @@ GUILD_ID=
 - `src/discord/commands`: slash commands
 - `src/discord/responders`: bot buttons/modals/selects
 - `src/discord/events`: eventos do Discord
+
+## Stack
+
+- Node.js 20.12+ (runtime)
+- TypeScript (linguagem)
+- Discord.js + Constatic (`@constatic/base`) (bot e roteamento)
+- Prisma + MongoDB (persistencia de dados)
+- TSUP + TSX (build e execucao em dev)
 
 ## Desenvolvimento
 
