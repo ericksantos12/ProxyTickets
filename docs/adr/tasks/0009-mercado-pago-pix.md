@@ -1,0 +1,27 @@
+# Task: Mercado Pago PIX Payment Integration
+
+- [ ] Review ADR 0009 decisions and confirm scope.
+- [ ] Install `mercadopago` SDK (`npm install mercadopago`).
+- [ ] Update `.env.example` with new variables (`MP_ACCESS_TOKEN`, `MP_WEBHOOK_SECRET`, `WEBHOOK_BASE_URL`, `WEBHOOK_PORT`).
+- [ ] Update `src/env.ts` to validate new env variables.
+- [ ] Update Prisma schema (`prisma/models/*.prisma`):
+  - Add `AWAITING_DELIVERY` to `TicketOrderStatus` enum.
+  - Add payment fields to `TicketOrder` model (`paymentId`, `paymentStatus`, `paymentQrCodeBase64`, `paymentCopyPaste`, `paymentExpiresAt`, `paidAt`).
+- [ ] Run Prisma generate to update client types.
+- [ ] Create `src/lib/mercado-pago.ts` client wrapper (initialize SDK, create payment, cancel payment).
+- [ ] Create `src/server/webhook.ts` Express server (start/stop, single POST route, signature validation).
+- [ ] Integrate payment creation into `ticket/confirm` responder:
+  - Replace mock PIX with real Mercado Pago payment creation.
+  - Save payment data to database.
+  - Render QR code image as attachment + embed with copia e cola.
+- [ ] Implement webhook handler:
+  - Validate `x-signature`.
+  - Parse `payment.updated` events.
+  - On `approved`, update ticket to `AWAITING_DELIVERY`, move channel, rename, reapply permissions, edit confirmation message.
+- [ ] Implement expiration/cleanup flow:
+  - On expiry, cancel payment in MP, update ticket to `CANCELLED`, delete channel after countdown.
+- [ ] Manual validation in Discord:
+  - Create ticket, confirm, scan QR, pay (sandbox), verify channel moves to awaiting.
+  - Test expired PIX cleanup.
+- [ ] Run `npm run check` and `npm run build`.
+- [ ] Commit via `git-commit` skill.

@@ -268,3 +268,29 @@ export function renderMockPix(userId: string, responsibleAdminId: string, detail
         components: [container],
     } satisfies InteractionUpdateOptions;
 }
+
+export function renderPixPayment(userId: string, responsibleAdminId: string, details: TicketOrderDetailsView, price: CardOrderPrice, copyPaste: string) {
+    const container = createContainer("Aqua",
+        "# Pagamento PIX gerado\nEscaneie o QR Code ou use o copia e cola abaixo.",
+        Separator.Default,
+        [
+            `**Usuario:** <@${userId}>`,
+            `**Responsavel:** <@${responsibleAdminId}>`,
+            `**Tipo de carta:** ${formatTicketOrderCardType(details.cardType)}`,
+            `**Quantidade:** ${details.cardCount}`,
+            `**Folhas A4:** ${price.sheetCount}`,
+            `**Valor final:** ${formatCurrencyFromCents(price.finalPriceCents)}`,
+            `**Link do deck:** ${details.deckLink ?? "Nao informado"}`,
+        ].join("\n"),
+        Separator.Default,
+        [
+            "**Copia e cola PIX:**",
+            `\`${copyPaste}\``,
+        ].join("\n"),
+    );
+
+    return {
+        flags: ["IsComponentsV2"],
+        components: [container],
+    } satisfies InteractionUpdateOptions;
+}

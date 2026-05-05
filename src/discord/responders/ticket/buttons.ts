@@ -3,7 +3,7 @@ import { prisma } from "#database";
 import { calculateCardOrderPrice, formatTicketChannelName, fromPrismaTicketOrderCardType, getOrCreateBotConfig, isTicketOrderCardTypeInput, parseDeckLink, parseTicketCardCount, toPrismaTicketOrderCardType, type TicketOrderCardTypeInput } from "#functions";
 import { ResponderType } from "@constatic/base";
 import { ChannelType, PermissionFlagsBits } from "discord.js";
-import { createTicketDetailsModal, renderCancelConfirmation, renderCancelConfirmed, renderCancelKept, renderCardTypeSelection, renderInitialTicketMessage, renderMockPix, renderOrderReview, renderPendingConfirmation, renderSelectedCardType } from "../../menus/ticket-order.js";
+import { createTicketDetailsModal, renderCancelConfirmation, renderCancelConfirmed, renderCancelKept, renderCardTypeSelection, renderInitialTicketMessage, renderOrderReview, renderPendingConfirmation, renderPixPayment, renderSelectedCardType } from "../../menus/ticket-order.js";
 import { ensureTicketOwnerPermissions } from "../../shared/ticket-permissions.js";
 
 createResponder({
@@ -358,6 +358,15 @@ createResponder({
         const user = await interaction.client.users.fetch(order.userId).catch(() => null);
         const nextChannelName = formatTicketChannelName("pending", user?.username ?? "usuario");
 
+        const payerEmail = `${order.userId}@discord.local`;
+
+        const { createPixPayment } = await import("../../../lib/mercado-pago.js");
+        const pix = await createPixPayment(
+            price.value.finalPriceCents / 100,
+            `Pedido proxies - ${details.cardCount} cartas`,
+            payerEmail,
+        );
+
         await channel.setParent(pendingCategory.id, { lockPermissions: false, reason: "Pedido confirmado e aguardando pagamento" });
         await ensureTicketOwnerPermissions(channel, order.userId, "Manter acesso do usuario ao mover categoria");
         await channel.setName(nextChannelName, "Pedido confirmado e aguardando pagamento");
@@ -371,10 +380,23 @@ createResponder({
                 profitMarginPercent: price.value.profitMarginPercent,
                 finalPriceCents: price.value.finalPriceCents,
                 confirmedAt: new Date(),
+                paymentId: pix.paymentId,
+                paymentStatus: pix.status,
+                paymentQrCodeBase64: pix.qrCodeBase64,
+                paymentCopyPaste: pix.copyPaste,
+                paymentExpiresAt: pix.expiresAt,
             },
         });
 
-        await interaction.update(renderMockPix(order.userId, interaction.user.id, details, price.value));
+        if (pix.qrCodeBase64) {
+            const buffer = Buffer.from(pix.qrCodeBase64, "base64");
+            await interaction.update({
+                ...renderPixPayment(order.userId, interaction.user.id, details, price.value, pix.copyPaste ?? "Nao disponivel"),
+                files: [{ attachment: buffer, name: "qrcode.png" }],
+            });
+        } else {
+            await interaction.update(renderPixPayment(order.userId, interaction.user.id, details, price.value, pix.copyPaste ?? "Nao disponivel"));
+        }
     },
 });
 

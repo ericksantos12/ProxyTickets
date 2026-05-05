@@ -4,6 +4,7 @@ enum TicketOrderStatus {
     PENDING_CONFIRMATION
     IN_REVIEW
     PENDING_PAYMENT
+    AWAITING_DELIVERY
     CANCELLED
 }
 
@@ -33,6 +34,13 @@ model TicketOrder {
     materialCostCents   Int?
     profitMarginPercent Int?
     finalPriceCents     Int?
+
+    paymentId            String?
+    paymentStatus        String?
+    paymentQrCodeBase64  String?
+    paymentCopyPaste     String?
+    paymentExpiresAt     DateTime?
+    paidAt               DateTime?
 
     cancelledAt DateTime?
     confirmedAt DateTime?
