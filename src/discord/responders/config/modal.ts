@@ -1,5 +1,5 @@
 import { createResponder } from "#base";
-import { parsePriceCents, parseSheetCount, updateBotConfig, type BotConfigUpdateData } from "#functions";
+import { parsePriceCents, parseProfitMarginPercent, parseSheetCount, updateBotConfig, type BotConfigUpdateData } from "#functions";
 import { ResponderType } from "@constatic/base";
 import { PermissionFlagsBits } from "discord.js";
 import { isConfigPanelPage, isConfigPanelSection, renderConfigPanel, type ConfigPanelPage, type ConfigPanelSection } from "../../menus/config-panel.js";
@@ -70,6 +70,33 @@ createResponder({
         const config = await updateBotConfig(interaction.guildId, getUpdateData(page, section, price.value, count.value));
 
         await interaction.update(renderConfigPanel(page, config, "Configuracao atualizada.", interaction.guild));
+    },
+});
+
+createResponder({
+    customId: "config/save-profit-margin",
+    types: [ResponderType.ModalComponent],
+    cache: "cached",
+    async run(interaction) {
+        if (!interaction.memberPermissions.has(PermissionFlagsBits.ManageGuild)) {
+            await interaction.reply({
+                flags: ["Ephemeral"],
+                content: "Voce nao tem permissao para configurar o bot.",
+            });
+            return;
+        }
+
+        const profitMargin = parseProfitMarginPercent(interaction.fields.getTextInputValue("profitMarginPercent"));
+        if (!profitMargin.ok) {
+            await interaction.reply({ flags: ["Ephemeral"], content: profitMargin.error });
+            return;
+        }
+
+        const config = await updateBotConfig(interaction.guildId, {
+            profitMarginPercent: profitMargin.value,
+        });
+
+        await interaction.update(renderConfigPanel("production", config, "Margem de lucro atualizada.", interaction.guild));
     },
 });
 

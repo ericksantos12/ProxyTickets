@@ -397,7 +397,8 @@ export const ModelName = {
   Guild: 'Guild',
   GuildChannel: 'GuildChannel',
   GuildBotConfig: 'GuildBotConfig',
-  Member: 'Member'
+  Member: 'Member',
+  TicketOrder: 'TicketOrder'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "guild" | "guildChannel" | "guildBotConfig" | "member"
+    modelProps: "guild" | "guildChannel" | "guildBotConfig" | "member" | "ticketOrder"
     txIsolationLevel: never
   }
   model: {
@@ -713,6 +714,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TicketOrder: {
+      payload: Prisma.$TicketOrderPayload<ExtArgs>
+      fields: Prisma.TicketOrderFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TicketOrderFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketOrderPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TicketOrderFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketOrderPayload>
+        }
+        findFirst: {
+          args: Prisma.TicketOrderFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketOrderPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TicketOrderFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketOrderPayload>
+        }
+        findMany: {
+          args: Prisma.TicketOrderFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketOrderPayload>[]
+        }
+        create: {
+          args: Prisma.TicketOrderCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketOrderPayload>
+        }
+        createMany: {
+          args: Prisma.TicketOrderCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TicketOrderDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketOrderPayload>
+        }
+        update: {
+          args: Prisma.TicketOrderUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketOrderPayload>
+        }
+        deleteMany: {
+          args: Prisma.TicketOrderDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TicketOrderUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TicketOrderUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketOrderPayload>
+        }
+        aggregate: {
+          args: Prisma.TicketOrderAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTicketOrder>
+        }
+        groupBy: {
+          args: Prisma.TicketOrderGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TicketOrderGroupByOutputType>[]
+        }
+        findRaw: {
+          args: Prisma.TicketOrderFindRawArgs<ExtArgs>
+          result: Prisma.JsonObject
+        }
+        aggregateRaw: {
+          args: Prisma.TicketOrderAggregateRawArgs<ExtArgs>
+          result: Prisma.JsonObject
+        }
+        count: {
+          args: Prisma.TicketOrderCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TicketOrderCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -764,6 +839,7 @@ export const GuildBotConfigScalarFieldEnum = {
   cardstockPackSheetCount: 'cardstockPackSheetCount',
   photoLaminatedProductionEnabled: 'photoLaminatedProductionEnabled',
   foilCardProductionEnabled: 'foilCardProductionEnabled',
+  profitMarginPercent: 'profitMarginPercent',
   newTicketsCategoryId: 'newTicketsCategoryId',
   pendingPaymentCategoryId: 'pendingPaymentCategoryId',
   awaitingDeliveryCategoryId: 'awaitingDeliveryCategoryId',
@@ -783,6 +859,29 @@ export const MemberScalarFieldEnum = {
 } as const
 
 export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
+
+
+export const TicketOrderScalarFieldEnum = {
+  oid: 'oid',
+  guildId: 'guildId',
+  channelId: 'channelId',
+  userId: 'userId',
+  responsibleAdminId: 'responsibleAdminId',
+  status: 'status',
+  cardType: 'cardType',
+  cardCount: 'cardCount',
+  deckLink: 'deckLink',
+  sheetCount: 'sheetCount',
+  materialCostCents: 'materialCostCents',
+  profitMarginPercent: 'profitMarginPercent',
+  finalPriceCents: 'finalPriceCents',
+  cancelledAt: 'cancelledAt',
+  confirmedAt: 'confirmedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TicketOrderScalarFieldEnum = (typeof TicketOrderScalarFieldEnum)[keyof typeof TicketOrderScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -853,6 +952,34 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'TicketOrderStatus'
+ */
+export type EnumTicketOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketOrderStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TicketOrderStatus[]'
+ */
+export type ListEnumTicketOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketOrderStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TicketOrderCardType'
+ */
+export type EnumTicketOrderCardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketOrderCardType'>
+    
+
+
+/**
+ * Reference to a field of type 'TicketOrderCardType[]'
+ */
+export type ListEnumTicketOrderCardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketOrderCardType[]'>
     
 
 
@@ -955,6 +1082,7 @@ export type GlobalOmitConfig = {
   guildChannel?: Prisma.GuildChannelOmit
   guildBotConfig?: Prisma.GuildBotConfigOmit
   member?: Prisma.MemberOmit
+  ticketOrder?: Prisma.TicketOrderOmit
 }
 
 /* Types for Logging */

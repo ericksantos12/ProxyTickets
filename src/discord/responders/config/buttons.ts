@@ -3,7 +3,7 @@ import { getOrCreateBotConfig, updateBotConfig } from "#functions";
 import { ResponderType } from "@constatic/base";
 import { createContainer } from "@magicyan/discord";
 import { PermissionFlagsBits } from "discord.js";
-import { createConfigEditModal, getVisibleConfigPanelPage, isConfigPanelPage, isConfigPanelSection, isProductionType, isTicketCategoryType, renderConfigPanel, type ConfigPanelPage, type ConfigPanelSection, type ProductionType, type TicketCategoryType } from "../../menus/config-panel.js";
+import { createConfigEditModal, createConfigProfitMarginModal, getVisibleConfigPanelPage, isConfigPanelPage, isConfigPanelSection, isProductionType, isTicketCategoryType, renderConfigPanel, type ConfigPanelPage, type ConfigPanelSection, type ProductionType, type TicketCategoryType } from "../../menus/config-panel.js";
 
 createResponder({
     customId: "config/page/:page",
@@ -86,6 +86,22 @@ createResponder({
         await interaction.update({
             components: [createContainer("Grey", "Painel fechado.")],
         });
+    },
+});
+
+createResponder({
+    customId: "config/edit-profit-margin",
+    types: [ResponderType.Button],
+    cache: "cached",
+    async run(interaction) {
+        if (!canManageGuild(interaction.memberPermissions)) {
+            await replyPermissionError(interaction);
+            return;
+        }
+
+        const config = await getOrCreateBotConfig(interaction.guildId);
+
+        await interaction.showModal(createConfigProfitMarginModal(config));
     },
 });
 

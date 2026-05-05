@@ -61,5 +61,14 @@ export type GuildBotConfig = Prisma.GuildBotConfigModel
  * 
  */
 export type Member = Prisma.MemberModel
+/**
+ * Model TicketOrder
+ * 
+ */
+export type TicketOrder = Prisma.TicketOrderModel
 
+export type TicketOrderStatus = $Enums.TicketOrderStatus
+export const TicketOrderStatus = $Enums.TicketOrderStatus
 
+export type TicketOrderCardType = $Enums.TicketOrderCardType
+export const TicketOrderCardType = $Enums.TicketOrderCardType

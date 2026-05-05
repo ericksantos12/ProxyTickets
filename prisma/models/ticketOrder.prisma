@@ -1,0 +1,45 @@
+enum TicketOrderStatus {
+    NEW
+    AWAITING_USER_DETAILS
+    PENDING_CONFIRMATION
+    IN_REVIEW
+    PENDING_PAYMENT
+    CANCELLED
+}
+
+enum TicketOrderCardType {
+    PHOTO_LAMINATED
+    FOIL_CARD
+}
+
+model TicketOrder {
+    oid String @id @default(auto()) @map("_id") @db.ObjectId
+
+    guild   Guild  @relation(fields: [guildId], references: [id])
+    guildId String
+
+    channelId String @unique
+    userId    String
+
+    responsibleAdminId String?
+
+    status TicketOrderStatus @default(NEW)
+
+    cardType  TicketOrderCardType?
+    cardCount Int?
+    deckLink  String?
+
+    sheetCount          Int?
+    materialCostCents   Int?
+    profitMarginPercent Int?
+    finalPriceCents     Int?
+
+    cancelledAt DateTime?
+    confirmedAt DateTime?
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+
+    @@index([guildId])
+    @@index([userId])
+    @@map("ticket_orders")
+}

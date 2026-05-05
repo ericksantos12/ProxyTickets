@@ -1,5 +1,30 @@
 const MAX_PRICE_CENTS = 10_000_000;
 const MAX_SHEET_COUNT = 100_000;
+const MAX_PROFIT_MARGIN_PERCENT = 1_000;
+const CARDS_PER_A4_SHEET = 8;
+
+export type CardOrderType = "photo-laminated" | "foil-card";
+
+export type CardOrderPricingConfig = {
+    paperPackPriceCents: number | null;
+    paperPackSheetCount: number | null;
+    laminationPackPriceCents: number | null;
+    laminationPackSheetCount: number | null;
+    holographicStickerPackPriceCents: number | null;
+    holographicStickerPackSheetCount: number | null;
+    cardstockPackPriceCents: number | null;
+    cardstockPackSheetCount: number | null;
+    profitMarginPercent: number | null;
+};
+
+export type CardOrderPrice = {
+    cardType: CardOrderType;
+    cardCount: number;
+    sheetCount: number;
+    materialCostCents: number;
+    profitMarginPercent: number;
+    finalPriceCents: number;
+};
 
 export type ParseResult<T> =
     | { ok: true; value: T }
@@ -52,12 +77,62 @@ export function parseSheetCount(input: string): ParseResult<number> {
     return { ok: true, value: count };
 }
 
+export function parseProfitMarginPercent(input: string): ParseResult<number> {
+    const value = input.trim();
+
+    if (!value) {
+        return { ok: false, error: "Informe a margem de lucro." };
+    }
+    if (!/^\d+$/.test(value)) {
+        return { ok: false, error: "A margem de lucro deve ser um numero inteiro maior ou igual a 0." };
+    }
+
+    const percent = Number.parseInt(value, 10);
+    if (percent > MAX_PROFIT_MARGIN_PERCENT) {
+        return { ok: false, error: "A margem de lucro deve ser no maximo 1000%." };
+    }
+
+    return { ok: true, value: percent };
+}
+
 export function calculateUnitPriceCents(priceCents: number | null, sheetCount: number | null): number | null {
     if (priceCents === null || sheetCount === null || sheetCount <= 0) {
         return null;
     }
 
     return priceCents / sheetCount;
+}
+
+export function calculateRequiredSheetCount(cardCount: number): number {
+    return Math.ceil(cardCount / CARDS_PER_A4_SHEET);
+}
+
+export function calculateCardOrderPrice(cardType: CardOrderType, cardCount: number, config: CardOrderPricingConfig): ParseResult<CardOrderPrice> {
+    if (!Number.isInteger(cardCount) || cardCount < 1) {
+        return { ok: false, error: "A quantidade de cartas deve ser um numero inteiro maior que zero." };
+    }
+
+    const sheetCostCents = calculateCardTypeSheetCostCents(cardType, config);
+    if (sheetCostCents === null) {
+        return { ok: false, error: "Configure todos os custos de material para este tipo de carta antes de confirmar o pedido." };
+    }
+
+    const sheetCount = calculateRequiredSheetCount(cardCount);
+    const profitMarginPercent = config.profitMarginPercent ?? 0;
+    const materialCostCents = roundCurrencyCents(sheetCostCents * sheetCount);
+    const finalPriceCents = roundCurrencyCents(materialCostCents * (1 + profitMarginPercent / 100));
+
+    return {
+        ok: true,
+        value: {
+            cardType,
+            cardCount,
+            sheetCount,
+            materialCostCents,
+            profitMarginPercent,
+            finalPriceCents,
+        },
+    };
 }
 
 export function formatCurrencyFromCents(cents: number | null): string {
@@ -79,6 +154,30 @@ export function formatPriceInput(cents: number | null): string | undefined {
     }
 
     return (cents / 100).toFixed(2).replace(".", ",");
+}
+
+function calculateCardTypeSheetCostCents(cardType: CardOrderType, config: CardOrderPricingConfig): number | null {
+    if (cardType === "foil-card") {
+        return sumNullablePrices(
+            calculateUnitPriceCents(config.holographicStickerPackPriceCents, config.holographicStickerPackSheetCount),
+            calculateUnitPriceCents(config.cardstockPackPriceCents, config.cardstockPackSheetCount),
+        );
+    }
+
+    return sumNullablePrices(
+        calculateUnitPriceCents(config.paperPackPriceCents, config.paperPackSheetCount),
+        calculateUnitPriceCents(config.laminationPackPriceCents, config.laminationPackSheetCount),
+    );
+}
+
+function sumNullablePrices(...prices: (number | null)[]): number | null {
+    return prices.reduce<number | null>((total, price) => (
+        total === null || price === null ? null : total + price
+    ), 0);
+}
+
+function roundCurrencyCents(cents: number): number {
+    return Math.ceil(cents);
 }
 
 function normalizeMoney(value: string): { integer: number; decimal: number } | null {

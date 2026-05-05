@@ -17,6 +17,7 @@ export type BotConfigView = {
     cardstockPackSheetCount: number | null;
     photoLaminatedProductionEnabled: boolean | null;
     foilCardProductionEnabled: boolean | null;
+    profitMarginPercent: number | null;
     newTicketsCategoryId: string | null;
     pendingPaymentCategoryId: string | null;
     awaitingDeliveryCategoryId: string | null;
@@ -194,6 +195,24 @@ export function createConfigEditModal(page: ConfigPanelPage, sectionId: ConfigPa
     );
 }
 
+export function createConfigProfitMarginModal(config: BotConfigView) {
+    return createModal(
+        "config/save-profit-margin",
+        "Editar margem de lucro",
+        createLabel({
+            label: "Margem de lucro (%)",
+            description: "Digite um numero inteiro maior ou igual a 0. Exemplo: 30",
+            component: createTextInput({
+                customId: "profitMarginPercent",
+                required: true,
+                style: TextInputStyle.Short,
+                placeholder: "30",
+                value: config.profitMarginPercent?.toString(),
+            }),
+        }),
+    );
+}
+
 function renderMaterialSection(page: ConfigPanelPage, section: SectionDefinition, config: BotConfigView) {
     const priceCents = config[section.priceField];
     const sheetCount = config[section.countField];
@@ -242,6 +261,7 @@ function renderProductionTypeSections(config: BotConfigView) {
             title: "Papel adesivo holografico em cartao (Foil)",
             enabled: isEnabled(config.foilCardProductionEnabled),
         }),
+        renderProfitMarginSection(config),
     ];
 }
 
@@ -260,6 +280,23 @@ function renderProductionTypeSection(data: { id: ProductionType; title: string; 
             customId: `config/toggle-production/${data.id}`,
             label: data.enabled ? "Desabilitar" : "Habilitar",
             style: data.enabled ? ButtonStyle.Danger : ButtonStyle.Success,
+        }),
+    );
+}
+
+function renderProfitMarginSection(config: BotConfigView) {
+    const profitMarginPercent = config.profitMarginPercent ?? 0;
+
+    return createSection(
+        [
+            "**Margem de lucro**",
+            `**Percentual:** ${profitMarginPercent}%`,
+            "Esta margem sera adicionada ao custo final calculado dos pedidos.",
+        ].join("\n"),
+        new ButtonBuilder({
+            customId: "config/edit-profit-margin",
+            label: "Editar",
+            style: ButtonStyle.Primary,
         }),
     );
 }

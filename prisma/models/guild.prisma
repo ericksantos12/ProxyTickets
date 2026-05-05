@@ -3,6 +3,7 @@ model Guild {
     id       String         @unique
     channels GuildChannel[]
     botConfig GuildBotConfig?
+    ticketOrders TicketOrder[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

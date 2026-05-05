@@ -11,6 +11,7 @@ export type BotConfigUpdateData = {
     cardstockPackSheetCount?: number;
     photoLaminatedProductionEnabled?: boolean;
     foilCardProductionEnabled?: boolean;
+    profitMarginPercent?: number;
     newTicketsCategoryId?: string;
     pendingPaymentCategoryId?: string;
     awaitingDeliveryCategoryId?: string;

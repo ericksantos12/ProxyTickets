@@ -19,6 +19,8 @@ model GuildBotConfig {
     photoLaminatedProductionEnabled Boolean? @default(true)
     foilCardProductionEnabled       Boolean? @default(true)
 
+    profitMarginPercent Int?
+
     newTicketsCategoryId      String?
     pendingPaymentCategoryId  String?
     awaitingDeliveryCategoryId String?

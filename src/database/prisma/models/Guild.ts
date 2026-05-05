@@ -175,6 +175,7 @@ export type GuildWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Guild"> | Date | string
   channels?: Prisma.GuildChannelListRelationFilter
   botConfig?: Prisma.XOR<Prisma.GuildBotConfigNullableScalarRelationFilter, Prisma.GuildBotConfigWhereInput> | null
+  ticketOrders?: Prisma.TicketOrderListRelationFilter
   members?: Prisma.MemberListRelationFilter
 }
 
@@ -185,6 +186,7 @@ export type GuildOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   channels?: Prisma.GuildChannelOrderByRelationAggregateInput
   botConfig?: Prisma.GuildBotConfigOrderByWithRelationInput
+  ticketOrders?: Prisma.TicketOrderOrderByRelationAggregateInput
   members?: Prisma.MemberOrderByRelationAggregateInput
 }
 
@@ -198,6 +200,7 @@ export type GuildWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Guild"> | Date | string
   channels?: Prisma.GuildChannelListRelationFilter
   botConfig?: Prisma.XOR<Prisma.GuildBotConfigNullableScalarRelationFilter, Prisma.GuildBotConfigWhereInput> | null
+  ticketOrders?: Prisma.TicketOrderListRelationFilter
   members?: Prisma.MemberListRelationFilter
 }, "oid" | "id">
 
@@ -228,6 +231,7 @@ export type GuildCreateInput = {
   updatedAt?: Date | string
   channels?: Prisma.GuildChannelCreateNestedManyWithoutGuildInput
   botConfig?: Prisma.GuildBotConfigCreateNestedOneWithoutGuildInput
+  ticketOrders?: Prisma.TicketOrderCreateNestedManyWithoutGuildInput
   members?: Prisma.MemberCreateNestedManyWithoutGuildInput
 }
 
@@ -238,6 +242,7 @@ export type GuildUncheckedCreateInput = {
   updatedAt?: Date | string
   channels?: Prisma.GuildChannelUncheckedCreateNestedManyWithoutGuildInput
   botConfig?: Prisma.GuildBotConfigUncheckedCreateNestedOneWithoutGuildInput
+  ticketOrders?: Prisma.TicketOrderUncheckedCreateNestedManyWithoutGuildInput
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutGuildInput
 }
 
@@ -247,6 +252,7 @@ export type GuildUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   channels?: Prisma.GuildChannelUpdateManyWithoutGuildNestedInput
   botConfig?: Prisma.GuildBotConfigUpdateOneWithoutGuildNestedInput
+  ticketOrders?: Prisma.TicketOrderUpdateManyWithoutGuildNestedInput
   members?: Prisma.MemberUpdateManyWithoutGuildNestedInput
 }
 
@@ -256,6 +262,7 @@ export type GuildUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   channels?: Prisma.GuildChannelUncheckedUpdateManyWithoutGuildNestedInput
   botConfig?: Prisma.GuildBotConfigUncheckedUpdateOneWithoutGuildNestedInput
+  ticketOrders?: Prisma.TicketOrderUncheckedUpdateManyWithoutGuildNestedInput
   members?: Prisma.MemberUncheckedUpdateManyWithoutGuildNestedInput
 }
 
@@ -354,12 +361,27 @@ export type GuildUpdateOneRequiredWithoutMembersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.GuildUpdateToOneWithWhereWithoutMembersInput, Prisma.GuildUpdateWithoutMembersInput>, Prisma.GuildUncheckedUpdateWithoutMembersInput>
 }
 
+export type GuildCreateNestedOneWithoutTicketOrdersInput = {
+  create?: Prisma.XOR<Prisma.GuildCreateWithoutTicketOrdersInput, Prisma.GuildUncheckedCreateWithoutTicketOrdersInput>
+  connectOrCreate?: Prisma.GuildCreateOrConnectWithoutTicketOrdersInput
+  connect?: Prisma.GuildWhereUniqueInput
+}
+
+export type GuildUpdateOneRequiredWithoutTicketOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.GuildCreateWithoutTicketOrdersInput, Prisma.GuildUncheckedCreateWithoutTicketOrdersInput>
+  connectOrCreate?: Prisma.GuildCreateOrConnectWithoutTicketOrdersInput
+  upsert?: Prisma.GuildUpsertWithoutTicketOrdersInput
+  connect?: Prisma.GuildWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GuildUpdateToOneWithWhereWithoutTicketOrdersInput, Prisma.GuildUpdateWithoutTicketOrdersInput>, Prisma.GuildUncheckedUpdateWithoutTicketOrdersInput>
+}
+
 export type GuildCreateWithoutChannelsInput = {
   oid?: string
   id: string
   createdAt?: Date | string
   updatedAt?: Date | string
   botConfig?: Prisma.GuildBotConfigCreateNestedOneWithoutGuildInput
+  ticketOrders?: Prisma.TicketOrderCreateNestedManyWithoutGuildInput
   members?: Prisma.MemberCreateNestedManyWithoutGuildInput
 }
 
@@ -369,6 +391,7 @@ export type GuildUncheckedCreateWithoutChannelsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   botConfig?: Prisma.GuildBotConfigUncheckedCreateNestedOneWithoutGuildInput
+  ticketOrders?: Prisma.TicketOrderUncheckedCreateNestedManyWithoutGuildInput
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutGuildInput
 }
 
@@ -393,6 +416,7 @@ export type GuildUpdateWithoutChannelsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   botConfig?: Prisma.GuildBotConfigUpdateOneWithoutGuildNestedInput
+  ticketOrders?: Prisma.TicketOrderUpdateManyWithoutGuildNestedInput
   members?: Prisma.MemberUpdateManyWithoutGuildNestedInput
 }
 
@@ -401,6 +425,7 @@ export type GuildUncheckedUpdateWithoutChannelsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   botConfig?: Prisma.GuildBotConfigUncheckedUpdateOneWithoutGuildNestedInput
+  ticketOrders?: Prisma.TicketOrderUncheckedUpdateManyWithoutGuildNestedInput
   members?: Prisma.MemberUncheckedUpdateManyWithoutGuildNestedInput
 }
 
@@ -410,6 +435,7 @@ export type GuildCreateWithoutBotConfigInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   channels?: Prisma.GuildChannelCreateNestedManyWithoutGuildInput
+  ticketOrders?: Prisma.TicketOrderCreateNestedManyWithoutGuildInput
   members?: Prisma.MemberCreateNestedManyWithoutGuildInput
 }
 
@@ -419,6 +445,7 @@ export type GuildUncheckedCreateWithoutBotConfigInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   channels?: Prisma.GuildChannelUncheckedCreateNestedManyWithoutGuildInput
+  ticketOrders?: Prisma.TicketOrderUncheckedCreateNestedManyWithoutGuildInput
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutGuildInput
 }
 
@@ -443,6 +470,7 @@ export type GuildUpdateWithoutBotConfigInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   channels?: Prisma.GuildChannelUpdateManyWithoutGuildNestedInput
+  ticketOrders?: Prisma.TicketOrderUpdateManyWithoutGuildNestedInput
   members?: Prisma.MemberUpdateManyWithoutGuildNestedInput
 }
 
@@ -451,6 +479,7 @@ export type GuildUncheckedUpdateWithoutBotConfigInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   channels?: Prisma.GuildChannelUncheckedUpdateManyWithoutGuildNestedInput
+  ticketOrders?: Prisma.TicketOrderUncheckedUpdateManyWithoutGuildNestedInput
   members?: Prisma.MemberUncheckedUpdateManyWithoutGuildNestedInput
 }
 
@@ -461,6 +490,7 @@ export type GuildCreateWithoutMembersInput = {
   updatedAt?: Date | string
   channels?: Prisma.GuildChannelCreateNestedManyWithoutGuildInput
   botConfig?: Prisma.GuildBotConfigCreateNestedOneWithoutGuildInput
+  ticketOrders?: Prisma.TicketOrderCreateNestedManyWithoutGuildInput
 }
 
 export type GuildUncheckedCreateWithoutMembersInput = {
@@ -470,6 +500,7 @@ export type GuildUncheckedCreateWithoutMembersInput = {
   updatedAt?: Date | string
   channels?: Prisma.GuildChannelUncheckedCreateNestedManyWithoutGuildInput
   botConfig?: Prisma.GuildBotConfigUncheckedCreateNestedOneWithoutGuildInput
+  ticketOrders?: Prisma.TicketOrderUncheckedCreateNestedManyWithoutGuildInput
 }
 
 export type GuildCreateOrConnectWithoutMembersInput = {
@@ -494,6 +525,7 @@ export type GuildUpdateWithoutMembersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   channels?: Prisma.GuildChannelUpdateManyWithoutGuildNestedInput
   botConfig?: Prisma.GuildBotConfigUpdateOneWithoutGuildNestedInput
+  ticketOrders?: Prisma.TicketOrderUpdateManyWithoutGuildNestedInput
 }
 
 export type GuildUncheckedUpdateWithoutMembersInput = {
@@ -502,6 +534,61 @@ export type GuildUncheckedUpdateWithoutMembersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   channels?: Prisma.GuildChannelUncheckedUpdateManyWithoutGuildNestedInput
   botConfig?: Prisma.GuildBotConfigUncheckedUpdateOneWithoutGuildNestedInput
+  ticketOrders?: Prisma.TicketOrderUncheckedUpdateManyWithoutGuildNestedInput
+}
+
+export type GuildCreateWithoutTicketOrdersInput = {
+  oid?: string
+  id: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  channels?: Prisma.GuildChannelCreateNestedManyWithoutGuildInput
+  botConfig?: Prisma.GuildBotConfigCreateNestedOneWithoutGuildInput
+  members?: Prisma.MemberCreateNestedManyWithoutGuildInput
+}
+
+export type GuildUncheckedCreateWithoutTicketOrdersInput = {
+  oid?: string
+  id: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  channels?: Prisma.GuildChannelUncheckedCreateNestedManyWithoutGuildInput
+  botConfig?: Prisma.GuildBotConfigUncheckedCreateNestedOneWithoutGuildInput
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutGuildInput
+}
+
+export type GuildCreateOrConnectWithoutTicketOrdersInput = {
+  where: Prisma.GuildWhereUniqueInput
+  create: Prisma.XOR<Prisma.GuildCreateWithoutTicketOrdersInput, Prisma.GuildUncheckedCreateWithoutTicketOrdersInput>
+}
+
+export type GuildUpsertWithoutTicketOrdersInput = {
+  update: Prisma.XOR<Prisma.GuildUpdateWithoutTicketOrdersInput, Prisma.GuildUncheckedUpdateWithoutTicketOrdersInput>
+  create: Prisma.XOR<Prisma.GuildCreateWithoutTicketOrdersInput, Prisma.GuildUncheckedCreateWithoutTicketOrdersInput>
+  where?: Prisma.GuildWhereInput
+}
+
+export type GuildUpdateToOneWithWhereWithoutTicketOrdersInput = {
+  where?: Prisma.GuildWhereInput
+  data: Prisma.XOR<Prisma.GuildUpdateWithoutTicketOrdersInput, Prisma.GuildUncheckedUpdateWithoutTicketOrdersInput>
+}
+
+export type GuildUpdateWithoutTicketOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  channels?: Prisma.GuildChannelUpdateManyWithoutGuildNestedInput
+  botConfig?: Prisma.GuildBotConfigUpdateOneWithoutGuildNestedInput
+  members?: Prisma.MemberUpdateManyWithoutGuildNestedInput
+}
+
+export type GuildUncheckedUpdateWithoutTicketOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  channels?: Prisma.GuildChannelUncheckedUpdateManyWithoutGuildNestedInput
+  botConfig?: Prisma.GuildBotConfigUncheckedUpdateOneWithoutGuildNestedInput
+  members?: Prisma.MemberUncheckedUpdateManyWithoutGuildNestedInput
 }
 
 
@@ -511,11 +598,13 @@ export type GuildUncheckedUpdateWithoutMembersInput = {
 
 export type GuildCountOutputType = {
   channels: number
+  ticketOrders: number
   members: number
 }
 
 export type GuildCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   channels?: boolean | GuildCountOutputTypeCountChannelsArgs
+  ticketOrders?: boolean | GuildCountOutputTypeCountTicketOrdersArgs
   members?: boolean | GuildCountOutputTypeCountMembersArgs
 }
 
@@ -539,6 +628,13 @@ export type GuildCountOutputTypeCountChannelsArgs<ExtArgs extends runtime.Types.
 /**
  * GuildCountOutputType without action
  */
+export type GuildCountOutputTypeCountTicketOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TicketOrderWhereInput
+}
+
+/**
+ * GuildCountOutputType without action
+ */
 export type GuildCountOutputTypeCountMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.MemberWhereInput
 }
@@ -551,6 +647,7 @@ export type GuildSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   updatedAt?: boolean
   channels?: boolean | Prisma.Guild$channelsArgs<ExtArgs>
   botConfig?: boolean | Prisma.Guild$botConfigArgs<ExtArgs>
+  ticketOrders?: boolean | Prisma.Guild$ticketOrdersArgs<ExtArgs>
   members?: boolean | Prisma.Guild$membersArgs<ExtArgs>
   _count?: boolean | Prisma.GuildCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["guild"]>
@@ -568,6 +665,7 @@ export type GuildOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
 export type GuildInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   channels?: boolean | Prisma.Guild$channelsArgs<ExtArgs>
   botConfig?: boolean | Prisma.Guild$botConfigArgs<ExtArgs>
+  ticketOrders?: boolean | Prisma.Guild$ticketOrdersArgs<ExtArgs>
   members?: boolean | Prisma.Guild$membersArgs<ExtArgs>
   _count?: boolean | Prisma.GuildCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -577,6 +675,7 @@ export type $GuildPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     channels: Prisma.$GuildChannelPayload<ExtArgs>[]
     botConfig: Prisma.$GuildBotConfigPayload<ExtArgs> | null
+    ticketOrders: Prisma.$TicketOrderPayload<ExtArgs>[]
     members: Prisma.$MemberPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -949,6 +1048,7 @@ export interface Prisma__GuildClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   channels<T extends Prisma.Guild$channelsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guild$channelsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GuildChannelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   botConfig<T extends Prisma.Guild$botConfigArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guild$botConfigArgs<ExtArgs>>): Prisma.Prisma__GuildBotConfigClient<runtime.Types.Result.GetResult<Prisma.$GuildBotConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  ticketOrders<T extends Prisma.Guild$ticketOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guild$ticketOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   members<T extends Prisma.Guild$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Guild$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1393,6 +1493,30 @@ export type Guild$botConfigArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.GuildBotConfigInclude<ExtArgs> | null
   where?: Prisma.GuildBotConfigWhereInput
+}
+
+/**
+ * Guild.ticketOrders
+ */
+export type Guild$ticketOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TicketOrder
+   */
+  select?: Prisma.TicketOrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TicketOrder
+   */
+  omit?: Prisma.TicketOrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TicketOrderInclude<ExtArgs> | null
+  where?: Prisma.TicketOrderWhereInput
+  orderBy?: Prisma.TicketOrderOrderByWithRelationInput | Prisma.TicketOrderOrderByWithRelationInput[]
+  cursor?: Prisma.TicketOrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TicketOrderScalarFieldEnum | Prisma.TicketOrderScalarFieldEnum[]
 }
 
 /**
