@@ -15,6 +15,8 @@
 - Keep ADRs focused on context, decisions, trade-offs, and consequences; keep execution details in the task file.
 - Task files must use markdown checklists and include implementation and validation steps.
 - Update task checkboxes as work progresses so the task file remains the source of truth for the current feature.
+- After implementing and validating an ADR, create a git commit for that ADR using the Conventional Commits 1.0.0 specification.
+- Commit messages must use a valid Conventional Commits type such as `feat`, `fix`, `docs`, `refactor`, `chore`, or `test`, and should reference the implemented ADR when useful.
 
 ## Commands
 - Use npm; `package-lock.json` is the lockfile. Node.js must be `20.12` or newer.
