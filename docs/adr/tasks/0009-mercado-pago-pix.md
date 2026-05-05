@@ -18,7 +18,7 @@
   - Validate `x-signature`.
   - Parse `payment.updated` events.
   - On `approved`, update ticket to `AWAITING_DELIVERY`, move channel, rename, reapply permissions, edit confirmation message.
-- [ ] Implement expiration/cleanup flow:
+- [x] Implement expiration/cleanup flow:
   - On expiry, cancel payment in MP, update ticket to `CANCELLED`, delete channel after countdown.
 - [ ] Manual validation in Discord:
   - Create ticket, confirm, scan QR, pay (sandbox), verify channel moves to awaiting.
