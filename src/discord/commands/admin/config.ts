@@ -19,6 +19,6 @@ createCommand({
 
         const config = await getOrCreateBotConfig(interaction.guildId);
 
-        await interaction.reply(renderConfigPanel("production", config));
+        await interaction.reply(renderConfigPanel("production", config, undefined, interaction.guild));
     },
 });

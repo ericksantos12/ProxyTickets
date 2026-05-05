@@ -11,6 +11,9 @@ export type BotConfigUpdateData = {
     cardstockPackSheetCount?: number;
     photoLaminatedProductionEnabled?: boolean;
     foilCardProductionEnabled?: boolean;
+    newTicketsCategoryId?: string;
+    pendingPaymentCategoryId?: string;
+    awaitingDeliveryCategoryId?: string;
 };
 
 export async function getOrCreateBotConfig(guildId: string) {

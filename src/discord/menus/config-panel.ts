@@ -1,8 +1,8 @@
 import { calculateUnitPriceCents, formatCurrencyFromCents, formatPriceInput } from "#functions";
 import { createContainer, createLabel, createModal, createRow, createSection, createTextInput, Separator } from "@magicyan/discord";
-import { ButtonBuilder, ButtonStyle, type InteractionReplyOptions, TextInputStyle } from "discord.js";
+import { ButtonBuilder, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, type Guild, type InteractionReplyOptions, TextInputStyle } from "discord.js";
 
-export const configPanelPages = ["production", "paper", "foil"] as const;
+export const configPanelPages = ["production", "ticket-categories", "paper", "foil"] as const;
 
 export type ConfigPanelPage = typeof configPanelPages[number];
 
@@ -17,13 +17,18 @@ export type BotConfigView = {
     cardstockPackSheetCount: number | null;
     photoLaminatedProductionEnabled: boolean | null;
     foilCardProductionEnabled: boolean | null;
+    newTicketsCategoryId: string | null;
+    pendingPaymentCategoryId: string | null;
+    awaitingDeliveryCategoryId: string | null;
 };
 
 export const configPanelSections = ["default", "lamination", "holographic-sticker", "cardstock"] as const;
 export const productionTypes = ["photo-laminated", "foil-card"] as const;
+export const ticketCategoryTypes = ["new", "pending", "awaiting"] as const;
 
 export type ConfigPanelSection = typeof configPanelSections[number];
 export type ProductionType = typeof productionTypes[number];
+export type TicketCategoryType = typeof ticketCategoryTypes[number];
 
 type PageDefinition = {
     id: ConfigPanelPage;
@@ -80,6 +85,11 @@ export const pageDefinitions: Record<ConfigPanelPage, PageDefinition> = {
         title: "Tipos de confeccao",
         sections: [],
     },
+    "ticket-categories": {
+        id: "ticket-categories",
+        title: "Categorias de tickets",
+        sections: [],
+    },
 };
 
 export function isConfigPanelPage(page: string): page is ConfigPanelPage {
@@ -94,7 +104,11 @@ export function isProductionType(type: string): type is ProductionType {
     return productionTypes.includes(type as ProductionType);
 }
 
-export function renderConfigPanel<R = InteractionReplyOptions>(page: ConfigPanelPage, config: BotConfigView, notice?: string): R {
+export function isTicketCategoryType(type: string): type is TicketCategoryType {
+    return ticketCategoryTypes.includes(type as TicketCategoryType);
+}
+
+export function renderConfigPanel<R = InteractionReplyOptions>(page: ConfigPanelPage, config: BotConfigView, notice?: string, guild?: Guild): R {
     const visiblePages = getVisibleConfigPanelPages(config);
     const visiblePage = getVisibleConfigPanelPage(page, config);
     const definition = pageDefinitions[visiblePage];
@@ -103,7 +117,9 @@ export function renderConfigPanel<R = InteractionReplyOptions>(page: ConfigPanel
     const nextPage = visiblePages[pageIndex + 1];
     const sections = visiblePage === "production"
         ? renderProductionTypeSections(config)
-        : definition.sections.map(section => renderMaterialSection(visiblePage, section, config));
+        : visiblePage === "ticket-categories"
+            ? renderTicketCategorySections(config, guild)
+            : definition.sections.map(section => renderMaterialSection(visiblePage, section, config));
     const combinedUnitPriceCents = visiblePage === "paper" || visiblePage === "foil"
         ? definition.sections.reduce<number | null>((total, section) => {
             const unitPriceCents = calculateUnitPriceCents(config[section.priceField], config[section.countField]);
@@ -202,6 +218,7 @@ function renderMaterialSection(page: ConfigPanelPage, section: SectionDefinition
 export function getVisibleConfigPanelPages(config: BotConfigView): ConfigPanelPage[] {
     return [
         "production",
+        "ticket-categories",
         ...(isEnabled(config.photoLaminatedProductionEnabled) ? ["paper" as const] : []),
         ...(isEnabled(config.foilCardProductionEnabled) ? ["foil" as const] : []),
     ];
@@ -245,6 +262,65 @@ function renderProductionTypeSection(data: { id: ProductionType; title: string; 
             style: data.enabled ? ButtonStyle.Danger : ButtonStyle.Success,
         }),
     );
+}
+
+function renderTicketCategorySections(config: BotConfigView, guild?: Guild) {
+    return ticketCategoryDefinitions.flatMap(definition => [
+        [
+            `**${definition.title}**`,
+            definition.description,
+            `**Categoria:** ${formatTicketCategory(config[definition.field], guild)}`,
+        ].join("\n"),
+        createRow(
+            new ChannelSelectMenuBuilder({
+                customId: `config/ticket-category/${definition.id}`,
+                placeholder: `Selecionar categoria: ${definition.title}`,
+                channelTypes: [ChannelType.GuildCategory],
+                minValues: 1,
+                maxValues: 1,
+            }),
+        ),
+        Separator.Default,
+    ]).slice(0, -1);
+}
+
+const ticketCategoryDefinitions: {
+    id: TicketCategoryType;
+    title: string;
+    description: string;
+    field: keyof Pick<BotConfigView, "newTicketsCategoryId" | "pendingPaymentCategoryId" | "awaitingDeliveryCategoryId">;
+}[] = [
+    {
+        id: "new",
+        title: "Tickets Novos",
+        description: "Tickets recem criados antes da geracao do codigo PIX.",
+        field: "newTicketsCategoryId",
+    },
+    {
+        id: "pending",
+        title: "Pendentes",
+        description: "Tickets aguardando confirmacao de pagamento.",
+        field: "pendingPaymentCategoryId",
+    },
+    {
+        id: "awaiting",
+        title: "Aguardando",
+        description: "Tickets pagos aguardando preparo, confirmacao ou entrega.",
+        field: "awaitingDeliveryCategoryId",
+    },
+];
+
+function formatTicketCategory(categoryId: string | null, guild?: Guild) {
+    if (!categoryId) {
+        return "Nao configurado";
+    }
+
+    const channel = guild?.channels.cache.get(categoryId);
+    if (!channel || channel.type !== ChannelType.GuildCategory) {
+        return "Categoria nao encontrada";
+    }
+
+    return `${channel.name} (\`${categoryId}\`)`;
 }
 
 export function getSectionDefinition(page: ConfigPanelPage, sectionId: ConfigPanelSection) {

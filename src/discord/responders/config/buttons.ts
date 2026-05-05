@@ -3,7 +3,7 @@ import { getOrCreateBotConfig, updateBotConfig } from "#functions";
 import { ResponderType } from "@constatic/base";
 import { createContainer } from "@magicyan/discord";
 import { PermissionFlagsBits } from "discord.js";
-import { createConfigEditModal, getVisibleConfigPanelPage, isConfigPanelPage, isConfigPanelSection, isProductionType, renderConfigPanel, type ConfigPanelPage, type ConfigPanelSection, type ProductionType } from "../../menus/config-panel.js";
+import { createConfigEditModal, getVisibleConfigPanelPage, isConfigPanelPage, isConfigPanelSection, isProductionType, isTicketCategoryType, renderConfigPanel, type ConfigPanelPage, type ConfigPanelSection, type ProductionType, type TicketCategoryType } from "../../menus/config-panel.js";
 
 createResponder({
     customId: "config/page/:page",
@@ -20,7 +20,7 @@ createResponder({
 
         const config = await getOrCreateBotConfig(interaction.guildId);
 
-        await interaction.update(renderConfigPanel(page, config));
+        await interaction.update(renderConfigPanel(page, config, undefined, interaction.guild));
     },
 });
 
@@ -40,7 +40,7 @@ createResponder({
         const config = await getOrCreateBotConfig(interaction.guildId);
         const visiblePage = getVisibleConfigPanelPage(page, config);
         if (visiblePage !== page || visiblePage === "production") {
-            await interaction.update(renderConfigPanel(visiblePage, config));
+            await interaction.update(renderConfigPanel(visiblePage, config, undefined, interaction.guild));
             return;
         }
 
@@ -65,7 +65,7 @@ createResponder({
         const config = await getOrCreateBotConfig(interaction.guildId);
         const visiblePage = getVisibleConfigPanelPage(page, config);
         if (visiblePage !== page || visiblePage === "production") {
-            await interaction.update(renderConfigPanel(visiblePage, config));
+            await interaction.update(renderConfigPanel(visiblePage, config, undefined, interaction.guild));
             return;
         }
 
@@ -117,6 +117,7 @@ createResponder({
                 "production",
                 currentConfig,
                 "Pelo menos um tipo de confeccao deve permanecer habilitado.",
+                interaction.guild,
             ));
             return;
         }
@@ -126,7 +127,43 @@ createResponder({
             foilCardProductionEnabled: nextFoilCard,
         });
 
-        await interaction.update(renderConfigPanel("production", config, "Tipo de confeccao atualizado."));
+        await interaction.update(renderConfigPanel("production", config, "Tipo de confeccao atualizado.", interaction.guild));
+    },
+});
+
+createResponder({
+    customId: "config/ticket-category/:type",
+    types: [ResponderType.ChannelSelect],
+    cache: "cached",
+    parse: params => ({
+        type: parseTicketCategoryType(params.type),
+    }),
+    async run(interaction, { type }) {
+        if (!canManageGuild(interaction.memberPermissions)) {
+            await replyPermissionError(interaction);
+            return;
+        }
+
+        const selectedCategoryId = interaction.values[0];
+        if (!selectedCategoryId) {
+            await interaction.update(renderConfigPanel("ticket-categories", await getOrCreateBotConfig(interaction.guildId), "Selecione uma categoria valida.", interaction.guild));
+            return;
+        }
+
+        const currentConfig = await getOrCreateBotConfig(interaction.guildId);
+        if (isDuplicateTicketCategory(currentConfig, type, selectedCategoryId)) {
+            await interaction.update(renderConfigPanel(
+                "ticket-categories",
+                currentConfig,
+                "Cada etapa precisa usar uma categoria diferente.",
+                interaction.guild,
+            ));
+            return;
+        }
+
+        const config = await updateBotConfig(interaction.guildId, getTicketCategoryUpdateData(type, selectedCategoryId));
+
+        await interaction.update(renderConfigPanel("ticket-categories", config, "Categoria de ticket atualizada.", interaction.guild));
     },
 });
 
@@ -140,6 +177,48 @@ function parseSection(section: string): ConfigPanelSection {
 
 function parseProductionType(type: string): ProductionType {
     return isProductionType(type) ? type : "photo-laminated";
+}
+
+function parseTicketCategoryType(type: string): TicketCategoryType {
+    return isTicketCategoryType(type) ? type : "new";
+}
+
+function isDuplicateTicketCategory(
+    config: {
+        newTicketsCategoryId: string | null;
+        pendingPaymentCategoryId: string | null;
+        awaitingDeliveryCategoryId: string | null;
+    },
+    type: TicketCategoryType,
+    selectedCategoryId: string,
+) {
+    const currentField = getTicketCategoryField(type);
+    const categoryIds = {
+        newTicketsCategoryId: config.newTicketsCategoryId,
+        pendingPaymentCategoryId: config.pendingPaymentCategoryId,
+        awaitingDeliveryCategoryId: config.awaitingDeliveryCategoryId,
+    };
+
+    return Object.entries(categoryIds).some(([field, categoryId]) => (
+        field !== currentField && categoryId === selectedCategoryId
+    ));
+}
+
+function getTicketCategoryUpdateData(type: TicketCategoryType, categoryId: string) {
+    return {
+        [getTicketCategoryField(type)]: categoryId,
+    };
+}
+
+function getTicketCategoryField(type: TicketCategoryType) {
+    if (type === "pending") {
+        return "pendingPaymentCategoryId" as const;
+    }
+    if (type === "awaiting") {
+        return "awaitingDeliveryCategoryId" as const;
+    }
+
+    return "newTicketsCategoryId" as const;
 }
 
 function canManageGuild(permissions: { has(permission: bigint): boolean }) {

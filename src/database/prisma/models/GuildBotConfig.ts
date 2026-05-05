@@ -60,6 +60,9 @@ export type GuildBotConfigMinAggregateOutputType = {
   cardstockPackSheetCount: number | null
   photoLaminatedProductionEnabled: boolean | null
   foilCardProductionEnabled: boolean | null
+  newTicketsCategoryId: string | null
+  pendingPaymentCategoryId: string | null
+  awaitingDeliveryCategoryId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -77,6 +80,9 @@ export type GuildBotConfigMaxAggregateOutputType = {
   cardstockPackSheetCount: number | null
   photoLaminatedProductionEnabled: boolean | null
   foilCardProductionEnabled: boolean | null
+  newTicketsCategoryId: string | null
+  pendingPaymentCategoryId: string | null
+  awaitingDeliveryCategoryId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -94,6 +100,9 @@ export type GuildBotConfigCountAggregateOutputType = {
   cardstockPackSheetCount: number
   photoLaminatedProductionEnabled: number
   foilCardProductionEnabled: number
+  newTicketsCategoryId: number
+  pendingPaymentCategoryId: number
+  awaitingDeliveryCategoryId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -135,6 +144,9 @@ export type GuildBotConfigMinAggregateInputType = {
   cardstockPackSheetCount?: true
   photoLaminatedProductionEnabled?: true
   foilCardProductionEnabled?: true
+  newTicketsCategoryId?: true
+  pendingPaymentCategoryId?: true
+  awaitingDeliveryCategoryId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -152,6 +164,9 @@ export type GuildBotConfigMaxAggregateInputType = {
   cardstockPackSheetCount?: true
   photoLaminatedProductionEnabled?: true
   foilCardProductionEnabled?: true
+  newTicketsCategoryId?: true
+  pendingPaymentCategoryId?: true
+  awaitingDeliveryCategoryId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -169,6 +184,9 @@ export type GuildBotConfigCountAggregateInputType = {
   cardstockPackSheetCount?: true
   photoLaminatedProductionEnabled?: true
   foilCardProductionEnabled?: true
+  newTicketsCategoryId?: true
+  pendingPaymentCategoryId?: true
+  awaitingDeliveryCategoryId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -273,6 +291,9 @@ export type GuildBotConfigGroupByOutputType = {
   cardstockPackSheetCount: number | null
   photoLaminatedProductionEnabled: boolean | null
   foilCardProductionEnabled: boolean | null
+  newTicketsCategoryId: string | null
+  pendingPaymentCategoryId: string | null
+  awaitingDeliveryCategoryId: string | null
   createdAt: Date
   updatedAt: Date
   _count: GuildBotConfigCountAggregateOutputType | null
@@ -313,6 +334,9 @@ export type GuildBotConfigWhereInput = {
   cardstockPackSheetCount?: Prisma.IntNullableFilter<"GuildBotConfig"> | number | null
   photoLaminatedProductionEnabled?: Prisma.BoolNullableFilter<"GuildBotConfig"> | boolean | null
   foilCardProductionEnabled?: Prisma.BoolNullableFilter<"GuildBotConfig"> | boolean | null
+  newTicketsCategoryId?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
+  pendingPaymentCategoryId?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
+  awaitingDeliveryCategoryId?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
   createdAt?: Prisma.DateTimeFilter<"GuildBotConfig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"GuildBotConfig"> | Date | string
   guild?: Prisma.XOR<Prisma.GuildScalarRelationFilter, Prisma.GuildWhereInput>
@@ -331,6 +355,9 @@ export type GuildBotConfigOrderByWithRelationInput = {
   cardstockPackSheetCount?: Prisma.SortOrder
   photoLaminatedProductionEnabled?: Prisma.SortOrder
   foilCardProductionEnabled?: Prisma.SortOrder
+  newTicketsCategoryId?: Prisma.SortOrder
+  pendingPaymentCategoryId?: Prisma.SortOrder
+  awaitingDeliveryCategoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   guild?: Prisma.GuildOrderByWithRelationInput
@@ -352,6 +379,9 @@ export type GuildBotConfigWhereUniqueInput = Prisma.AtLeast<{
   cardstockPackSheetCount?: Prisma.IntNullableFilter<"GuildBotConfig"> | number | null
   photoLaminatedProductionEnabled?: Prisma.BoolNullableFilter<"GuildBotConfig"> | boolean | null
   foilCardProductionEnabled?: Prisma.BoolNullableFilter<"GuildBotConfig"> | boolean | null
+  newTicketsCategoryId?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
+  pendingPaymentCategoryId?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
+  awaitingDeliveryCategoryId?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
   createdAt?: Prisma.DateTimeFilter<"GuildBotConfig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"GuildBotConfig"> | Date | string
   guild?: Prisma.XOR<Prisma.GuildScalarRelationFilter, Prisma.GuildWhereInput>
@@ -370,6 +400,9 @@ export type GuildBotConfigOrderByWithAggregationInput = {
   cardstockPackSheetCount?: Prisma.SortOrder
   photoLaminatedProductionEnabled?: Prisma.SortOrder
   foilCardProductionEnabled?: Prisma.SortOrder
+  newTicketsCategoryId?: Prisma.SortOrder
+  pendingPaymentCategoryId?: Prisma.SortOrder
+  awaitingDeliveryCategoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.GuildBotConfigCountOrderByAggregateInput
@@ -395,6 +428,9 @@ export type GuildBotConfigScalarWhereWithAggregatesInput = {
   cardstockPackSheetCount?: Prisma.IntNullableWithAggregatesFilter<"GuildBotConfig"> | number | null
   photoLaminatedProductionEnabled?: Prisma.BoolNullableWithAggregatesFilter<"GuildBotConfig"> | boolean | null
   foilCardProductionEnabled?: Prisma.BoolNullableWithAggregatesFilter<"GuildBotConfig"> | boolean | null
+  newTicketsCategoryId?: Prisma.StringNullableWithAggregatesFilter<"GuildBotConfig"> | string | null
+  pendingPaymentCategoryId?: Prisma.StringNullableWithAggregatesFilter<"GuildBotConfig"> | string | null
+  awaitingDeliveryCategoryId?: Prisma.StringNullableWithAggregatesFilter<"GuildBotConfig"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"GuildBotConfig"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"GuildBotConfig"> | Date | string
 }
@@ -411,6 +447,9 @@ export type GuildBotConfigCreateInput = {
   cardstockPackSheetCount?: number | null
   photoLaminatedProductionEnabled?: boolean | null
   foilCardProductionEnabled?: boolean | null
+  newTicketsCategoryId?: string | null
+  pendingPaymentCategoryId?: string | null
+  awaitingDeliveryCategoryId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   guild: Prisma.GuildCreateNestedOneWithoutBotConfigInput
@@ -429,6 +468,9 @@ export type GuildBotConfigUncheckedCreateInput = {
   cardstockPackSheetCount?: number | null
   photoLaminatedProductionEnabled?: boolean | null
   foilCardProductionEnabled?: boolean | null
+  newTicketsCategoryId?: string | null
+  pendingPaymentCategoryId?: string | null
+  awaitingDeliveryCategoryId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -444,6 +486,9 @@ export type GuildBotConfigUpdateInput = {
   cardstockPackSheetCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   photoLaminatedProductionEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   foilCardProductionEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  newTicketsCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingPaymentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awaitingDeliveryCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   guild?: Prisma.GuildUpdateOneRequiredWithoutBotConfigNestedInput
@@ -461,6 +506,9 @@ export type GuildBotConfigUncheckedUpdateInput = {
   cardstockPackSheetCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   photoLaminatedProductionEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   foilCardProductionEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  newTicketsCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingPaymentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awaitingDeliveryCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -478,6 +526,9 @@ export type GuildBotConfigCreateManyInput = {
   cardstockPackSheetCount?: number | null
   photoLaminatedProductionEnabled?: boolean | null
   foilCardProductionEnabled?: boolean | null
+  newTicketsCategoryId?: string | null
+  pendingPaymentCategoryId?: string | null
+  awaitingDeliveryCategoryId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -493,6 +544,9 @@ export type GuildBotConfigUpdateManyMutationInput = {
   cardstockPackSheetCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   photoLaminatedProductionEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   foilCardProductionEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  newTicketsCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingPaymentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awaitingDeliveryCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -509,6 +563,9 @@ export type GuildBotConfigUncheckedUpdateManyInput = {
   cardstockPackSheetCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   photoLaminatedProductionEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   foilCardProductionEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  newTicketsCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingPaymentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awaitingDeliveryCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -531,6 +588,9 @@ export type GuildBotConfigCountOrderByAggregateInput = {
   cardstockPackSheetCount?: Prisma.SortOrder
   photoLaminatedProductionEnabled?: Prisma.SortOrder
   foilCardProductionEnabled?: Prisma.SortOrder
+  newTicketsCategoryId?: Prisma.SortOrder
+  pendingPaymentCategoryId?: Prisma.SortOrder
+  awaitingDeliveryCategoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -559,6 +619,9 @@ export type GuildBotConfigMaxOrderByAggregateInput = {
   cardstockPackSheetCount?: Prisma.SortOrder
   photoLaminatedProductionEnabled?: Prisma.SortOrder
   foilCardProductionEnabled?: Prisma.SortOrder
+  newTicketsCategoryId?: Prisma.SortOrder
+  pendingPaymentCategoryId?: Prisma.SortOrder
+  awaitingDeliveryCategoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -576,6 +639,9 @@ export type GuildBotConfigMinOrderByAggregateInput = {
   cardstockPackSheetCount?: Prisma.SortOrder
   photoLaminatedProductionEnabled?: Prisma.SortOrder
   foilCardProductionEnabled?: Prisma.SortOrder
+  newTicketsCategoryId?: Prisma.SortOrder
+  pendingPaymentCategoryId?: Prisma.SortOrder
+  awaitingDeliveryCategoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -637,6 +703,11 @@ export type NullableBoolFieldUpdateOperationsInput = {
   unset?: boolean
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+  unset?: boolean
+}
+
 export type GuildBotConfigCreateWithoutGuildInput = {
   oid?: string
   paperPackPriceCents?: number | null
@@ -649,6 +720,9 @@ export type GuildBotConfigCreateWithoutGuildInput = {
   cardstockPackSheetCount?: number | null
   photoLaminatedProductionEnabled?: boolean | null
   foilCardProductionEnabled?: boolean | null
+  newTicketsCategoryId?: string | null
+  pendingPaymentCategoryId?: string | null
+  awaitingDeliveryCategoryId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -665,6 +739,9 @@ export type GuildBotConfigUncheckedCreateWithoutGuildInput = {
   cardstockPackSheetCount?: number | null
   photoLaminatedProductionEnabled?: boolean | null
   foilCardProductionEnabled?: boolean | null
+  newTicketsCategoryId?: string | null
+  pendingPaymentCategoryId?: string | null
+  awaitingDeliveryCategoryId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -696,6 +773,9 @@ export type GuildBotConfigUpdateWithoutGuildInput = {
   cardstockPackSheetCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   photoLaminatedProductionEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   foilCardProductionEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  newTicketsCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingPaymentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awaitingDeliveryCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -711,6 +791,9 @@ export type GuildBotConfigUncheckedUpdateWithoutGuildInput = {
   cardstockPackSheetCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   photoLaminatedProductionEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   foilCardProductionEnabled?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  newTicketsCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingPaymentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awaitingDeliveryCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -730,6 +813,9 @@ export type GuildBotConfigSelect<ExtArgs extends runtime.Types.Extensions.Intern
   cardstockPackSheetCount?: boolean
   photoLaminatedProductionEnabled?: boolean
   foilCardProductionEnabled?: boolean
+  newTicketsCategoryId?: boolean
+  pendingPaymentCategoryId?: boolean
+  awaitingDeliveryCategoryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
@@ -750,11 +836,14 @@ export type GuildBotConfigSelectScalar = {
   cardstockPackSheetCount?: boolean
   photoLaminatedProductionEnabled?: boolean
   foilCardProductionEnabled?: boolean
+  newTicketsCategoryId?: boolean
+  pendingPaymentCategoryId?: boolean
+  awaitingDeliveryCategoryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type GuildBotConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"oid" | "guildId" | "paperPackPriceCents" | "paperPackSheetCount" | "laminationPackPriceCents" | "laminationPackSheetCount" | "holographicStickerPackPriceCents" | "holographicStickerPackSheetCount" | "cardstockPackPriceCents" | "cardstockPackSheetCount" | "photoLaminatedProductionEnabled" | "foilCardProductionEnabled" | "createdAt" | "updatedAt", ExtArgs["result"]["guildBotConfig"]>
+export type GuildBotConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"oid" | "guildId" | "paperPackPriceCents" | "paperPackSheetCount" | "laminationPackPriceCents" | "laminationPackSheetCount" | "holographicStickerPackPriceCents" | "holographicStickerPackSheetCount" | "cardstockPackPriceCents" | "cardstockPackSheetCount" | "photoLaminatedProductionEnabled" | "foilCardProductionEnabled" | "newTicketsCategoryId" | "pendingPaymentCategoryId" | "awaitingDeliveryCategoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["guildBotConfig"]>
 export type GuildBotConfigInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
 }
@@ -777,6 +866,9 @@ export type $GuildBotConfigPayload<ExtArgs extends runtime.Types.Extensions.Inte
     cardstockPackSheetCount: number | null
     photoLaminatedProductionEnabled: boolean | null
     foilCardProductionEnabled: boolean | null
+    newTicketsCategoryId: string | null
+    pendingPaymentCategoryId: string | null
+    awaitingDeliveryCategoryId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["guildBotConfig"]>
@@ -1184,6 +1276,9 @@ export interface GuildBotConfigFieldRefs {
   readonly cardstockPackSheetCount: Prisma.FieldRef<"GuildBotConfig", 'Int'>
   readonly photoLaminatedProductionEnabled: Prisma.FieldRef<"GuildBotConfig", 'Boolean'>
   readonly foilCardProductionEnabled: Prisma.FieldRef<"GuildBotConfig", 'Boolean'>
+  readonly newTicketsCategoryId: Prisma.FieldRef<"GuildBotConfig", 'String'>
+  readonly pendingPaymentCategoryId: Prisma.FieldRef<"GuildBotConfig", 'String'>
+  readonly awaitingDeliveryCategoryId: Prisma.FieldRef<"GuildBotConfig", 'String'>
   readonly createdAt: Prisma.FieldRef<"GuildBotConfig", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"GuildBotConfig", 'DateTime'>
 }

@@ -34,7 +34,7 @@ createResponder({
 
         const config = await updateBotConfig(interaction.guildId, getUpdateData(page, "default", price.value, count.value));
 
-        await interaction.update(renderConfigPanel(page, config, "Configuracao atualizada."));
+        await interaction.update(renderConfigPanel(page, config, "Configuracao atualizada.", interaction.guild));
     },
 });
 
@@ -69,7 +69,7 @@ createResponder({
 
         const config = await updateBotConfig(interaction.guildId, getUpdateData(page, section, price.value, count.value));
 
-        await interaction.update(renderConfigPanel(page, config, "Configuracao atualizada."));
+        await interaction.update(renderConfigPanel(page, config, "Configuracao atualizada.", interaction.guild));
     },
 });
 

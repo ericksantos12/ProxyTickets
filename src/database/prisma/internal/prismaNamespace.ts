@@ -764,6 +764,9 @@ export const GuildBotConfigScalarFieldEnum = {
   cardstockPackSheetCount: 'cardstockPackSheetCount',
   photoLaminatedProductionEnabled: 'photoLaminatedProductionEnabled',
   foilCardProductionEnabled: 'foilCardProductionEnabled',
+  newTicketsCategoryId: 'newTicketsCategoryId',
+  pendingPaymentCategoryId: 'pendingPaymentCategoryId',
+  awaitingDeliveryCategoryId: 'awaitingDeliveryCategoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
