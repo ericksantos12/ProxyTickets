@@ -7,11 +7,11 @@
 
 ## ADRs And Feature Tasks
 - For every new feature plan, create the ADR in `docs/adr/NNNN-feature-name.md` and the matching task file in `docs/adr/tasks/NNNN-feature-name.md` first, before asking whether to implement code.
-- After the ADR and task file exist, ask the user whether they want to proceed with implementation before making code, schema, or database changes.
+- **NEVER start implementation without explicit user approval.** After the ADR and task file exist, always ask the user whether they want to proceed with implementation before making any code, schema, or database changes.
 - For complex new functionality, use the `grill-me` skill before writing the ADR/task files to gather detailed requirements one question at a time. A small addition to an existing screen or existing feature does not require `grill-me` unless the user asks for it.
 - For every new feature, create an ADR in `docs/adr/NNNN-feature-name.md` before implementation.
 - For every feature ADR, create a matching task file in `docs/adr/tasks/NNNN-feature-name.md` before implementation.
-- The agent must consult the matching task file before and during feature implementation.
+- **The task file is the source of truth for implementation.** The agent must consult the matching task file before and during feature implementation, and update checkboxes as work progresses.
 - Keep ADRs focused on context, decisions, trade-offs, and consequences; keep execution details in the task file.
 - Task files must use markdown checklists and include implementation and validation steps.
 - Update task checkboxes as work progresses so the task file remains the source of truth for the current feature.
