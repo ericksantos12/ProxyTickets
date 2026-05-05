@@ -17,6 +17,7 @@
 - Update task checkboxes as work progresses so the task file remains the source of truth for the current feature.
 - After implementing and validating an ADR, create a git commit for that ADR using the Conventional Commits 1.0.0 specification.
 - After implementing a feature, always commit using the `git-commit` skill.
+- For simple documentation edits (`.md` files only), immediate commits are not required.
 - Commit messages must use a valid Conventional Commits type such as `feat`, `fix`, `docs`, `refactor`, `chore`, or `test`, and should reference the implemented ADR when useful.
 
 ## Commands
@@ -27,6 +28,7 @@
 - `npm run build` runs `tsup`; `npm start` runs compiled `build/index.js` and first runs `prisma migrate deploy` through `prestart`.
 - There is no lint or test script in this repo.
 - After implementing changes, always run `npm run check` and `npm run build` to verify code integrity.
+- For simple documentation edits (`.md` files only), `npm run check`/`npm run build` and immediate commits are not required.
 
 ## Constatic Wiring
 - `src/index.ts` only calls `bootstrap({ meta: import.meta, env })`; Constatic then loads `./discord/**/*.{js,ts,jsx,tsx}` and excludes `discord/index`.
