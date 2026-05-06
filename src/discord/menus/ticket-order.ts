@@ -241,6 +241,27 @@ export function renderOrderReview(userId: string, responsibleAdminId: string, de
     } satisfies InteractionUpdateOptions;
 }
 
+export function renderOrderConfirmed(userId: string, responsibleAdminId: string, details: TicketOrderDetailsView, price: CardOrderPrice) {
+    const container = createContainer("Green",
+        "# Pedido confirmado\nO pedido foi confirmado e o PIX foi enviado em uma nova mensagem neste canal.",
+        Separator.Default,
+        [
+            `**Usuario:** <@${userId}>`,
+            `**Responsavel:** <@${responsibleAdminId}>`,
+            `**Tipo de carta:** ${formatTicketOrderCardType(details.cardType)}`,
+            `**Quantidade:** ${details.cardCount}`,
+            `**Folhas A4:** ${price.sheetCount}`,
+            `**Valor final:** ${formatCurrencyFromCents(price.finalPriceCents)}`,
+            `**Link do deck:** ${details.deckLink ?? "Nao informado"}`,
+        ].join("\n"),
+    );
+
+    return {
+        flags: ["IsComponentsV2"],
+        components: [container],
+    } satisfies InteractionUpdateOptions;
+}
+
 export function renderMockPix(userId: string, responsibleAdminId: string, details: TicketOrderDetailsView, price: CardOrderPrice) {
     const pixCode = `PIX-MOCK-${userId}-${price.finalPriceCents}`;
     const container = createContainer("Aqua",

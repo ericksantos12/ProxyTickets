@@ -3,7 +3,7 @@ import { prisma } from "#database";
 import { calculateCardOrderPrice, formatTicketChannelName, fromPrismaTicketOrderCardType, getOrCreateBotConfig, isTicketOrderCardTypeInput, parseDeckLink, parseTicketCardCount, toPrismaTicketOrderCardType, type TicketOrderCardTypeInput } from "#functions";
 import { ResponderType } from "@constatic/base";
 import { ChannelType, PermissionFlagsBits } from "discord.js";
-import { createTicketDetailsModal, renderCancelConfirmation, renderCancelConfirmed, renderCancelKept, renderCardTypeSelection, renderInitialTicketMessage, renderOrderReview, renderPendingConfirmation, renderPixPayment, renderSelectedCardType } from "../../menus/ticket-order.js";
+import { createTicketDetailsModal, renderCancelConfirmation, renderCancelConfirmed, renderCancelKept, renderCardTypeSelection, renderInitialTicketMessage, renderOrderConfirmed, renderOrderReview, renderPendingConfirmation, renderPixPayment, renderSelectedCardType } from "../../menus/ticket-order.js";
 import { ensureTicketOwnerPermissions } from "../../shared/ticket-permissions.js";
 
 createResponder({
@@ -395,14 +395,17 @@ createResponder({
             },
         });
 
+        await interaction.update(renderOrderConfirmed(order.userId, interaction.user.id, details, price.value));
+
+        const pixMessage = renderPixPayment(order.userId, interaction.user.id, details, price.value, pix.copyPaste ?? "Nao disponivel");
         if (pix.qrCodeBase64) {
             const buffer = Buffer.from(pix.qrCodeBase64, "base64");
-            await interaction.update({
-                ...renderPixPayment(order.userId, interaction.user.id, details, price.value, pix.copyPaste ?? "Nao disponivel"),
+            await channel.send({
+                ...pixMessage,
                 files: [{ attachment: buffer, name: "qrcode.png" }],
             });
         } else {
-            await interaction.update(renderPixPayment(order.userId, interaction.user.id, details, price.value, pix.copyPaste ?? "Nao disponivel"));
+            await channel.send(pixMessage);
         }
     },
 });
