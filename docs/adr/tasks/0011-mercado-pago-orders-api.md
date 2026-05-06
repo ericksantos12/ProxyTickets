@@ -21,4 +21,4 @@
 - [ ] Verify the bot renders the PIX QR code image and copia-e-cola string.
 - [ ] Verify polling moves the ticket to awaiting delivery after sandbox approval.
 - [ ] Verify expired pending orders are cancelled and the ticket channel is closed.
-- [ ] Commit the implemented ADR using a Conventional Commits message.
+- [x] Commit the implemented ADR using a Conventional Commits message.
