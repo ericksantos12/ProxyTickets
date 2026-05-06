@@ -134,7 +134,42 @@ createResponder({
             return;
         }
 
-        await interaction.update(renderCardTypeSelection(cardTypes));
+        await interaction.update(renderCardTypeSelection(cardTypes, shouldShowEditBackButton(order)));
+    },
+});
+
+createResponder({
+    customId: "ticket/details/back",
+    types: [ResponderType.Button],
+    cache: "cached",
+    async run(interaction) {
+        const order = await getChannelOrder(interaction.channelId);
+        if (!order) {
+            await interaction.reply({ flags: ["Ephemeral"], content: "Este canal nao possui um ticket ativo." });
+            return;
+        }
+        if (!canEditTicketDetails(interaction.user.id, order.userId, order.status)) {
+            await interaction.reply({ flags: ["Ephemeral"], content: "Voce nao pode preencher este pedido agora." });
+            return;
+        }
+
+        const details = getOrderDetails(order);
+        if (!details) {
+            await interaction.reply({ flags: ["Ephemeral"], content: "O pedido ainda nao possui todas as informacoes necessarias." });
+            return;
+        }
+
+        if (order.status === "IN_REVIEW" && order.responsibleAdminId) {
+            await interaction.update(renderOrderReview(order.userId, order.responsibleAdminId, details));
+            return;
+        }
+
+        if (order.status === "PENDING_CONFIRMATION") {
+            await interaction.update(renderPendingConfirmation(order.userId, details));
+            return;
+        }
+
+        await interaction.reply({ flags: ["Ephemeral"], content: "Nao ha uma tela anterior para voltar neste pedido." });
     },
 });
 
@@ -165,7 +200,7 @@ createResponder({
             return;
         }
 
-        await interaction.update(renderSelectedCardType(selectedCardType));
+        await interaction.update(renderSelectedCardType(selectedCardType, shouldShowEditBackButton(order)));
     },
 });
 
@@ -331,27 +366,29 @@ createResponder({
             return;
         }
 
+        await interaction.deferUpdate();
+
         const config = await getOrCreateBotConfig(interaction.guildId);
         if (!config.pendingPaymentCategoryId) {
-            await interaction.reply({ flags: ["Ephemeral"], content: "A categoria de Pendentes ainda nao foi configurada em /config." });
+            await interaction.followUp({ flags: ["Ephemeral"], content: "A categoria de Pendentes ainda nao foi configurada em /config." });
             return;
         }
 
         const pendingCategory = await interaction.guild.channels.fetch(config.pendingPaymentCategoryId).catch(() => null);
         if (!pendingCategory || pendingCategory.type !== ChannelType.GuildCategory) {
-            await interaction.reply({ flags: ["Ephemeral"], content: "A categoria de Pendentes configurada nao foi encontrada." });
+            await interaction.followUp({ flags: ["Ephemeral"], content: "A categoria de Pendentes configurada nao foi encontrada." });
             return;
         }
 
         const price = calculateCardOrderPrice(details.cardType, details.cardCount, config);
         if (!price.ok) {
-            await interaction.reply({ flags: ["Ephemeral"], content: price.error });
+            await interaction.followUp({ flags: ["Ephemeral"], content: price.error });
             return;
         }
 
         const channel = await interaction.guild.channels.fetch(interaction.channelId).catch(() => null);
         if (!channel || channel.type !== ChannelType.GuildText) {
-            await interaction.reply({ flags: ["Ephemeral"], content: "Nao foi possivel encontrar o canal do ticket." });
+            await interaction.followUp({ flags: ["Ephemeral"], content: "Nao foi possivel encontrar o canal do ticket." });
             return;
         }
 
@@ -367,7 +404,7 @@ createResponder({
             payerEmail,
         ).catch(async error => {
             console.error("Failed to create Mercado Pago PIX payment:", error);
-            await interaction.reply({ flags: ["Ephemeral"], content: getMercadoPagoPaymentErrorMessage(error) });
+            await interaction.followUp({ flags: ["Ephemeral"], content: getMercadoPagoPaymentErrorMessage(error) });
             return null;
         });
         if (!pix) {
@@ -395,7 +432,7 @@ createResponder({
             },
         });
 
-        await interaction.update(renderOrderConfirmed(order.userId, interaction.user.id, details, price.value));
+        await interaction.editReply(renderOrderConfirmed(order.userId, interaction.user.id, details, price.value));
 
         if (pix.qrCodeBase64) {
             const qrCodeFileName = "qrcode.png";
@@ -457,6 +494,12 @@ function getOrderDetails(order: { cardType: string | null; cardCount: number | n
         cardCount: order.cardCount,
         deckLink: order.deckLink,
     };
+}
+
+function shouldShowEditBackButton(order: { status: string; cardType: string | null; cardCount: number | null }) {
+    return (order.status === "IN_REVIEW" || order.status === "PENDING_CONFIRMATION")
+        && fromPrismaTicketOrderCardType(order.cardType) !== null
+        && order.cardCount !== null;
 }
 
 function getMercadoPagoPayerEmail(userId: string) {

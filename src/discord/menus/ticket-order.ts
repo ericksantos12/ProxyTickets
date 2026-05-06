@@ -81,7 +81,7 @@ export function renderCancelConfirmed() {
     } satisfies InteractionUpdateOptions;
 }
 
-export function renderCardTypeSelection(cardTypes: TicketOrderCardTypeInput[]) {
+export function renderCardTypeSelection(cardTypes: TicketOrderCardTypeInput[], showBackButton = false) {
     const container = createContainer("Blue",
         "# Preencher pedido\nSelecione o tipo de carta para continuar.",
         Separator.Default,
@@ -99,6 +99,11 @@ export function renderCardTypeSelection(cardTypes: TicketOrderCardTypeInput[]) {
         ),
         Separator.Default,
         createRow(
+            ...(showBackButton ? [new ButtonBuilder({
+                customId: "ticket/details/back",
+                label: "Voltar",
+                style: ButtonStyle.Secondary,
+            })] : []),
             new ButtonBuilder({
                 customId: "ticket/cancel/request",
                 label: "Desistir",
@@ -113,7 +118,7 @@ export function renderCardTypeSelection(cardTypes: TicketOrderCardTypeInput[]) {
     } satisfies InteractionUpdateOptions;
 }
 
-export function renderSelectedCardType(cardType: TicketOrderCardTypeInput) {
+export function renderSelectedCardType(cardType: TicketOrderCardTypeInput, showBackButton = false) {
     const container = createContainer("Blue",
         "# Preencher pedido\nTipo de carta selecionado. Abra o formulario para informar quantidade e link, se houver.",
         Separator.Default,
@@ -127,7 +132,7 @@ export function renderSelectedCardType(cardType: TicketOrderCardTypeInput) {
             }),
             new ButtonBuilder({
                 customId: "ticket/details/start",
-                label: "Trocar tipo",
+                label: showBackButton ? "Voltar" : "Trocar tipo",
                 style: ButtonStyle.Secondary,
             }),
             new ButtonBuilder({
