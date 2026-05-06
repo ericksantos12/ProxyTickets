@@ -1,5 +1,6 @@
 import { MercadoPagoConfig, Payment } from "mercadopago";
 import { env } from "#env";
+import { randomUUID } from "node:crypto";
 
 const client = new MercadoPagoConfig({ accessToken: env.MP_ACCESS_TOKEN });
 const paymentApi = new Payment(client);
@@ -18,15 +19,22 @@ export async function createPixPayment(amount: number, description: string, paye
                 email: payerEmail,
             },
         },
+        requestOptions: { idempotencyKey: randomUUID() },
     });
 
     const transactionData = response.point_of_interaction?.transaction_data;
+    if (!response.id) {
+        throw new Error("Mercado Pago did not return a payment ID.");
+    }
+    if (!transactionData?.qr_code || !transactionData.qr_code_base64) {
+        throw new Error("Mercado Pago did not return PIX QR code data.");
+    }
 
     return {
         paymentId: String(response.id),
         status: response.status,
-        qrCodeBase64: transactionData?.qr_code_base64 ?? null,
-        copyPaste: transactionData?.qr_code ?? null,
+        qrCodeBase64: transactionData.qr_code_base64,
+        copyPaste: transactionData.qr_code,
         expiresAt: expirationDate,
     };
 }

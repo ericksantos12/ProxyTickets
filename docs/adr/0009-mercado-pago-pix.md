@@ -41,8 +41,9 @@ When an admin clicks **Confirmar pedido** (`ticket/confirm`):
 New required/optional env vars:
 - `MP_ACCESS_TOKEN` (required)
 - `MP_WEBHOOK_SECRET` (required for signature validation)
-- `WEBHOOK_BASE_URL` (required, public URL for Mercado Pago to call)
 - `WEBHOOK_PORT` (optional, defaults to 3001)
+
+The public webhook URL is configured manually in the Mercado Pago dashboard and must point to `/webhooks/mercado-pago` on the deployed bot host.
 
 ### Schema Changes
 Add to `TicketOrder`:

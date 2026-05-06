@@ -2,13 +2,14 @@
 
 - [x] Review ADR 0009 decisions and confirm scope.
 - [x] Install `mercadopago` SDK (`npm install mercadopago`).
-- [x] Update `.env.example` with new variables (`MP_ACCESS_TOKEN`, `MP_WEBHOOK_SECRET`, `WEBHOOK_BASE_URL`, `WEBHOOK_PORT`).
+- [x] Update `.env.example` with new variables (`MP_ACCESS_TOKEN`, `MP_WEBHOOK_SECRET`, `WEBHOOK_PORT`) and document the public webhook URL setup.
 - [x] Update `src/env.ts` to validate new env variables.
 - [x] Update Prisma schema (`prisma/models/*.prisma`):
   - Add `AWAITING_DELIVERY` to `TicketOrderStatus` enum.
   - Add payment fields to `TicketOrder` model (`paymentId`, `paymentStatus`, `paymentQrCodeBase64`, `paymentCopyPaste`, `paymentExpiresAt`, `paidAt`).
 - [x] Run Prisma generate to update client types.
 - [x] Create `src/lib/mercado-pago.ts` client wrapper (initialize SDK, create payment, cancel payment).
+- [x] Send `X-Idempotency-Key` when creating Mercado Pago payments.
 - [x] Create `src/server/webhook.ts` Express server (start/stop, single POST route, signature validation).
 - [x] Integrate payment creation into `ticket/confirm` responder:
   - Replace mock PIX with real Mercado Pago payment creation.

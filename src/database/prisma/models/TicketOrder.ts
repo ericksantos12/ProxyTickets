@@ -55,6 +55,12 @@ export type TicketOrderMinAggregateOutputType = {
   materialCostCents: number | null
   profitMarginPercent: number | null
   finalPriceCents: number | null
+  paymentId: string | null
+  paymentStatus: string | null
+  paymentQrCodeBase64: string | null
+  paymentCopyPaste: string | null
+  paymentExpiresAt: Date | null
+  paidAt: Date | null
   cancelledAt: Date | null
   confirmedAt: Date | null
   createdAt: Date | null
@@ -75,6 +81,12 @@ export type TicketOrderMaxAggregateOutputType = {
   materialCostCents: number | null
   profitMarginPercent: number | null
   finalPriceCents: number | null
+  paymentId: string | null
+  paymentStatus: string | null
+  paymentQrCodeBase64: string | null
+  paymentCopyPaste: string | null
+  paymentExpiresAt: Date | null
+  paidAt: Date | null
   cancelledAt: Date | null
   confirmedAt: Date | null
   createdAt: Date | null
@@ -95,6 +107,12 @@ export type TicketOrderCountAggregateOutputType = {
   materialCostCents: number
   profitMarginPercent: number
   finalPriceCents: number
+  paymentId: number
+  paymentStatus: number
+  paymentQrCodeBase64: number
+  paymentCopyPaste: number
+  paymentExpiresAt: number
+  paidAt: number
   cancelledAt: number
   confirmedAt: number
   createdAt: number
@@ -133,6 +151,12 @@ export type TicketOrderMinAggregateInputType = {
   materialCostCents?: true
   profitMarginPercent?: true
   finalPriceCents?: true
+  paymentId?: true
+  paymentStatus?: true
+  paymentQrCodeBase64?: true
+  paymentCopyPaste?: true
+  paymentExpiresAt?: true
+  paidAt?: true
   cancelledAt?: true
   confirmedAt?: true
   createdAt?: true
@@ -153,6 +177,12 @@ export type TicketOrderMaxAggregateInputType = {
   materialCostCents?: true
   profitMarginPercent?: true
   finalPriceCents?: true
+  paymentId?: true
+  paymentStatus?: true
+  paymentQrCodeBase64?: true
+  paymentCopyPaste?: true
+  paymentExpiresAt?: true
+  paidAt?: true
   cancelledAt?: true
   confirmedAt?: true
   createdAt?: true
@@ -173,6 +203,12 @@ export type TicketOrderCountAggregateInputType = {
   materialCostCents?: true
   profitMarginPercent?: true
   finalPriceCents?: true
+  paymentId?: true
+  paymentStatus?: true
+  paymentQrCodeBase64?: true
+  paymentCopyPaste?: true
+  paymentExpiresAt?: true
+  paidAt?: true
   cancelledAt?: true
   confirmedAt?: true
   createdAt?: true
@@ -280,6 +316,12 @@ export type TicketOrderGroupByOutputType = {
   materialCostCents: number | null
   profitMarginPercent: number | null
   finalPriceCents: number | null
+  paymentId: string | null
+  paymentStatus: string | null
+  paymentQrCodeBase64: string | null
+  paymentCopyPaste: string | null
+  paymentExpiresAt: Date | null
+  paidAt: Date | null
   cancelledAt: Date | null
   confirmedAt: Date | null
   createdAt: Date
@@ -323,6 +365,12 @@ export type TicketOrderWhereInput = {
   materialCostCents?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
   profitMarginPercent?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
   finalPriceCents?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
+  paymentId?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentStatus?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentQrCodeBase64?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentCopyPaste?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentExpiresAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
+  paidAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   confirmedAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"TicketOrder"> | Date | string
@@ -344,6 +392,12 @@ export type TicketOrderOrderByWithRelationInput = {
   materialCostCents?: Prisma.SortOrder
   profitMarginPercent?: Prisma.SortOrder
   finalPriceCents?: Prisma.SortOrder
+  paymentId?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  paymentQrCodeBase64?: Prisma.SortOrder
+  paymentCopyPaste?: Prisma.SortOrder
+  paymentExpiresAt?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -368,6 +422,12 @@ export type TicketOrderWhereUniqueInput = Prisma.AtLeast<{
   materialCostCents?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
   profitMarginPercent?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
   finalPriceCents?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
+  paymentId?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentStatus?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentQrCodeBase64?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentCopyPaste?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentExpiresAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
+  paidAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   confirmedAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"TicketOrder"> | Date | string
@@ -389,6 +449,12 @@ export type TicketOrderOrderByWithAggregationInput = {
   materialCostCents?: Prisma.SortOrder
   profitMarginPercent?: Prisma.SortOrder
   finalPriceCents?: Prisma.SortOrder
+  paymentId?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  paymentQrCodeBase64?: Prisma.SortOrder
+  paymentCopyPaste?: Prisma.SortOrder
+  paymentExpiresAt?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -417,6 +483,12 @@ export type TicketOrderScalarWhereWithAggregatesInput = {
   materialCostCents?: Prisma.IntNullableWithAggregatesFilter<"TicketOrder"> | number | null
   profitMarginPercent?: Prisma.IntNullableWithAggregatesFilter<"TicketOrder"> | number | null
   finalPriceCents?: Prisma.IntNullableWithAggregatesFilter<"TicketOrder"> | number | null
+  paymentId?: Prisma.StringNullableWithAggregatesFilter<"TicketOrder"> | string | null
+  paymentStatus?: Prisma.StringNullableWithAggregatesFilter<"TicketOrder"> | string | null
+  paymentQrCodeBase64?: Prisma.StringNullableWithAggregatesFilter<"TicketOrder"> | string | null
+  paymentCopyPaste?: Prisma.StringNullableWithAggregatesFilter<"TicketOrder"> | string | null
+  paymentExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TicketOrder"> | Date | string | null
+  paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TicketOrder"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TicketOrder"> | Date | string | null
   confirmedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TicketOrder"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TicketOrder"> | Date | string
@@ -436,6 +508,12 @@ export type TicketOrderCreateInput = {
   materialCostCents?: number | null
   profitMarginPercent?: number | null
   finalPriceCents?: number | null
+  paymentId?: string | null
+  paymentStatus?: string | null
+  paymentQrCodeBase64?: string | null
+  paymentCopyPaste?: string | null
+  paymentExpiresAt?: Date | string | null
+  paidAt?: Date | string | null
   cancelledAt?: Date | string | null
   confirmedAt?: Date | string | null
   createdAt?: Date | string
@@ -457,6 +535,12 @@ export type TicketOrderUncheckedCreateInput = {
   materialCostCents?: number | null
   profitMarginPercent?: number | null
   finalPriceCents?: number | null
+  paymentId?: string | null
+  paymentStatus?: string | null
+  paymentQrCodeBase64?: string | null
+  paymentCopyPaste?: string | null
+  paymentExpiresAt?: Date | string | null
+  paidAt?: Date | string | null
   cancelledAt?: Date | string | null
   confirmedAt?: Date | string | null
   createdAt?: Date | string
@@ -475,6 +559,12 @@ export type TicketOrderUpdateInput = {
   materialCostCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentCopyPaste?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -495,6 +585,12 @@ export type TicketOrderUncheckedUpdateInput = {
   materialCostCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentCopyPaste?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -515,6 +611,12 @@ export type TicketOrderCreateManyInput = {
   materialCostCents?: number | null
   profitMarginPercent?: number | null
   finalPriceCents?: number | null
+  paymentId?: string | null
+  paymentStatus?: string | null
+  paymentQrCodeBase64?: string | null
+  paymentCopyPaste?: string | null
+  paymentExpiresAt?: Date | string | null
+  paidAt?: Date | string | null
   cancelledAt?: Date | string | null
   confirmedAt?: Date | string | null
   createdAt?: Date | string
@@ -533,6 +635,12 @@ export type TicketOrderUpdateManyMutationInput = {
   materialCostCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentCopyPaste?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -552,6 +660,12 @@ export type TicketOrderUncheckedUpdateManyInput = {
   materialCostCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentCopyPaste?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -582,6 +696,12 @@ export type TicketOrderCountOrderByAggregateInput = {
   materialCostCents?: Prisma.SortOrder
   profitMarginPercent?: Prisma.SortOrder
   finalPriceCents?: Prisma.SortOrder
+  paymentId?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  paymentQrCodeBase64?: Prisma.SortOrder
+  paymentCopyPaste?: Prisma.SortOrder
+  paymentExpiresAt?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -610,6 +730,12 @@ export type TicketOrderMaxOrderByAggregateInput = {
   materialCostCents?: Prisma.SortOrder
   profitMarginPercent?: Prisma.SortOrder
   finalPriceCents?: Prisma.SortOrder
+  paymentId?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  paymentQrCodeBase64?: Prisma.SortOrder
+  paymentCopyPaste?: Prisma.SortOrder
+  paymentExpiresAt?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -630,6 +756,12 @@ export type TicketOrderMinOrderByAggregateInput = {
   materialCostCents?: Prisma.SortOrder
   profitMarginPercent?: Prisma.SortOrder
   finalPriceCents?: Prisma.SortOrder
+  paymentId?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  paymentQrCodeBase64?: Prisma.SortOrder
+  paymentCopyPaste?: Prisma.SortOrder
+  paymentExpiresAt?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -713,6 +845,12 @@ export type TicketOrderCreateWithoutGuildInput = {
   materialCostCents?: number | null
   profitMarginPercent?: number | null
   finalPriceCents?: number | null
+  paymentId?: string | null
+  paymentStatus?: string | null
+  paymentQrCodeBase64?: string | null
+  paymentCopyPaste?: string | null
+  paymentExpiresAt?: Date | string | null
+  paidAt?: Date | string | null
   cancelledAt?: Date | string | null
   confirmedAt?: Date | string | null
   createdAt?: Date | string
@@ -732,6 +870,12 @@ export type TicketOrderUncheckedCreateWithoutGuildInput = {
   materialCostCents?: number | null
   profitMarginPercent?: number | null
   finalPriceCents?: number | null
+  paymentId?: string | null
+  paymentStatus?: string | null
+  paymentQrCodeBase64?: string | null
+  paymentCopyPaste?: string | null
+  paymentExpiresAt?: Date | string | null
+  paidAt?: Date | string | null
   cancelledAt?: Date | string | null
   confirmedAt?: Date | string | null
   createdAt?: Date | string
@@ -780,6 +924,12 @@ export type TicketOrderScalarWhereInput = {
   materialCostCents?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
   profitMarginPercent?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
   finalPriceCents?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
+  paymentId?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentStatus?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentQrCodeBase64?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentCopyPaste?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentExpiresAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
+  paidAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   confirmedAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"TicketOrder"> | Date | string
@@ -799,6 +949,12 @@ export type TicketOrderCreateManyGuildInput = {
   materialCostCents?: number | null
   profitMarginPercent?: number | null
   finalPriceCents?: number | null
+  paymentId?: string | null
+  paymentStatus?: string | null
+  paymentQrCodeBase64?: string | null
+  paymentCopyPaste?: string | null
+  paymentExpiresAt?: Date | string | null
+  paidAt?: Date | string | null
   cancelledAt?: Date | string | null
   confirmedAt?: Date | string | null
   createdAt?: Date | string
@@ -817,6 +973,12 @@ export type TicketOrderUpdateWithoutGuildInput = {
   materialCostCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentCopyPaste?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -835,6 +997,12 @@ export type TicketOrderUncheckedUpdateWithoutGuildInput = {
   materialCostCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentCopyPaste?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -853,6 +1021,12 @@ export type TicketOrderUncheckedUpdateManyWithoutGuildInput = {
   materialCostCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentCopyPaste?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -875,6 +1049,12 @@ export type TicketOrderSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   materialCostCents?: boolean
   profitMarginPercent?: boolean
   finalPriceCents?: boolean
+  paymentId?: boolean
+  paymentStatus?: boolean
+  paymentQrCodeBase64?: boolean
+  paymentCopyPaste?: boolean
+  paymentExpiresAt?: boolean
+  paidAt?: boolean
   cancelledAt?: boolean
   confirmedAt?: boolean
   createdAt?: boolean
@@ -898,13 +1078,19 @@ export type TicketOrderSelectScalar = {
   materialCostCents?: boolean
   profitMarginPercent?: boolean
   finalPriceCents?: boolean
+  paymentId?: boolean
+  paymentStatus?: boolean
+  paymentQrCodeBase64?: boolean
+  paymentCopyPaste?: boolean
+  paymentExpiresAt?: boolean
+  paidAt?: boolean
   cancelledAt?: boolean
   confirmedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TicketOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"oid" | "guildId" | "channelId" | "userId" | "responsibleAdminId" | "status" | "cardType" | "cardCount" | "deckLink" | "sheetCount" | "materialCostCents" | "profitMarginPercent" | "finalPriceCents" | "cancelledAt" | "confirmedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["ticketOrder"]>
+export type TicketOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"oid" | "guildId" | "channelId" | "userId" | "responsibleAdminId" | "status" | "cardType" | "cardCount" | "deckLink" | "sheetCount" | "materialCostCents" | "profitMarginPercent" | "finalPriceCents" | "paymentId" | "paymentStatus" | "paymentQrCodeBase64" | "paymentCopyPaste" | "paymentExpiresAt" | "paidAt" | "cancelledAt" | "confirmedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["ticketOrder"]>
 export type TicketOrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
 }
@@ -928,6 +1114,12 @@ export type $TicketOrderPayload<ExtArgs extends runtime.Types.Extensions.Interna
     materialCostCents: number | null
     profitMarginPercent: number | null
     finalPriceCents: number | null
+    paymentId: string | null
+    paymentStatus: string | null
+    paymentQrCodeBase64: string | null
+    paymentCopyPaste: string | null
+    paymentExpiresAt: Date | null
+    paidAt: Date | null
     cancelledAt: Date | null
     confirmedAt: Date | null
     createdAt: Date
@@ -1338,6 +1530,12 @@ export interface TicketOrderFieldRefs {
   readonly materialCostCents: Prisma.FieldRef<"TicketOrder", 'Int'>
   readonly profitMarginPercent: Prisma.FieldRef<"TicketOrder", 'Int'>
   readonly finalPriceCents: Prisma.FieldRef<"TicketOrder", 'Int'>
+  readonly paymentId: Prisma.FieldRef<"TicketOrder", 'String'>
+  readonly paymentStatus: Prisma.FieldRef<"TicketOrder", 'String'>
+  readonly paymentQrCodeBase64: Prisma.FieldRef<"TicketOrder", 'String'>
+  readonly paymentCopyPaste: Prisma.FieldRef<"TicketOrder", 'String'>
+  readonly paymentExpiresAt: Prisma.FieldRef<"TicketOrder", 'DateTime'>
+  readonly paidAt: Prisma.FieldRef<"TicketOrder", 'DateTime'>
   readonly cancelledAt: Prisma.FieldRef<"TicketOrder", 'DateTime'>
   readonly confirmedAt: Prisma.FieldRef<"TicketOrder", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"TicketOrder", 'DateTime'>

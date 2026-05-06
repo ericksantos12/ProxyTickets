@@ -1,0 +1,30 @@
+# Task: Mercado Pago Payment Polling
+
+- [x] Review ADR 0010 decisions and confirm scope.
+- [x] Remove webhook-specific runtime code:
+  - Delete `src/server/webhook.ts`.
+  - Delete `src/discord/events/webhook-start.ts`.
+- [x] Remove webhook dependencies:
+  - Remove `express` from dependencies.
+  - Remove `@types/express` from devDependencies.
+- [x] Remove webhook environment variables:
+  - Remove `MP_WEBHOOK_SECRET` from `src/env.ts` and `.env.example`.
+  - Remove `WEBHOOK_PORT` from `src/env.ts` and `.env.example`.
+- [x] Replace payment cleanup event with unified polling:
+  - Rename cleanup event to `src/discord/events/payment-polling.ts`.
+  - Poll `PENDING_PAYMENT` orders every 30 seconds.
+  - Fetch payment status from Mercado Pago with `getPayment(paymentId)`.
+  - Persist latest `paymentStatus` while waiting.
+- [x] Handle approved payments in polling:
+  - Update order to `AWAITING_DELIVERY` and set `paidAt`.
+  - Move channel to the configured `Aguardando` category.
+  - Rename channel with awaiting-delivery prefix.
+  - Reapply ticket owner permissions.
+  - Notify the channel.
+- [x] Handle expired payments in polling:
+  - Cancel payment in Mercado Pago when possible.
+  - Update order to `CANCELLED` and set `cancelledAt`.
+  - Notify channel and delete it after countdown.
+- [x] Update ADR/task status as implementation progresses.
+- [x] Run `npm run check` and `npm run build`.
+- [x] Commit via `git-commit` skill.
