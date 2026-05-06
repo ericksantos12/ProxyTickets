@@ -401,13 +401,15 @@ createResponder({
             const qrCodeFileName = "qrcode.png";
             const pixMessage = renderPixPayment(order.userId, interaction.user.id, details, price.value, pix.copyPaste ?? "Nao disponivel", qrCodeFileName);
             const buffer = Buffer.from(pix.qrCodeBase64, "base64");
-            await channel.send({
+            const paymentMessage = await channel.send({
                 ...pixMessage,
                 files: [{ attachment: buffer, name: qrCodeFileName }],
             });
+            await savePaymentMessageId(interaction.channelId, paymentMessage.id);
         } else {
             const pixMessage = renderPixPayment(order.userId, interaction.user.id, details, price.value, pix.copyPaste ?? "Nao disponivel");
-            await channel.send(pixMessage);
+            const paymentMessage = await channel.send(pixMessage);
+            await savePaymentMessageId(interaction.channelId, paymentMessage.id);
         }
     },
 });
@@ -415,6 +417,13 @@ createResponder({
 async function getChannelOrder(channelId: string) {
     return prisma.ticketOrder.findUnique({
         where: { channelId },
+    });
+}
+
+async function savePaymentMessageId(channelId: string, paymentMessageId: string) {
+    await prisma.ticketOrder.update({
+        where: { channelId },
+        data: { paymentMessageId },
     });
 }
 

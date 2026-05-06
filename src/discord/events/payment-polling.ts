@@ -3,6 +3,7 @@ import { prisma } from "#database";
 import { formatTicketChannelName } from "#functions";
 import { ChannelType, type Client, type TextChannel } from "discord.js";
 import { cancelPayment, getPayment } from "../../lib/mercado-pago.js";
+import { renderPixPaymentConfirmed } from "../menus/ticket-order.js";
 import { ensureTicketOwnerPermissions } from "../shared/ticket-permissions.js";
 
 const pollingIntervalMs = 30_000;
@@ -22,8 +23,8 @@ async function getTicketChannel(order: { channelId: string; guildId: string }, c
     return channel;
 }
 
-async function cleanupExpiredOrder(order: { channelId: string; guildId: string; paymentId: string | null }, client: Client) {
-    if (order.paymentId) {
+async function cleanupExpiredOrder(order: { channelId: string; guildId: string; paymentId: string | null }, client: Client, options?: { cancelMercadoPagoOrder?: boolean }) {
+    if (options?.cancelMercadoPagoOrder !== false && order.paymentId) {
         await cancelPayment(order.paymentId).catch(() => null);
     }
 
@@ -48,7 +49,7 @@ async function cleanupExpiredOrder(order: { channelId: string; guildId: string; 
     await channel.delete("PIX expirado").catch(() => null);
 }
 
-async function approveOrder(order: { channelId: string; guildId: string; userId: string }, client: Client, paymentStatus: string | undefined) {
+async function approveOrder(order: { channelId: string; guildId: string; userId: string; paymentMessageId: string | null }, client: Client, paymentStatus: string | undefined) {
     const channel = await getTicketChannel(order, client);
     if (!channel) {
         await prisma.ticketOrder.update({
@@ -63,6 +64,7 @@ async function approveOrder(order: { channelId: string; guildId: string; userId:
     }
 
     await moveToAwaitingDelivery(order, channel, client);
+    await editPaymentMessageAsConfirmed(order, channel);
 
     await prisma.ticketOrder.update({
         where: { channelId: order.channelId },
@@ -76,6 +78,18 @@ async function approveOrder(order: { channelId: string; guildId: string; userId:
     await channel.send({
         content: `Pagamento confirmado! <@${order.userId}> seu pedido agora esta em preparo.`,
     });
+}
+
+async function editPaymentMessageAsConfirmed(order: { userId: string; paymentMessageId: string | null }, channel: TextChannel) {
+    if (!order.paymentMessageId) return;
+
+    const message = await channel.messages.fetch(order.paymentMessageId).catch(() => null);
+    if (!message) return;
+
+    await message.edit({
+        ...renderPixPaymentConfirmed(order.userId),
+        attachments: [],
+    }).catch(() => null);
 }
 
 async function moveToAwaitingDelivery(order: { guildId: string; userId: string }, channel: TextChannel, client: Client) {
@@ -124,6 +138,11 @@ async function pollPendingPayments(client: Client) {
                     continue;
                 }
 
+                if (isExpiredPaymentStatus(payment.status)) {
+                    await cleanupExpiredOrder(order, client, { cancelMercadoPagoOrder: false });
+                    continue;
+                }
+
                 await prisma.ticketOrder.update({
                     where: { channelId: order.channelId },
                     data: { paymentStatus: payment.status },
@@ -150,5 +169,9 @@ createEvent({
 });
 
 function isApprovedPaymentStatus(status: string | undefined) {
-    return status === "approved" || status === "paid" || status === "processed";
+    return status === "processed";
+}
+
+function isExpiredPaymentStatus(status: string | undefined) {
+    return status === "expired";
 }

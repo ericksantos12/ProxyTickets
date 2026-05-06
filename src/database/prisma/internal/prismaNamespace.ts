@@ -876,6 +876,7 @@ export const TicketOrderScalarFieldEnum = {
   profitMarginPercent: 'profitMarginPercent',
   finalPriceCents: 'finalPriceCents',
   paymentId: 'paymentId',
+  paymentMessageId: 'paymentMessageId',
   paymentStatus: 'paymentStatus',
   paymentQrCodeBase64: 'paymentQrCodeBase64',
   paymentCopyPaste: 'paymentCopyPaste',

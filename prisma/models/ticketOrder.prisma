@@ -36,6 +36,7 @@ model TicketOrder {
     finalPriceCents     Int?
 
     paymentId            String?
+    paymentMessageId     String?
     paymentStatus        String?
     paymentQrCodeBase64  String?
     paymentCopyPaste     String?

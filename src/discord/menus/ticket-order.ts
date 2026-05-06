@@ -316,3 +316,16 @@ export function renderPixPayment(userId: string, responsibleAdminId: string, det
         components: [container],
     } satisfies InteractionUpdateOptions;
 }
+
+export function renderPixPaymentConfirmed(userId: string) {
+    const container = createContainer("Green",
+        "# Pagamento confirmado\nO PIX foi pago e o pedido agora esta em preparo.",
+        Separator.Default,
+        `**Usuario:** <@${userId}>`,
+    );
+
+    return {
+        flags: ["IsComponentsV2"],
+        components: [container],
+    } satisfies InteractionUpdateOptions;
+}
