@@ -481,7 +481,7 @@ createResponder({
             await interaction.reply({ flags: ["Ephemeral"], content: "Este canal nao possui um ticket ativo." });
             return;
         }
-        if (order.status !== "AWAITING_DELIVERY") {
+        if (order.status !== "AWAITING_DELIVERY" && order.status !== "CONCLUDED") {
             await interaction.reply({ flags: ["Ephemeral"], content: "Este pedido nao esta aguardando entrega." });
             return;
         }
@@ -490,20 +490,22 @@ createResponder({
             return;
         }
 
-        await interaction.deferUpdate();
-
         try {
+            await interaction.update(renderOrderConcluded(order.userId, order.responsibleAdminId, order.finalPriceCents));
+
             const channel = await interaction.guild.channels.fetch(interaction.channelId).catch(() => null);
             if (!channel || channel.type !== ChannelType.GuildText) {
-                await interaction.followUp({ flags: ["Ephemeral"], content: "Nao foi possivel encontrar o canal do ticket." });
+                console.error(`Failed to conclude ticket order for ${interaction.channelId}: ticket channel not found.`);
+                await interaction.followUp({ flags: ["Ephemeral"], content: "Nao foi possivel encontrar o canal do ticket." }).catch(() => null);
                 return;
             }
 
-            const user = await interaction.client.users.fetch(order.userId).catch(() => null);
-            const nextChannelName = formatTicketChannelName("concluded", user?.username ?? "usuario");
-
-            await removeTicketOwnerPermissions(channel, order.userId, "Pedido concluido e entregue");
-            await channel.setName(nextChannelName, "Pedido concluido e entregue");
+            const nextChannelName = formatConcludedChannelName(channel.name);
+            await channel.setName(nextChannelName, "Pedido concluido e entregue").catch(async error => {
+                console.error(`Failed to rename concluded ticket channel ${interaction.channelId} to ${nextChannelName}:`, error);
+                await interaction.followUp({ flags: ["Ephemeral"], content: "Pedido marcado como concluido, mas nao consegui renomear o canal. Verifique a permissao Manage Channels do bot." }).catch(() => null);
+                throw error;
+            });
 
             await prisma.ticketOrder.update({
                 where: { channelId: interaction.channelId },
@@ -513,11 +515,14 @@ createResponder({
                 },
             });
 
-            await interaction.message.edit(renderOrderConcluded(order.userId, order.responsibleAdminId, order.finalPriceCents));
-            await interaction.followUp({ flags: ["Ephemeral"], content: "Pedido concluido. O canal ficara visivel para admins por 24 horas." });
+            await removeTicketOwnerPermissions(channel, order.userId, "Pedido concluido e entregue").catch(async error => {
+                console.error(`Failed to hide concluded ticket channel ${interaction.channelId} from ${order.userId}:`, error);
+                await interaction.followUp({ flags: ["Ephemeral"], content: "Pedido concluido, mas nao consegui ocultar o canal do cliente. Verifique a permissao Manage Roles do bot." }).catch(() => null);
+            });
+
+            await interaction.followUp({ flags: ["Ephemeral"], content: "Pedido concluido. O canal ficara visivel para admins por 24 horas." }).catch(() => null);
         } catch (error) {
             console.error(`Failed to conclude ticket order for ${interaction.channelId}:`, error);
-            await interaction.followUp({ flags: ["Ephemeral"], content: "Nao foi possivel concluir o pedido. Verifique as permissoes do bot e tente novamente." }).catch(() => null);
         }
     },
 });
@@ -575,6 +580,16 @@ function shouldShowEditBackButton(order: { status: string; cardType: string | nu
 
 function getMercadoPagoPayerEmail(userId: string) {
     return `discord-${userId}@example.com`;
+}
+
+function formatConcludedChannelName(currentName: string) {
+    const separator = "│";
+    const [, ...parts] = currentName.split(separator);
+    if (parts.length >= 2) {
+        return ["🚛", ...parts].join(separator);
+    }
+
+    return formatTicketChannelName("concluded", "usuario");
 }
 
 function getMercadoPagoPaymentErrorMessage(error: unknown) {
