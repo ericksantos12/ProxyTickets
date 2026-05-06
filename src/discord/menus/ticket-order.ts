@@ -1,5 +1,5 @@
 import { formatCurrencyFromCents, formatTicketOrderCardType, type CardOrderPrice, type TicketOrderCardTypeInput } from "#functions";
-import { createContainer, createLabel, createModal, createRow, createTextInput, Separator } from "@magicyan/discord";
+import { createContainer, createLabel, createMediaGallery, createModal, createRow, createTextInput, Separator } from "@magicyan/discord";
 import { ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, TextInputStyle, type InteractionReplyOptions, type InteractionUpdateOptions } from "discord.js";
 
 export type TicketOrderDetailsView = {
@@ -290,7 +290,7 @@ export function renderMockPix(userId: string, responsibleAdminId: string, detail
     } satisfies InteractionUpdateOptions;
 }
 
-export function renderPixPayment(userId: string, responsibleAdminId: string, details: TicketOrderDetailsView, price: CardOrderPrice, copyPaste: string) {
+export function renderPixPayment(userId: string, responsibleAdminId: string, details: TicketOrderDetailsView, price: CardOrderPrice, copyPaste: string, qrCodeAttachmentName?: string) {
     const container = createContainer("Aqua",
         "# Pagamento PIX gerado\nEscaneie o QR Code ou use o copia e cola abaixo.",
         Separator.Default,
@@ -308,6 +308,7 @@ export function renderPixPayment(userId: string, responsibleAdminId: string, det
             "**Copia e cola PIX:**",
             `\`${copyPaste}\``,
         ].join("\n"),
+        qrCodeAttachmentName ? createMediaGallery(`attachment://${qrCodeAttachmentName}`) : undefined,
     );
 
     return {

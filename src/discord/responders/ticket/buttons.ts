@@ -397,14 +397,16 @@ createResponder({
 
         await interaction.update(renderOrderConfirmed(order.userId, interaction.user.id, details, price.value));
 
-        const pixMessage = renderPixPayment(order.userId, interaction.user.id, details, price.value, pix.copyPaste ?? "Nao disponivel");
         if (pix.qrCodeBase64) {
+            const qrCodeFileName = "qrcode.png";
+            const pixMessage = renderPixPayment(order.userId, interaction.user.id, details, price.value, pix.copyPaste ?? "Nao disponivel", qrCodeFileName);
             const buffer = Buffer.from(pix.qrCodeBase64, "base64");
             await channel.send({
                 ...pixMessage,
-                files: [{ attachment: buffer, name: "qrcode.png" }],
+                files: [{ attachment: buffer, name: qrCodeFileName }],
             });
         } else {
+            const pixMessage = renderPixPayment(order.userId, interaction.user.id, details, price.value, pix.copyPaste ?? "Nao disponivel");
             await channel.send(pixMessage);
         }
     },
