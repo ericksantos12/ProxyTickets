@@ -3,8 +3,8 @@ import { prisma } from "#database";
 import { calculateCardOrderPrice, formatTicketChannelName, fromPrismaTicketOrderCardType, getOrCreateBotConfig, isTicketOrderCardTypeInput, parseDeckLink, parseTicketCardCount, toPrismaTicketOrderCardType, type TicketOrderCardTypeInput } from "#functions";
 import { ResponderType } from "@constatic/base";
 import { ChannelType, PermissionFlagsBits } from "discord.js";
-import { createTicketDetailsModal, renderCancelConfirmation, renderCancelConfirmed, renderCancelKept, renderCardTypeSelection, renderInitialTicketMessage, renderOrderConfirmed, renderOrderReview, renderPendingConfirmation, renderPixPayment, renderSelectedCardType } from "../../menus/ticket-order.js";
-import { ensureTicketOwnerPermissions } from "../../shared/ticket-permissions.js";
+import { createTicketDetailsModal, renderCancelConfirmation, renderCancelConfirmed, renderCancelKept, renderCardTypeSelection, renderInitialTicketMessage, renderOrderConcluded, renderOrderConfirmed, renderOrderReview, renderPendingConfirmation, renderPixPayment, renderSelectedCardType } from "../../menus/ticket-order.js";
+import { ensureTicketOwnerPermissions, removeTicketOwnerPermissions } from "../../shared/ticket-permissions.js";
 
 createResponder({
     customId: "ticket/create",
@@ -447,6 +447,57 @@ createResponder({
             const pixMessage = renderPixPayment(order.userId, interaction.user.id, details, price.value, pix.copyPaste ?? "Nao disponivel");
             const paymentMessage = await channel.send(pixMessage);
             await savePaymentMessageId(interaction.channelId, paymentMessage.id);
+        }
+    },
+});
+
+createResponder({
+    customId: "ticket/deliver",
+    types: [ResponderType.Button],
+    cache: "cached",
+    async run(interaction) {
+        const order = await getChannelOrder(interaction.channelId);
+        if (!order) {
+            await interaction.reply({ flags: ["Ephemeral"], content: "Este canal nao possui um ticket ativo." });
+            return;
+        }
+        if (order.status !== "AWAITING_DELIVERY") {
+            await interaction.reply({ flags: ["Ephemeral"], content: "Este pedido nao esta aguardando entrega." });
+            return;
+        }
+        if (!order.responsibleAdminId || order.responsibleAdminId !== interaction.user.id) {
+            await interaction.reply({ flags: ["Ephemeral"], content: "Apenas o admin responsavel pode concluir este pedido." });
+            return;
+        }
+
+        await interaction.deferUpdate();
+
+        try {
+            const channel = await interaction.guild.channels.fetch(interaction.channelId).catch(() => null);
+            if (!channel || channel.type !== ChannelType.GuildText) {
+                await interaction.followUp({ flags: ["Ephemeral"], content: "Nao foi possivel encontrar o canal do ticket." });
+                return;
+            }
+
+            const user = await interaction.client.users.fetch(order.userId).catch(() => null);
+            const nextChannelName = formatTicketChannelName("concluded", user?.username ?? "usuario");
+
+            await removeTicketOwnerPermissions(channel, order.userId, "Pedido concluido e entregue");
+            await channel.setName(nextChannelName, "Pedido concluido e entregue");
+
+            await prisma.ticketOrder.update({
+                where: { channelId: interaction.channelId },
+                data: {
+                    status: "CONCLUDED",
+                    concludedAt: new Date(),
+                },
+            });
+
+            await interaction.editReply(renderOrderConcluded(order.userId, order.responsibleAdminId, order.finalPriceCents));
+            await interaction.followUp({ flags: ["Ephemeral"], content: "Pedido concluido. O canal ficara visivel para admins por 24 horas." });
+        } catch (error) {
+            console.error(`Failed to conclude ticket order for ${interaction.channelId}:`, error);
+            await interaction.followUp({ flags: ["Ephemeral"], content: "Nao foi possivel concluir o pedido. Verifique as permissoes do bot e tente novamente." }).catch(() => null);
         }
     },
 });

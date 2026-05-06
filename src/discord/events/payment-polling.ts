@@ -7,7 +7,10 @@ import { renderPixPaymentConfirmed } from "../menus/ticket-order.js";
 import { ensureTicketOwnerPermissions } from "../shared/ticket-permissions.js";
 
 const pollingIntervalMs = 30_000;
+const concludedCleanupIntervalMs = 5 * 60_000;
+const concludedRetentionMs = 24 * 60 * 60_000;
 let isPolling = false;
+let isCleaningConcludedOrders = false;
 
 async function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -49,7 +52,7 @@ async function cleanupExpiredOrder(order: { channelId: string; guildId: string; 
     await channel.delete("PIX expirado").catch(() => null);
 }
 
-async function approveOrder(order: { channelId: string; guildId: string; userId: string; paymentMessageId: string | null; finalPriceCents: number | null }, client: Client, paymentStatus: string | undefined) {
+async function approveOrder(order: { channelId: string; guildId: string; userId: string; responsibleAdminId: string | null; paymentMessageId: string | null; finalPriceCents: number | null }, client: Client, paymentStatus: string | undefined) {
     const channel = await getTicketChannel(order, client);
     if (!channel) {
         await prisma.ticketOrder.update({
@@ -77,14 +80,14 @@ async function approveOrder(order: { channelId: string; guildId: string; userId:
 
 }
 
-async function editPaymentMessageAsConfirmed(order: { userId: string; paymentMessageId: string | null; finalPriceCents: number | null }, channel: TextChannel) {
+async function editPaymentMessageAsConfirmed(order: { userId: string; responsibleAdminId: string | null; paymentMessageId: string | null; finalPriceCents: number | null }, channel: TextChannel) {
     if (!order.paymentMessageId) return;
 
     const message = await channel.messages.fetch(order.paymentMessageId).catch(() => null);
     if (!message) return;
 
     await message.edit({
-        ...renderPixPaymentConfirmed(order.userId, order.finalPriceCents),
+        ...renderPixPaymentConfirmed(order.userId, order.responsibleAdminId, order.finalPriceCents),
         attachments: [],
     }).catch(() => null);
 }
@@ -153,15 +156,49 @@ async function pollPendingPayments(client: Client) {
     }
 }
 
+async function cleanupConcludedOrders(client: Client) {
+    if (isCleaningConcludedOrders) return;
+    isCleaningConcludedOrders = true;
+
+    try {
+        const cutoff = new Date(Date.now() - concludedRetentionMs);
+        const concludedOrders = await prisma.ticketOrder.findMany({
+            where: {
+                status: "CONCLUDED",
+                concludedAt: { lte: cutoff },
+            },
+        });
+
+        for (const order of concludedOrders) {
+            try {
+                const channel = await getTicketChannel(order, client);
+                if (!channel) continue;
+
+                await channel.send({ content: "Pedido concluido. Este canal sera removido automaticamente em 10 segundos." }).catch(() => null);
+                await sleep(10_000);
+                await channel.delete("Pedido concluido ha mais de 24 horas").catch(() => null);
+            } catch (error) {
+                console.error(`Failed to cleanup concluded order for ${order.channelId}:`, error);
+            }
+        }
+    } finally {
+        isCleaningConcludedOrders = false;
+    }
+}
+
 createEvent({
     name: "payment-polling-loop",
     event: "clientReady",
     once: true,
     async run(client) {
         await pollPendingPayments(client);
+        await cleanupConcludedOrders(client);
         setInterval(() => {
             void pollPendingPayments(client);
         }, pollingIntervalMs);
+        setInterval(() => {
+            void cleanupConcludedOrders(client);
+        }, concludedCleanupIntervalMs);
     },
 });
 

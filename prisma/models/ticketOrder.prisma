@@ -5,6 +5,7 @@ enum TicketOrderStatus {
     IN_REVIEW
     PENDING_PAYMENT
     AWAITING_DELIVERY
+    CONCLUDED
     CANCELLED
 }
 
@@ -45,6 +46,7 @@ model TicketOrder {
 
     cancelledAt DateTime?
     confirmedAt DateTime?
+    concludedAt DateTime?
     createdAt   DateTime  @default(now())
     updatedAt   DateTime  @updatedAt
 

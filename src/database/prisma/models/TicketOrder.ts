@@ -64,6 +64,7 @@ export type TicketOrderMinAggregateOutputType = {
   paidAt: Date | null
   cancelledAt: Date | null
   confirmedAt: Date | null
+  concludedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -91,6 +92,7 @@ export type TicketOrderMaxAggregateOutputType = {
   paidAt: Date | null
   cancelledAt: Date | null
   confirmedAt: Date | null
+  concludedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -118,6 +120,7 @@ export type TicketOrderCountAggregateOutputType = {
   paidAt: number
   cancelledAt: number
   confirmedAt: number
+  concludedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -163,6 +166,7 @@ export type TicketOrderMinAggregateInputType = {
   paidAt?: true
   cancelledAt?: true
   confirmedAt?: true
+  concludedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -190,6 +194,7 @@ export type TicketOrderMaxAggregateInputType = {
   paidAt?: true
   cancelledAt?: true
   confirmedAt?: true
+  concludedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -217,6 +222,7 @@ export type TicketOrderCountAggregateInputType = {
   paidAt?: true
   cancelledAt?: true
   confirmedAt?: true
+  concludedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -331,6 +337,7 @@ export type TicketOrderGroupByOutputType = {
   paidAt: Date | null
   cancelledAt: Date | null
   confirmedAt: Date | null
+  concludedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: TicketOrderCountAggregateOutputType | null
@@ -381,6 +388,7 @@ export type TicketOrderWhereInput = {
   paidAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   confirmedAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
+  concludedAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"TicketOrder"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TicketOrder"> | Date | string
   guild?: Prisma.XOR<Prisma.GuildScalarRelationFilter, Prisma.GuildWhereInput>
@@ -409,6 +417,7 @@ export type TicketOrderOrderByWithRelationInput = {
   paidAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
+  concludedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   guild?: Prisma.GuildOrderByWithRelationInput
@@ -440,6 +449,7 @@ export type TicketOrderWhereUniqueInput = Prisma.AtLeast<{
   paidAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   confirmedAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
+  concludedAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"TicketOrder"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TicketOrder"> | Date | string
   guild?: Prisma.XOR<Prisma.GuildScalarRelationFilter, Prisma.GuildWhereInput>
@@ -468,6 +478,7 @@ export type TicketOrderOrderByWithAggregationInput = {
   paidAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
+  concludedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TicketOrderCountOrderByAggregateInput
@@ -503,6 +514,7 @@ export type TicketOrderScalarWhereWithAggregatesInput = {
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TicketOrder"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TicketOrder"> | Date | string | null
   confirmedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TicketOrder"> | Date | string | null
+  concludedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TicketOrder"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TicketOrder"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TicketOrder"> | Date | string
 }
@@ -529,6 +541,7 @@ export type TicketOrderCreateInput = {
   paidAt?: Date | string | null
   cancelledAt?: Date | string | null
   confirmedAt?: Date | string | null
+  concludedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   guild: Prisma.GuildCreateNestedOneWithoutTicketOrdersInput
@@ -557,6 +570,7 @@ export type TicketOrderUncheckedCreateInput = {
   paidAt?: Date | string | null
   cancelledAt?: Date | string | null
   confirmedAt?: Date | string | null
+  concludedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -582,6 +596,7 @@ export type TicketOrderUpdateInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  concludedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   guild?: Prisma.GuildUpdateOneRequiredWithoutTicketOrdersNestedInput
@@ -609,6 +624,7 @@ export type TicketOrderUncheckedUpdateInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  concludedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -636,6 +652,7 @@ export type TicketOrderCreateManyInput = {
   paidAt?: Date | string | null
   cancelledAt?: Date | string | null
   confirmedAt?: Date | string | null
+  concludedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -661,6 +678,7 @@ export type TicketOrderUpdateManyMutationInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  concludedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -687,6 +705,7 @@ export type TicketOrderUncheckedUpdateManyInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  concludedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -724,6 +743,7 @@ export type TicketOrderCountOrderByAggregateInput = {
   paidAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
+  concludedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -759,6 +779,7 @@ export type TicketOrderMaxOrderByAggregateInput = {
   paidAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
+  concludedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -786,6 +807,7 @@ export type TicketOrderMinOrderByAggregateInput = {
   paidAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
+  concludedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -876,6 +898,7 @@ export type TicketOrderCreateWithoutGuildInput = {
   paidAt?: Date | string | null
   cancelledAt?: Date | string | null
   confirmedAt?: Date | string | null
+  concludedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -902,6 +925,7 @@ export type TicketOrderUncheckedCreateWithoutGuildInput = {
   paidAt?: Date | string | null
   cancelledAt?: Date | string | null
   confirmedAt?: Date | string | null
+  concludedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -957,6 +981,7 @@ export type TicketOrderScalarWhereInput = {
   paidAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   confirmedAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
+  concludedAt?: Prisma.DateTimeNullableFilter<"TicketOrder"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"TicketOrder"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TicketOrder"> | Date | string
 }
@@ -983,6 +1008,7 @@ export type TicketOrderCreateManyGuildInput = {
   paidAt?: Date | string | null
   cancelledAt?: Date | string | null
   confirmedAt?: Date | string | null
+  concludedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1008,6 +1034,7 @@ export type TicketOrderUpdateWithoutGuildInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  concludedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1033,6 +1060,7 @@ export type TicketOrderUncheckedUpdateWithoutGuildInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  concludedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1058,6 +1086,7 @@ export type TicketOrderUncheckedUpdateManyWithoutGuildInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  concludedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1087,6 +1116,7 @@ export type TicketOrderSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   paidAt?: boolean
   cancelledAt?: boolean
   confirmedAt?: boolean
+  concludedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
@@ -1117,11 +1147,12 @@ export type TicketOrderSelectScalar = {
   paidAt?: boolean
   cancelledAt?: boolean
   confirmedAt?: boolean
+  concludedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TicketOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"oid" | "guildId" | "channelId" | "userId" | "responsibleAdminId" | "status" | "cardType" | "cardCount" | "deckLink" | "sheetCount" | "materialCostCents" | "profitMarginPercent" | "finalPriceCents" | "paymentId" | "paymentMessageId" | "paymentStatus" | "paymentQrCodeBase64" | "paymentCopyPaste" | "paymentExpiresAt" | "paidAt" | "cancelledAt" | "confirmedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["ticketOrder"]>
+export type TicketOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"oid" | "guildId" | "channelId" | "userId" | "responsibleAdminId" | "status" | "cardType" | "cardCount" | "deckLink" | "sheetCount" | "materialCostCents" | "profitMarginPercent" | "finalPriceCents" | "paymentId" | "paymentMessageId" | "paymentStatus" | "paymentQrCodeBase64" | "paymentCopyPaste" | "paymentExpiresAt" | "paidAt" | "cancelledAt" | "confirmedAt" | "concludedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["ticketOrder"]>
 export type TicketOrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
 }
@@ -1154,6 +1185,7 @@ export type $TicketOrderPayload<ExtArgs extends runtime.Types.Extensions.Interna
     paidAt: Date | null
     cancelledAt: Date | null
     confirmedAt: Date | null
+    concludedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["ticketOrder"]>
@@ -1571,6 +1603,7 @@ export interface TicketOrderFieldRefs {
   readonly paidAt: Prisma.FieldRef<"TicketOrder", 'DateTime'>
   readonly cancelledAt: Prisma.FieldRef<"TicketOrder", 'DateTime'>
   readonly confirmedAt: Prisma.FieldRef<"TicketOrder", 'DateTime'>
+  readonly concludedAt: Prisma.FieldRef<"TicketOrder", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"TicketOrder", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TicketOrder", 'DateTime'>
 }

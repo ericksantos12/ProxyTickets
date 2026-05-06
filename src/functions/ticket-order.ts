@@ -1,10 +1,11 @@
-export type TicketChannelStage = "new" | "pending" | "awaiting";
+export type TicketChannelStage = "new" | "pending" | "awaiting" | "concluded";
 export type TicketOrderCardTypeInput = "photo-laminated" | "foil-card";
 
 const ticketChannelPrefixes: Record<TicketChannelStage, string> = {
     new: "⌛",
     pending: "🛒",
     awaiting: "✅",
+    concluded: "🚛",
 };
 const ticketChannelSeparator = "│";
 

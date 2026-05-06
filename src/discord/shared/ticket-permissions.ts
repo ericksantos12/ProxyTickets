@@ -6,6 +6,12 @@ const ticketOwnerPermissions = {
     ReadMessageHistory: true,
 } as const;
 
+const hiddenTicketOwnerPermissions = {
+    ViewChannel: false,
+    SendMessages: false,
+    ReadMessageHistory: false,
+} as const;
+
 export function hasTicketOwnerPermissions(channel: TextChannel, userId: string) {
     const overwrite = channel.permissionOverwrites.cache.get(userId);
     if (!overwrite) {
@@ -26,4 +32,8 @@ export async function ensureTicketOwnerPermissions(channel: TextChannel, userId:
     }
 
     await channel.permissionOverwrites.edit(userId, ticketOwnerPermissions, { reason });
+}
+
+export async function removeTicketOwnerPermissions(channel: TextChannel, userId: string, reason?: string) {
+    await channel.permissionOverwrites.edit(userId, hiddenTicketOwnerPermissions, { reason });
 }

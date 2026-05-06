@@ -884,6 +884,7 @@ export const TicketOrderScalarFieldEnum = {
   paidAt: 'paidAt',
   cancelledAt: 'cancelledAt',
   confirmedAt: 'confirmedAt',
+  concludedAt: 'concludedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

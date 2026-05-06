@@ -323,13 +323,40 @@ export function renderPixPayment(userId: string, responsibleAdminId: string, det
     } satisfies InteractionUpdateOptions;
 }
 
-export function renderPixPaymentConfirmed(userId: string, finalPriceCents: number | null) {
+export function renderPixPaymentConfirmed(userId: string, responsibleAdminId: string | null, finalPriceCents: number | null) {
     const paidValue = finalPriceCents === null ? "Nao informado" : formatCurrencyFromCents(finalPriceCents);
     const container = createContainer("Green",
         "# Pagamento confirmado\nO PIX foi pago e o pedido agora esta em preparo.",
         Separator.Default,
         [
             `**Usuario:** <@${userId}>`,
+            `**Responsavel:** ${responsibleAdminId ? `<@${responsibleAdminId}>` : "Nao informado"}`,
+            `**Valor pago:** ${paidValue} ✅`,
+        ].join("\n"),
+        responsibleAdminId ? Separator.Default : undefined,
+        responsibleAdminId ? createRow(
+            new ButtonBuilder({
+                customId: "ticket/deliver",
+                label: "Concluir pedido",
+                style: ButtonStyle.Success,
+            }),
+        ) : undefined,
+    );
+
+    return {
+        flags: ["IsComponentsV2"],
+        components: [container],
+    } satisfies InteractionUpdateOptions;
+}
+
+export function renderOrderConcluded(userId: string, responsibleAdminId: string | null, finalPriceCents: number | null) {
+    const paidValue = finalPriceCents === null ? "Nao informado" : formatCurrencyFromCents(finalPriceCents);
+    const container = createContainer("Green",
+        "# Pedido concluido\nO pedido foi confeccionado e entregue ao cliente.",
+        Separator.Default,
+        [
+            `**Usuario:** <@${userId}>`,
+            `**Responsavel:** ${responsibleAdminId ? `<@${responsibleAdminId}>` : "Nao informado"}`,
             `**Valor pago:** ${paidValue} ✅`,
         ].join("\n"),
     );
