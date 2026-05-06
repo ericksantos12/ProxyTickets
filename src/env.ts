@@ -8,4 +8,6 @@ export const env = await validateEnv(z.looseObject({
     GUILD_ID: z.string().optional(),
     DATABASE_URL: z.url("Database URL is required").min(1),
     MP_ACCESS_TOKEN: z.string().min(1),
+    MP_SANDBOX: z.coerce.boolean().default(true),
+    MP_TEST_PAYER_EMAIL: z.email().default("test@testuser.com"),
 }));

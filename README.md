@@ -17,10 +17,13 @@ BOT_TOKEN=
 DATABASE_URL=
 WEBHOOK_LOGS_URL=
 GUILD_ID=
+MP_ACCESS_TOKEN=
+MP_SANDBOX=true
+MP_TEST_PAYER_EMAIL=test@testuser.com
 ```
 
-- `BOT_TOKEN` e `DATABASE_URL` sao obrigatorias.
-- `WEBHOOK_LOGS_URL` e `GUILD_ID` sao opcionais.
+- `BOT_TOKEN`, `DATABASE_URL` e `MP_ACCESS_TOKEN` sao obrigatorias.
+- `WEBHOOK_LOGS_URL`, `GUILD_ID`, `MP_SANDBOX` e `MP_TEST_PAYER_EMAIL` sao opcionais.
 
 ### Detalhes do .env
 
@@ -29,6 +32,9 @@ GUILD_ID=
 - `NODE_OPTIONS`: opcoes adicionais do Node.js (ex: `--max-old-space-size=4096`).
 - `WEBHOOK_LOGS_URL`: webhook para logs do bot.
 - `GUILD_ID`: ID do servidor para registrar comandos em escopo de guild.
+- `MP_ACCESS_TOKEN`: Access Token do Mercado Pago.
+- `MP_SANDBOX`: quando `true`, envia `X-Test-Token` nas chamadas do Mercado Pago. Use `false` somente em producao.
+- `MP_TEST_PAYER_EMAIL`: email usado como pagador em sandbox pela Orders API. Padrao: `test@testuser.com`.
 
 ## Fluxo principal
 

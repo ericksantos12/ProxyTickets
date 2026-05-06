@@ -358,14 +358,21 @@ createResponder({
         const user = await interaction.client.users.fetch(order.userId).catch(() => null);
         const nextChannelName = formatTicketChannelName("pending", user?.username ?? "usuario");
 
-        const payerEmail = `${order.userId}@discord.local`;
+        const payerEmail = getMercadoPagoPayerEmail(order.userId);
 
         const { createPixPayment } = await import("../../../lib/mercado-pago.js");
         const pix = await createPixPayment(
             price.value.finalPriceCents / 100,
             `Pedido proxies - ${details.cardCount} cartas`,
             payerEmail,
-        );
+        ).catch(async error => {
+            console.error("Failed to create Mercado Pago PIX payment:", error);
+            await interaction.reply({ flags: ["Ephemeral"], content: getMercadoPagoPaymentErrorMessage(error) });
+            return null;
+        });
+        if (!pix) {
+            return;
+        }
 
         await channel.setParent(pendingCategory.id, { lockPermissions: false, reason: "Pedido confirmado e aguardando pagamento" });
         await ensureTicketOwnerPermissions(channel, order.userId, "Manter acesso do usuario ao mover categoria");
@@ -436,4 +443,24 @@ function getOrderDetails(order: { cardType: string | null; cardCount: number | n
         cardCount: order.cardCount,
         deckLink: order.deckLink,
     };
+}
+
+function getMercadoPagoPayerEmail(userId: string) {
+    return `discord-${userId}@example.com`;
+}
+
+function getMercadoPagoPaymentErrorMessage(error: unknown) {
+    const message = typeof error === "object" && error && "message" in error
+        ? String(error.message)
+        : "";
+
+    if (message.includes("Unauthorized use of live credentials")) {
+        return "O Mercado Pago recusou a criacao do PIX porque credenciais de producao foram usadas em um fluxo de teste. Verifique se `MP_SANDBOX=true` esta configurado para testes.";
+    }
+
+    if (message.includes("Invalid test user email")) {
+        return "O Mercado Pago recusou o email do pagador de teste. Verifique `MP_TEST_PAYER_EMAIL` ou use a Orders API com `MP_SANDBOX=true`.";
+    }
+
+    return "Nao foi possivel gerar o PIX no Mercado Pago. Tente novamente em instantes.";
 }

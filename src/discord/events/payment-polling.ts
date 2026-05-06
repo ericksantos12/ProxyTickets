@@ -119,7 +119,7 @@ async function pollPendingPayments(client: Client) {
                 if (!order.paymentId) continue;
 
                 const payment = await getPayment(order.paymentId);
-                if (payment.status === "approved") {
+                if (isApprovedPaymentStatus(payment.status)) {
                     await approveOrder(order, client, payment.status);
                     continue;
                 }
@@ -148,3 +148,7 @@ createEvent({
         }, pollingIntervalMs);
     },
 });
+
+function isApprovedPaymentStatus(status: string | undefined) {
+    return status === "approved" || status === "paid" || status === "processed";
+}

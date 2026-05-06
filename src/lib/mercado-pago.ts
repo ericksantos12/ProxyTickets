@@ -1,48 +1,95 @@
-import { MercadoPagoConfig, Payment } from "mercadopago";
+import { MercadoPagoConfig, Order } from "mercadopago";
 import { env } from "#env";
 import { randomUUID } from "node:crypto";
 
-const client = new MercadoPagoConfig({ accessToken: env.MP_ACCESS_TOKEN });
-const paymentApi = new Payment(client);
+const client = new MercadoPagoConfig({
+    accessToken: env.MP_ACCESS_TOKEN,
+    options: { testToken: env.MP_SANDBOX },
+});
+const orderApi = new Order(client);
 
 export async function createPixPayment(amount: number, description: string, payerEmail: string) {
     const expirationDate = new Date();
     expirationDate.setMinutes(expirationDate.getMinutes() + 30);
+    const payer = getOrderPayer(payerEmail);
 
-    const response = await paymentApi.create({
+    const response = await orderApi.create({
         body: {
-            transaction_amount: amount,
+            type: "online",
             description,
-            payment_method_id: "pix",
-            date_of_expiration: expirationDate.toISOString(),
-            payer: {
-                email: payerEmail,
+            external_reference: randomUUID(),
+            total_amount: formatMercadoPagoAmount(amount),
+            processing_mode: "automatic",
+            payer,
+            transactions: {
+                payments: [
+                    {
+                        amount: formatMercadoPagoAmount(amount),
+                        expiration_time: "PT30M",
+                        payment_method: {
+                            id: "pix",
+                            type: "bank_transfer",
+                        },
+                    },
+                ],
             },
         },
         requestOptions: { idempotencyKey: randomUUID() },
     });
 
-    const transactionData = response.point_of_interaction?.transaction_data;
+    const payment = getOrderPayment(response);
+    const paymentMethod = payment?.payment_method;
     if (!response.id) {
-        throw new Error("Mercado Pago did not return a payment ID.");
+        throw new Error("Mercado Pago did not return an order ID.");
     }
-    if (!transactionData?.qr_code || !transactionData.qr_code_base64) {
+    if (!paymentMethod?.qr_code || !paymentMethod.qr_code_base64) {
         throw new Error("Mercado Pago did not return PIX QR code data.");
     }
 
     return {
         paymentId: String(response.id),
-        status: response.status,
-        qrCodeBase64: transactionData.qr_code_base64,
-        copyPaste: transactionData.qr_code,
+        status: getOrderStatus(response),
+        qrCodeBase64: paymentMethod.qr_code_base64,
+        copyPaste: paymentMethod.qr_code,
         expiresAt: expirationDate,
     };
 }
 
 export async function getPayment(paymentId: string) {
-    return paymentApi.get({ id: paymentId });
+    const response = await orderApi.get({ id: paymentId });
+
+    return {
+        id: response.id,
+        status: getOrderStatus(response),
+    };
 }
 
 export async function cancelPayment(paymentId: string) {
-    return paymentApi.cancel({ id: paymentId });
+    return orderApi.cancel({ id: paymentId });
+}
+
+type MercadoPagoOrder = Awaited<ReturnType<Order["get"]>>;
+
+function getOrderPayment(order: MercadoPagoOrder) {
+    return order.transactions?.payments?.[0];
+}
+
+function getOrderStatus(order: MercadoPagoOrder) {
+    const payment = getOrderPayment(order);
+    return payment?.status ?? order.status;
+}
+
+function getOrderPayer(payerEmail: string) {
+    if (env.MP_SANDBOX) {
+        return {
+            email: env.MP_TEST_PAYER_EMAIL,
+            first_name: "APRO",
+        };
+    }
+
+    return { email: payerEmail };
+}
+
+function formatMercadoPagoAmount(amount: number) {
+    return amount.toFixed(2);
 }
