@@ -493,7 +493,7 @@ createResponder({
                 },
             });
 
-            await interaction.editReply(renderOrderConcluded(order.userId, order.responsibleAdminId, order.finalPriceCents));
+            await interaction.message.edit(renderOrderConcluded(order.userId, order.responsibleAdminId, order.finalPriceCents));
             await interaction.followUp({ flags: ["Ephemeral"], content: "Pedido concluido. O canal ficara visivel para admins por 24 horas." });
         } catch (error) {
             console.error(`Failed to conclude ticket order for ${interaction.channelId}:`, error);

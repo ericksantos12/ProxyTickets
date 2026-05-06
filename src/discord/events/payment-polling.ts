@@ -66,9 +66,6 @@ async function approveOrder(order: { channelId: string; guildId: string; userId:
         return;
     }
 
-    await moveToAwaitingDelivery(order, channel, client);
-    await editPaymentMessageAsConfirmed(order, channel);
-
     await prisma.ticketOrder.update({
         where: { channelId: order.channelId },
         data: {
@@ -77,6 +74,9 @@ async function approveOrder(order: { channelId: string; guildId: string; userId:
             paidAt: new Date(),
         },
     });
+
+    await moveToAwaitingDelivery(order, channel, client);
+    await editPaymentMessageAsConfirmed(order, channel);
 
 }
 
