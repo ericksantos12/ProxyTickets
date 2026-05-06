@@ -300,9 +300,10 @@ export function renderPixPayment(userId: string, responsibleAdminId: string, det
             `**Tipo de carta:** ${formatTicketOrderCardType(details.cardType)}`,
             `**Quantidade:** ${details.cardCount}`,
             `**Folhas A4:** ${price.sheetCount}`,
-            `**Valor final:** ${formatCurrencyFromCents(price.finalPriceCents)}`,
             `**Link do deck:** ${details.deckLink ?? "Nao informado"}`,
         ].join("\n"),
+        Separator.Default,
+        `## Valor total: ${formatCurrencyFromCents(price.finalPriceCents)}`,
         Separator.Default,
         [
             "**Copia e cola PIX:**",
@@ -317,11 +318,15 @@ export function renderPixPayment(userId: string, responsibleAdminId: string, det
     } satisfies InteractionUpdateOptions;
 }
 
-export function renderPixPaymentConfirmed(userId: string) {
+export function renderPixPaymentConfirmed(userId: string, finalPriceCents: number | null) {
+    const paidValue = finalPriceCents === null ? "Nao informado" : formatCurrencyFromCents(finalPriceCents);
     const container = createContainer("Green",
         "# Pagamento confirmado\nO PIX foi pago e o pedido agora esta em preparo.",
         Separator.Default,
-        `**Usuario:** <@${userId}>`,
+        [
+            `**Usuario:** <@${userId}>`,
+            `**Valor pago:** ${paidValue} ✅`,
+        ].join("\n"),
     );
 
     return {

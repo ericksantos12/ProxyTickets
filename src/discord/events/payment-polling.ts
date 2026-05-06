@@ -49,7 +49,7 @@ async function cleanupExpiredOrder(order: { channelId: string; guildId: string; 
     await channel.delete("PIX expirado").catch(() => null);
 }
 
-async function approveOrder(order: { channelId: string; guildId: string; userId: string; paymentMessageId: string | null }, client: Client, paymentStatus: string | undefined) {
+async function approveOrder(order: { channelId: string; guildId: string; userId: string; paymentMessageId: string | null; finalPriceCents: number | null }, client: Client, paymentStatus: string | undefined) {
     const channel = await getTicketChannel(order, client);
     if (!channel) {
         await prisma.ticketOrder.update({
@@ -75,19 +75,16 @@ async function approveOrder(order: { channelId: string; guildId: string; userId:
         },
     });
 
-    await channel.send({
-        content: `Pagamento confirmado! <@${order.userId}> seu pedido agora esta em preparo.`,
-    });
 }
 
-async function editPaymentMessageAsConfirmed(order: { userId: string; paymentMessageId: string | null }, channel: TextChannel) {
+async function editPaymentMessageAsConfirmed(order: { userId: string; paymentMessageId: string | null; finalPriceCents: number | null }, channel: TextChannel) {
     if (!order.paymentMessageId) return;
 
     const message = await channel.messages.fetch(order.paymentMessageId).catch(() => null);
     if (!message) return;
 
     await message.edit({
-        ...renderPixPaymentConfirmed(order.userId),
+        ...renderPixPaymentConfirmed(order.userId, order.finalPriceCents),
         attachments: [],
     }).catch(() => null);
 }
