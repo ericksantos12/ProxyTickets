@@ -159,13 +159,20 @@ createResponder({
             return;
         }
 
+        const config = await getOrCreateBotConfig(interaction.guildId);
+        const price = calculateCardOrderPrice(details.cardType, details.cardCount, config);
+        if (!price.ok) {
+            await interaction.reply({ flags: ["Ephemeral"], content: price.error });
+            return;
+        }
+
         if (order.status === "IN_REVIEW" && order.responsibleAdminId) {
-            await interaction.update(renderOrderReview(order.userId, order.responsibleAdminId, details));
+            await interaction.update(renderOrderReview(order.userId, order.responsibleAdminId, details, price.value));
             return;
         }
 
         if (order.status === "PENDING_CONFIRMATION") {
-            await interaction.update(renderPendingConfirmation(order.userId, details));
+            await interaction.update(renderPendingConfirmation(order.userId, details, price.value));
             return;
         }
 
@@ -271,6 +278,18 @@ createResponder({
             return;
         }
 
+        const details = {
+            cardType,
+            cardCount: cardCount.value,
+            deckLink: deckLink.value,
+        };
+
+        const price = calculateCardOrderPrice(details.cardType, details.cardCount, config);
+        if (!price.ok) {
+            await interaction.reply({ flags: ["Ephemeral"], content: price.error });
+            return;
+        }
+
         const status = order.responsibleAdminId ? "IN_REVIEW" : "PENDING_CONFIRMATION";
 
         await prisma.ticketOrder.update({
@@ -283,15 +302,9 @@ createResponder({
             },
         });
 
-        const details = {
-            cardType,
-            cardCount: cardCount.value,
-            deckLink: deckLink.value,
-        };
-
         await interaction.update(order.responsibleAdminId
-            ? renderOrderReview(order.userId, order.responsibleAdminId, details)
-            : renderPendingConfirmation(order.userId, details));
+            ? renderOrderReview(order.userId, order.responsibleAdminId, details, price.value)
+            : renderPendingConfirmation(order.userId, details, price.value));
     },
 });
 
@@ -325,6 +338,13 @@ createResponder({
             return;
         }
 
+        const config = await getOrCreateBotConfig(interaction.guildId);
+        const price = calculateCardOrderPrice(details.cardType, details.cardCount, config);
+        if (!price.ok) {
+            await interaction.reply({ flags: ["Ephemeral"], content: price.error });
+            return;
+        }
+
         await prisma.ticketOrder.update({
             where: { channelId: interaction.channelId },
             data: {
@@ -333,7 +353,7 @@ createResponder({
             },
         });
 
-        await interaction.update(renderOrderReview(order.userId, interaction.user.id, details));
+        await interaction.update(renderOrderReview(order.userId, interaction.user.id, details, price.value));
     },
 });
 

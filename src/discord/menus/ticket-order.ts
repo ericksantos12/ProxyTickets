@@ -178,7 +178,7 @@ export function createTicketDetailsModal(cardType: TicketOrderCardTypeInput, det
     );
 }
 
-export function renderPendingConfirmation(userId: string, details: TicketOrderDetailsView) {
+export function renderPendingConfirmation(userId: string, details: TicketOrderDetailsView, price: CardOrderPrice) {
     const container = createContainer("Yellow",
         "# Pendencia de confirmacao\nUm admin precisa assumir este pedido para revisar as informacoes com o usuario.",
         Separator.Default,
@@ -188,6 +188,8 @@ export function renderPendingConfirmation(userId: string, details: TicketOrderDe
             `**Quantidade:** ${details.cardCount}`,
             `**Link do deck:** ${details.deckLink ?? "Nao informado"}`,
         ].join("\n"),
+        Separator.Default,
+        `## Valor total: ${formatCurrencyFromCents(price.finalPriceCents)}`,
         Separator.Default,
         createRow(
             new ButtonBuilder({
@@ -209,7 +211,7 @@ export function renderPendingConfirmation(userId: string, details: TicketOrderDe
     } satisfies InteractionUpdateOptions;
 }
 
-export function renderOrderReview(userId: string, responsibleAdminId: string, details: TicketOrderDetailsView) {
+export function renderOrderReview(userId: string, responsibleAdminId: string, details: TicketOrderDetailsView, price: CardOrderPrice) {
     const container = createContainer("Green",
         "# Pedido em revisao\nO admin responsavel assumiu o pedido. Confirme as informacoes pelo chat antes do pagamento.",
         Separator.Default,
@@ -220,6 +222,8 @@ export function renderOrderReview(userId: string, responsibleAdminId: string, de
             `**Quantidade:** ${details.cardCount}`,
             `**Link do deck:** ${details.deckLink ?? "Nao informado"}`,
         ].join("\n"),
+        Separator.Default,
+        `## Valor total: ${formatCurrencyFromCents(price.finalPriceCents)}`,
         Separator.Default,
         createRow(
             new ButtonBuilder({
