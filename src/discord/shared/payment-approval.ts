@@ -1,5 +1,5 @@
 import { prisma } from "#database";
-import { formatTicketChannelName } from "#functions";
+import { replaceChannelStageEmoji } from "#functions";
 import { ChannelType, type Client, type TextChannel } from "discord.js";
 import { renderPixPaymentConfirmed } from "../menus/ticket-order.js";
 import { ensureTicketOwnerPermissions } from "./ticket-permissions.js";
@@ -34,7 +34,7 @@ export async function approveTicketOrderPayment(order: {
         },
     });
 
-    await moveToAwaitingDelivery(order, channel, client);
+    await moveToAwaitingDelivery(order, channel);
     await editPaymentMessageAsConfirmed(order, channel);
 }
 
@@ -60,7 +60,7 @@ async function editPaymentMessageAsConfirmed(order: { userId: string; responsibl
     }).catch(() => null);
 }
 
-async function moveToAwaitingDelivery(order: { guildId: string; userId: string }, channel: TextChannel, client: Client) {
+async function moveToAwaitingDelivery(order: { guildId: string; userId: string }, channel: TextChannel) {
     const config = await prisma.guildBotConfig.findUnique({
         where: { guildId: order.guildId },
     });
@@ -74,7 +74,6 @@ async function moveToAwaitingDelivery(order: { guildId: string; userId: string }
 
     await ensureTicketOwnerPermissions(channel, order.userId, "Manter acesso ao confirmar pagamento");
 
-    const user = await client.users.fetch(order.userId).catch(() => null);
-    const nextChannelName = formatTicketChannelName("awaiting", user?.username ?? "usuario");
+    const nextChannelName = replaceChannelStageEmoji(channel.name, "awaiting");
     await channel.setName(nextChannelName, "Pagamento confirmado");
 }

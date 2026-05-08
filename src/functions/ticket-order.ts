@@ -4,8 +4,8 @@ export type TicketOrderCardTypeInput = "photo-laminated" | "foil-card";
 const ticketChannelPrefixes: Record<TicketChannelStage, string> = {
     new: "⌛",
     pending: "🛒",
-    awaiting: "✅",
-    concluded: "🚛",
+    awaiting: "✏️",
+    concluded: "✅",
 };
 const ticketChannelSeparator = "│";
 
@@ -15,6 +15,18 @@ export function formatTicketChannelName(stage: TicketChannelStage, nickname: str
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
 
     return `${prefix}${ticketChannelSeparator}${sanitizeTicketNickname(nickname)}${ticketChannelSeparator}${day}/${month}`;
+}
+
+export function replaceChannelStageEmoji(currentName: string, stage: TicketChannelStage): string {
+    const prefix = ticketChannelPrefixes[stage];
+
+    for (const currentPrefix of Object.values(ticketChannelPrefixes)) {
+        if (currentName.startsWith(`${currentPrefix}${ticketChannelSeparator}`)) {
+            return `${prefix}${currentName.slice(currentPrefix.length)}`;
+        }
+    }
+
+    return currentName;
 }
 
 export function parseTicketCardCount(input: string) {

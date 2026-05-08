@@ -1,6 +1,6 @@
 import { createResponder } from "#base";
 import { prisma } from "#database";
-import { calculateCardOrderPrice, formatTicketChannelName, fromPrismaTicketOrderCardType, getOrCreateBotConfig, isTicketOrderCardTypeInput, parseDeckLink, parseTicketCardCount, toPrismaTicketOrderCardType, type CardOrderPrice, type TicketOrderCardTypeInput } from "#functions";
+import { calculateCardOrderPrice, formatTicketChannelName, fromPrismaTicketOrderCardType, getOrCreateBotConfig, isTicketOrderCardTypeInput, parseDeckLink, parseTicketCardCount, replaceChannelStageEmoji, toPrismaTicketOrderCardType, type CardOrderPrice, type TicketOrderCardTypeInput } from "#functions";
 import { ResponderType } from "@constatic/base";
 import { ChannelType, PermissionFlagsBits, type ButtonInteraction, type TextChannel } from "discord.js";
 import { createTicketDetailsModal, renderCancelConfirmation, renderCancelConfirmed, renderCancelKept, renderCardTypeSelection, renderInitialTicketMessage, renderManualPixPayment, renderOrderConcluded, renderOrderConfirmed, renderOrderReview, renderPendingConfirmation, renderPixPayment, renderSelectedCardType } from "../../menus/ticket-order.js";
@@ -413,8 +413,7 @@ createResponder({
             return;
         }
 
-        const user = await interaction.client.users.fetch(order.userId).catch(() => null);
-        const nextChannelName = formatTicketChannelName("pending", user?.username ?? "usuario");
+        const nextChannelName = replaceChannelStageEmoji(channel.name, "pending");
 
         const payerEmail = getMercadoPagoPayerEmail(order.userId);
 
@@ -548,8 +547,7 @@ createResponder({
             return;
         }
 
-        const user = await interaction.client.users.fetch(order.userId).catch(() => null);
-        const nextChannelName = formatTicketChannelName("pending", user?.username ?? "usuario");
+        const nextChannelName = replaceChannelStageEmoji(channel.name, "pending");
 
         await startManualPixPayment({
             interaction,
@@ -618,7 +616,7 @@ createResponder({
                 return;
             }
 
-            const nextChannelName = formatConcludedChannelName(channel.name);
+            const nextChannelName = replaceChannelStageEmoji(channel.name, "concluded");
             await channel.setName(nextChannelName, "Pedido concluido e entregue").catch(async error => {
                 console.error(`Failed to rename concluded ticket channel ${interaction.channelId} to ${nextChannelName}:`, error);
                 await interaction.followUp({ flags: ["Ephemeral"], content: "Pedido marcado como concluido, mas nao consegui renomear o canal. Verifique a permissao Manage Channels do bot." }).catch(() => null);
@@ -745,16 +743,6 @@ function shouldShowEditBackButton(order: { status: string; cardType: string | nu
 
 function getMercadoPagoPayerEmail(userId: string) {
     return `discord-${userId}@example.com`;
-}
-
-function formatConcludedChannelName(currentName: string) {
-    const separator = "│";
-    const [, ...parts] = currentName.split(separator);
-    if (parts.length >= 2) {
-        return ["🚛", ...parts].join(separator);
-    }
-
-    return formatTicketChannelName("concluded", "usuario");
 }
 
 function getMercadoPagoPaymentErrorMessage(error: unknown) {
