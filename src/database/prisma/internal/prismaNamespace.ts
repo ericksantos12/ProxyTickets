@@ -843,6 +843,7 @@ export const GuildBotConfigScalarFieldEnum = {
   newTicketsCategoryId: 'newTicketsCategoryId',
   pendingPaymentCategoryId: 'pendingPaymentCategoryId',
   awaitingDeliveryCategoryId: 'awaitingDeliveryCategoryId',
+  fallbackPixKey: 'fallbackPixKey',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -876,6 +877,7 @@ export const TicketOrderScalarFieldEnum = {
   profitMarginPercent: 'profitMarginPercent',
   finalPriceCents: 'finalPriceCents',
   paymentId: 'paymentId',
+  paymentMethod: 'paymentMethod',
   paymentMessageId: 'paymentMessageId',
   paymentStatus: 'paymentStatus',
   paymentQrCodeBase64: 'paymentQrCodeBase64',
@@ -988,6 +990,20 @@ export type EnumTicketOrderCardTypeFieldRefInput<$PrismaModel> = FieldRefInputTy
  * Reference to a field of type 'TicketOrderCardType[]'
  */
 export type ListEnumTicketOrderCardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketOrderCardType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentMethod'
+ */
+export type EnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentMethod[]'
+ */
+export type ListEnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod[]'>
     
 
 

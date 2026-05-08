@@ -1,6 +1,7 @@
 const MAX_PRICE_CENTS = 10_000_000;
 const MAX_SHEET_COUNT = 100_000;
 const MAX_PROFIT_MARGIN_PERCENT = 1_000;
+const MAX_FALLBACK_PIX_KEY_LENGTH = 140;
 const CARDS_PER_A4_SHEET = 8;
 
 export type CardOrderType = "photo-laminated" | "foil-card";
@@ -93,6 +94,19 @@ export function parseProfitMarginPercent(input: string): ParseResult<number> {
     }
 
     return { ok: true, value: percent };
+}
+
+export function parseFallbackPixKey(input: string): ParseResult<string | null> {
+    const value = input.trim();
+
+    if (!value) {
+        return { ok: true, value: null };
+    }
+    if (value.length > MAX_FALLBACK_PIX_KEY_LENGTH) {
+        return { ok: false, error: `A chave PIX deve ter no maximo ${MAX_FALLBACK_PIX_KEY_LENGTH} caracteres.` };
+    }
+
+    return { ok: true, value };
 }
 
 export function calculateUnitPriceCents(priceCents: number | null, sheetCount: number | null): number | null {

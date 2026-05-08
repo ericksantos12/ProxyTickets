@@ -25,6 +25,8 @@ model GuildBotConfig {
     pendingPaymentCategoryId  String?
     awaitingDeliveryCategoryId String?
 
+    fallbackPixKey String?
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 

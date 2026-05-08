@@ -2,7 +2,7 @@ import { calculateUnitPriceCents, formatCurrencyFromCents, formatPriceInput } fr
 import { createContainer, createLabel, createModal, createRow, createSection, createTextInput, Separator } from "@magicyan/discord";
 import { ButtonBuilder, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, type Guild, type InteractionReplyOptions, TextInputStyle } from "discord.js";
 
-export const configPanelPages = ["production", "ticket-categories", "paper", "foil"] as const;
+export const configPanelPages = ["production", "ticket-categories", "payment", "paper", "foil"] as const;
 
 export type ConfigPanelPage = typeof configPanelPages[number];
 
@@ -21,6 +21,7 @@ export type BotConfigView = {
     newTicketsCategoryId: string | null;
     pendingPaymentCategoryId: string | null;
     awaitingDeliveryCategoryId: string | null;
+    fallbackPixKey: string | null;
 };
 
 export const configPanelSections = ["default", "lamination", "holographic-sticker", "cardstock"] as const;
@@ -91,6 +92,11 @@ export const pageDefinitions: Record<ConfigPanelPage, PageDefinition> = {
         title: "Categorias de tickets",
         sections: [],
     },
+    payment: {
+        id: "payment",
+        title: "Pagamento",
+        sections: [],
+    },
 };
 
 export function isConfigPanelPage(page: string): page is ConfigPanelPage {
@@ -120,6 +126,8 @@ export function renderConfigPanel<R = InteractionReplyOptions>(page: ConfigPanel
         ? renderProductionTypeSections(config)
         : visiblePage === "ticket-categories"
             ? renderTicketCategorySections(config, guild)
+            : visiblePage === "payment"
+                ? renderPaymentSections(config)
             : definition.sections.map(section => renderMaterialSection(visiblePage, section, config));
     const combinedUnitPriceCents = visiblePage === "paper" || visiblePage === "foil"
         ? definition.sections.reduce<number | null>((total, section) => {
@@ -213,6 +221,24 @@ export function createConfigProfitMarginModal(config: BotConfigView) {
     );
 }
 
+export function createConfigFallbackPixKeyModal(config: BotConfigView) {
+    return createModal(
+        "config/save-fallback-pix",
+        "Editar PIX manual",
+        createLabel({
+            label: "Chave PIX manual",
+            description: "Usada quando o Mercado Pago falhar ou quando o admin escolher PIX manual. Deixe vazio para desativar.",
+            component: createTextInput({
+                customId: "fallbackPixKey",
+                required: false,
+                style: TextInputStyle.Short,
+                placeholder: "email@exemplo.com, telefone, CPF/CNPJ ou chave aleatoria",
+                value: config.fallbackPixKey ?? undefined,
+            }),
+        }),
+    );
+}
+
 function renderMaterialSection(page: ConfigPanelPage, section: SectionDefinition, config: BotConfigView) {
     const priceCents = config[section.priceField];
     const sheetCount = config[section.countField];
@@ -238,8 +264,26 @@ export function getVisibleConfigPanelPages(config: BotConfigView): ConfigPanelPa
     return [
         "production",
         "ticket-categories",
+        "payment",
         ...(isEnabled(config.photoLaminatedProductionEnabled) ? ["paper" as const] : []),
         ...(isEnabled(config.foilCardProductionEnabled) ? ["foil" as const] : []),
+    ];
+}
+
+function renderPaymentSections(config: BotConfigView) {
+    return [
+        createSection(
+            [
+                "**PIX manual/fallback**",
+                `**Chave PIX:** ${config.fallbackPixKey ? `\`${config.fallbackPixKey}\`` : "Nao configurado"}`,
+                "Esta chave sera exibida quando o Mercado Pago falhar ou quando o admin escolher PIX manual.",
+            ].join("\n"),
+            new ButtonBuilder({
+                customId: "config/edit-fallback-pix",
+                label: "Editar",
+                style: ButtonStyle.Primary,
+            }),
+        ),
     ];
 }
 

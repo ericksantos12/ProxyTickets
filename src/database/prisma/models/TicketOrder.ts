@@ -56,6 +56,7 @@ export type TicketOrderMinAggregateOutputType = {
   profitMarginPercent: number | null
   finalPriceCents: number | null
   paymentId: string | null
+  paymentMethod: $Enums.PaymentMethod | null
   paymentMessageId: string | null
   paymentStatus: string | null
   paymentQrCodeBase64: string | null
@@ -84,6 +85,7 @@ export type TicketOrderMaxAggregateOutputType = {
   profitMarginPercent: number | null
   finalPriceCents: number | null
   paymentId: string | null
+  paymentMethod: $Enums.PaymentMethod | null
   paymentMessageId: string | null
   paymentStatus: string | null
   paymentQrCodeBase64: string | null
@@ -112,6 +114,7 @@ export type TicketOrderCountAggregateOutputType = {
   profitMarginPercent: number
   finalPriceCents: number
   paymentId: number
+  paymentMethod: number
   paymentMessageId: number
   paymentStatus: number
   paymentQrCodeBase64: number
@@ -158,6 +161,7 @@ export type TicketOrderMinAggregateInputType = {
   profitMarginPercent?: true
   finalPriceCents?: true
   paymentId?: true
+  paymentMethod?: true
   paymentMessageId?: true
   paymentStatus?: true
   paymentQrCodeBase64?: true
@@ -186,6 +190,7 @@ export type TicketOrderMaxAggregateInputType = {
   profitMarginPercent?: true
   finalPriceCents?: true
   paymentId?: true
+  paymentMethod?: true
   paymentMessageId?: true
   paymentStatus?: true
   paymentQrCodeBase64?: true
@@ -214,6 +219,7 @@ export type TicketOrderCountAggregateInputType = {
   profitMarginPercent?: true
   finalPriceCents?: true
   paymentId?: true
+  paymentMethod?: true
   paymentMessageId?: true
   paymentStatus?: true
   paymentQrCodeBase64?: true
@@ -329,6 +335,7 @@ export type TicketOrderGroupByOutputType = {
   profitMarginPercent: number | null
   finalPriceCents: number | null
   paymentId: string | null
+  paymentMethod: $Enums.PaymentMethod | null
   paymentMessageId: string | null
   paymentStatus: string | null
   paymentQrCodeBase64: string | null
@@ -380,6 +387,7 @@ export type TicketOrderWhereInput = {
   profitMarginPercent?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
   finalPriceCents?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
   paymentId?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentMethod?: Prisma.EnumPaymentMethodNullableFilter<"TicketOrder"> | $Enums.PaymentMethod | null
   paymentMessageId?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
   paymentStatus?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
   paymentQrCodeBase64?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
@@ -409,6 +417,7 @@ export type TicketOrderOrderByWithRelationInput = {
   profitMarginPercent?: Prisma.SortOrder
   finalPriceCents?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
   paymentMessageId?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   paymentQrCodeBase64?: Prisma.SortOrder
@@ -441,6 +450,7 @@ export type TicketOrderWhereUniqueInput = Prisma.AtLeast<{
   profitMarginPercent?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
   finalPriceCents?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
   paymentId?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentMethod?: Prisma.EnumPaymentMethodNullableFilter<"TicketOrder"> | $Enums.PaymentMethod | null
   paymentMessageId?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
   paymentStatus?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
   paymentQrCodeBase64?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
@@ -470,6 +480,7 @@ export type TicketOrderOrderByWithAggregationInput = {
   profitMarginPercent?: Prisma.SortOrder
   finalPriceCents?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
   paymentMessageId?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   paymentQrCodeBase64?: Prisma.SortOrder
@@ -506,6 +517,7 @@ export type TicketOrderScalarWhereWithAggregatesInput = {
   profitMarginPercent?: Prisma.IntNullableWithAggregatesFilter<"TicketOrder"> | number | null
   finalPriceCents?: Prisma.IntNullableWithAggregatesFilter<"TicketOrder"> | number | null
   paymentId?: Prisma.StringNullableWithAggregatesFilter<"TicketOrder"> | string | null
+  paymentMethod?: Prisma.EnumPaymentMethodNullableWithAggregatesFilter<"TicketOrder"> | $Enums.PaymentMethod | null
   paymentMessageId?: Prisma.StringNullableWithAggregatesFilter<"TicketOrder"> | string | null
   paymentStatus?: Prisma.StringNullableWithAggregatesFilter<"TicketOrder"> | string | null
   paymentQrCodeBase64?: Prisma.StringNullableWithAggregatesFilter<"TicketOrder"> | string | null
@@ -533,6 +545,7 @@ export type TicketOrderCreateInput = {
   profitMarginPercent?: number | null
   finalPriceCents?: number | null
   paymentId?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
   paymentMessageId?: string | null
   paymentStatus?: string | null
   paymentQrCodeBase64?: string | null
@@ -562,6 +575,7 @@ export type TicketOrderUncheckedCreateInput = {
   profitMarginPercent?: number | null
   finalPriceCents?: number | null
   paymentId?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
   paymentMessageId?: string | null
   paymentStatus?: string | null
   paymentQrCodeBase64?: string | null
@@ -588,6 +602,7 @@ export type TicketOrderUpdateInput = {
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
   paymentMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -616,6 +631,7 @@ export type TicketOrderUncheckedUpdateInput = {
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
   paymentMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -644,6 +660,7 @@ export type TicketOrderCreateManyInput = {
   profitMarginPercent?: number | null
   finalPriceCents?: number | null
   paymentId?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
   paymentMessageId?: string | null
   paymentStatus?: string | null
   paymentQrCodeBase64?: string | null
@@ -670,6 +687,7 @@ export type TicketOrderUpdateManyMutationInput = {
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
   paymentMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -697,6 +715,7 @@ export type TicketOrderUncheckedUpdateManyInput = {
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
   paymentMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -735,6 +754,7 @@ export type TicketOrderCountOrderByAggregateInput = {
   profitMarginPercent?: Prisma.SortOrder
   finalPriceCents?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
   paymentMessageId?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   paymentQrCodeBase64?: Prisma.SortOrder
@@ -771,6 +791,7 @@ export type TicketOrderMaxOrderByAggregateInput = {
   profitMarginPercent?: Prisma.SortOrder
   finalPriceCents?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
   paymentMessageId?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   paymentQrCodeBase64?: Prisma.SortOrder
@@ -799,6 +820,7 @@ export type TicketOrderMinOrderByAggregateInput = {
   profitMarginPercent?: Prisma.SortOrder
   finalPriceCents?: Prisma.SortOrder
   paymentId?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
   paymentMessageId?: Prisma.SortOrder
   paymentStatus?: Prisma.SortOrder
   paymentQrCodeBase64?: Prisma.SortOrder
@@ -871,6 +893,11 @@ export type NullableEnumTicketOrderCardTypeFieldUpdateOperationsInput = {
   unset?: boolean
 }
 
+export type NullableEnumPaymentMethodFieldUpdateOperationsInput = {
+  set?: $Enums.PaymentMethod | null
+  unset?: boolean
+}
+
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
   unset?: boolean
@@ -890,6 +917,7 @@ export type TicketOrderCreateWithoutGuildInput = {
   profitMarginPercent?: number | null
   finalPriceCents?: number | null
   paymentId?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
   paymentMessageId?: string | null
   paymentStatus?: string | null
   paymentQrCodeBase64?: string | null
@@ -917,6 +945,7 @@ export type TicketOrderUncheckedCreateWithoutGuildInput = {
   profitMarginPercent?: number | null
   finalPriceCents?: number | null
   paymentId?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
   paymentMessageId?: string | null
   paymentStatus?: string | null
   paymentQrCodeBase64?: string | null
@@ -973,6 +1002,7 @@ export type TicketOrderScalarWhereInput = {
   profitMarginPercent?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
   finalPriceCents?: Prisma.IntNullableFilter<"TicketOrder"> | number | null
   paymentId?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
+  paymentMethod?: Prisma.EnumPaymentMethodNullableFilter<"TicketOrder"> | $Enums.PaymentMethod | null
   paymentMessageId?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
   paymentStatus?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
   paymentQrCodeBase64?: Prisma.StringNullableFilter<"TicketOrder"> | string | null
@@ -1000,6 +1030,7 @@ export type TicketOrderCreateManyGuildInput = {
   profitMarginPercent?: number | null
   finalPriceCents?: number | null
   paymentId?: string | null
+  paymentMethod?: $Enums.PaymentMethod | null
   paymentMessageId?: string | null
   paymentStatus?: string | null
   paymentQrCodeBase64?: string | null
@@ -1026,6 +1057,7 @@ export type TicketOrderUpdateWithoutGuildInput = {
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
   paymentMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1052,6 +1084,7 @@ export type TicketOrderUncheckedUpdateWithoutGuildInput = {
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
   paymentMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1078,6 +1111,7 @@ export type TicketOrderUncheckedUpdateManyWithoutGuildInput = {
   profitMarginPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalPriceCents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
   paymentMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentQrCodeBase64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1108,6 +1142,7 @@ export type TicketOrderSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   profitMarginPercent?: boolean
   finalPriceCents?: boolean
   paymentId?: boolean
+  paymentMethod?: boolean
   paymentMessageId?: boolean
   paymentStatus?: boolean
   paymentQrCodeBase64?: boolean
@@ -1139,6 +1174,7 @@ export type TicketOrderSelectScalar = {
   profitMarginPercent?: boolean
   finalPriceCents?: boolean
   paymentId?: boolean
+  paymentMethod?: boolean
   paymentMessageId?: boolean
   paymentStatus?: boolean
   paymentQrCodeBase64?: boolean
@@ -1152,7 +1188,7 @@ export type TicketOrderSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TicketOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"oid" | "guildId" | "channelId" | "userId" | "responsibleAdminId" | "status" | "cardType" | "cardCount" | "deckLink" | "sheetCount" | "materialCostCents" | "profitMarginPercent" | "finalPriceCents" | "paymentId" | "paymentMessageId" | "paymentStatus" | "paymentQrCodeBase64" | "paymentCopyPaste" | "paymentExpiresAt" | "paidAt" | "cancelledAt" | "confirmedAt" | "concludedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["ticketOrder"]>
+export type TicketOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"oid" | "guildId" | "channelId" | "userId" | "responsibleAdminId" | "status" | "cardType" | "cardCount" | "deckLink" | "sheetCount" | "materialCostCents" | "profitMarginPercent" | "finalPriceCents" | "paymentId" | "paymentMethod" | "paymentMessageId" | "paymentStatus" | "paymentQrCodeBase64" | "paymentCopyPaste" | "paymentExpiresAt" | "paidAt" | "cancelledAt" | "confirmedAt" | "concludedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["ticketOrder"]>
 export type TicketOrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
 }
@@ -1177,6 +1213,7 @@ export type $TicketOrderPayload<ExtArgs extends runtime.Types.Extensions.Interna
     profitMarginPercent: number | null
     finalPriceCents: number | null
     paymentId: string | null
+    paymentMethod: $Enums.PaymentMethod | null
     paymentMessageId: string | null
     paymentStatus: string | null
     paymentQrCodeBase64: string | null
@@ -1595,6 +1632,7 @@ export interface TicketOrderFieldRefs {
   readonly profitMarginPercent: Prisma.FieldRef<"TicketOrder", 'Int'>
   readonly finalPriceCents: Prisma.FieldRef<"TicketOrder", 'Int'>
   readonly paymentId: Prisma.FieldRef<"TicketOrder", 'String'>
+  readonly paymentMethod: Prisma.FieldRef<"TicketOrder", 'PaymentMethod'>
   readonly paymentMessageId: Prisma.FieldRef<"TicketOrder", 'String'>
   readonly paymentStatus: Prisma.FieldRef<"TicketOrder", 'String'>
   readonly paymentQrCodeBase64: Prisma.FieldRef<"TicketOrder", 'String'>

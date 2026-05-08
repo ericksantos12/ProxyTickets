@@ -232,6 +232,11 @@ export function renderOrderReview(userId: string, responsibleAdminId: string, de
                 style: ButtonStyle.Success,
             }),
             new ButtonBuilder({
+                customId: "ticket/confirm-manual",
+                label: "Usar PIX Manual",
+                style: ButtonStyle.Primary,
+            }),
+            new ButtonBuilder({
                 customId: "ticket/details/start",
                 label: "Editar informacoes",
                 style: ButtonStyle.Secondary,
@@ -319,6 +324,42 @@ export function renderPixPayment(userId: string, responsibleAdminId: string, det
             `\`${copyPaste}\``,
         ].join("\n"),
         qrCodeAttachmentName ? createMediaGallery(`attachment://${qrCodeAttachmentName}`) : undefined,
+    );
+
+    return {
+        flags: ["IsComponentsV2"],
+        components: [container],
+    } satisfies InteractionUpdateOptions;
+}
+
+export function renderManualPixPayment(userId: string, responsibleAdminId: string, details: TicketOrderDetailsView, price: CardOrderPrice, fallbackPixKey: string) {
+    const container = createContainer("Yellow",
+        "# PIX manual\nO PIX automatico nao sera usado neste pagamento. Realize o PIX manualmente usando a chave abaixo e envie o comprovante neste chat.",
+        Separator.Default,
+        [
+            `**Usuario:** <@${userId}>`,
+            `**Responsavel:** <@${responsibleAdminId}>`,
+            `**Tipo de carta:** ${formatTicketOrderCardType(details.cardType)}`,
+            `**Quantidade:** ${details.cardCount}`,
+            `**Folhas A4:** ${price.sheetCount}`,
+            `**Link do deck:** ${details.deckLink ?? "Nao informado"}`,
+        ].join("\n"),
+        Separator.Default,
+        `## Valor total: ${formatCurrencyFromCents(price.finalPriceCents)}`,
+        Separator.Default,
+        [
+            "**Chave PIX manual:**",
+            `\`${fallbackPixKey}\``,
+            "Depois de pagar, envie o comprovante neste canal. O admin responsavel confirmara o pagamento manualmente.",
+        ].join("\n"),
+        Separator.Default,
+        createRow(
+            new ButtonBuilder({
+                customId: "ticket/confirm-payment",
+                label: "Confirmar Pagamento",
+                style: ButtonStyle.Success,
+            }),
+        ),
     );
 
     return {

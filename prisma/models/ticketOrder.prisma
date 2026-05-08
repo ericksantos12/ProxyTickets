@@ -14,6 +14,11 @@ enum TicketOrderCardType {
     FOIL_CARD
 }
 
+enum PaymentMethod {
+    MERCADO_PAGO
+    MANUAL
+}
+
 model TicketOrder {
     oid String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -37,6 +42,7 @@ model TicketOrder {
     finalPriceCents     Int?
 
     paymentId            String?
+    paymentMethod        PaymentMethod?
     paymentMessageId     String?
     paymentStatus        String?
     paymentQrCodeBase64  String?

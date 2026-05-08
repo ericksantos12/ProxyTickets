@@ -27,3 +27,11 @@ export const TicketOrderCardType = {
 } as const
 
 export type TicketOrderCardType = (typeof TicketOrderCardType)[keyof typeof TicketOrderCardType]
+
+
+export const PaymentMethod = {
+  MERCADO_PAGO: 'MERCADO_PAGO',
+  MANUAL: 'MANUAL'
+} as const
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]

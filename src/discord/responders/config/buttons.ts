@@ -3,7 +3,7 @@ import { getOrCreateBotConfig, updateBotConfig } from "#functions";
 import { ResponderType } from "@constatic/base";
 import { createContainer } from "@magicyan/discord";
 import { PermissionFlagsBits } from "discord.js";
-import { createConfigEditModal, createConfigProfitMarginModal, getVisibleConfigPanelPage, isConfigPanelPage, isConfigPanelSection, isProductionType, isTicketCategoryType, renderConfigPanel, type ConfigPanelPage, type ConfigPanelSection, type ProductionType, type TicketCategoryType } from "../../menus/config-panel.js";
+import { createConfigEditModal, createConfigFallbackPixKeyModal, createConfigProfitMarginModal, getVisibleConfigPanelPage, isConfigPanelPage, isConfigPanelSection, isProductionType, isTicketCategoryType, renderConfigPanel, type ConfigPanelPage, type ConfigPanelSection, type ProductionType, type TicketCategoryType } from "../../menus/config-panel.js";
 
 createResponder({
     customId: "config/page/:page",
@@ -102,6 +102,22 @@ createResponder({
         const config = await getOrCreateBotConfig(interaction.guildId);
 
         await interaction.showModal(createConfigProfitMarginModal(config));
+    },
+});
+
+createResponder({
+    customId: "config/edit-fallback-pix",
+    types: [ResponderType.Button],
+    cache: "cached",
+    async run(interaction) {
+        if (!canManageGuild(interaction.memberPermissions)) {
+            await replyPermissionError(interaction);
+            return;
+        }
+
+        const config = await getOrCreateBotConfig(interaction.guildId);
+
+        await interaction.showModal(createConfigFallbackPixKeyModal(config));
     },
 });
 

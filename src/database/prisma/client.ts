@@ -72,3 +72,6 @@ export const TicketOrderStatus = $Enums.TicketOrderStatus
 
 export type TicketOrderCardType = $Enums.TicketOrderCardType
 export const TicketOrderCardType = $Enums.TicketOrderCardType
+
+export type PaymentMethod = $Enums.PaymentMethod
+export const PaymentMethod = $Enums.PaymentMethod

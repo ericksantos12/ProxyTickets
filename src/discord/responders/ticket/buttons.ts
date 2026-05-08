@@ -1,9 +1,10 @@
 import { createResponder } from "#base";
 import { prisma } from "#database";
-import { calculateCardOrderPrice, formatTicketChannelName, fromPrismaTicketOrderCardType, getOrCreateBotConfig, isTicketOrderCardTypeInput, parseDeckLink, parseTicketCardCount, toPrismaTicketOrderCardType, type TicketOrderCardTypeInput } from "#functions";
+import { calculateCardOrderPrice, formatTicketChannelName, fromPrismaTicketOrderCardType, getOrCreateBotConfig, isTicketOrderCardTypeInput, parseDeckLink, parseTicketCardCount, toPrismaTicketOrderCardType, type CardOrderPrice, type TicketOrderCardTypeInput } from "#functions";
 import { ResponderType } from "@constatic/base";
-import { ChannelType, PermissionFlagsBits } from "discord.js";
-import { createTicketDetailsModal, renderCancelConfirmation, renderCancelConfirmed, renderCancelKept, renderCardTypeSelection, renderInitialTicketMessage, renderOrderConcluded, renderOrderConfirmed, renderOrderReview, renderPendingConfirmation, renderPixPayment, renderSelectedCardType } from "../../menus/ticket-order.js";
+import { ChannelType, PermissionFlagsBits, type ButtonInteraction, type TextChannel } from "discord.js";
+import { createTicketDetailsModal, renderCancelConfirmation, renderCancelConfirmed, renderCancelKept, renderCardTypeSelection, renderInitialTicketMessage, renderManualPixPayment, renderOrderConcluded, renderOrderConfirmed, renderOrderReview, renderPendingConfirmation, renderPixPayment, renderSelectedCardType } from "../../menus/ticket-order.js";
+import { approveTicketOrderPayment } from "../../shared/payment-approval.js";
 import { ensureTicketOwnerPermissions, removeTicketOwnerPermissions } from "../../shared/ticket-permissions.js";
 
 createResponder({
@@ -422,12 +423,28 @@ createResponder({
             price.value.finalPriceCents / 100,
             `Pedido proxies - ${details.cardCount} cartas`,
             payerEmail,
-        ).catch(async error => {
+        ).catch(error => {
             console.error("Failed to create Mercado Pago PIX payment:", error);
-            await interaction.followUp({ flags: ["Ephemeral"], content: getMercadoPagoPaymentErrorMessage(error) });
-            return null;
+            return { error } as const;
         });
-        if (!pix) {
+
+        if ("error" in pix) {
+            if (!config.fallbackPixKey) {
+                await interaction.followUp({ flags: ["Ephemeral"], content: `${getMercadoPagoPaymentErrorMessage(pix.error)} Configure a chave PIX manual em /config para usar o fallback.` });
+                return;
+            }
+
+            await startManualPixPayment({
+                interaction,
+                order,
+                details,
+                price: price.value,
+                pendingCategoryId: pendingCategory.id,
+                channel,
+                nextChannelName,
+                fallbackPixKey: config.fallbackPixKey,
+            });
+            await interaction.followUp({ flags: ["Ephemeral"], content: "O Mercado Pago falhou. Usei o PIX manual configurado como fallback." });
             return;
         }
 
@@ -445,6 +462,7 @@ createResponder({
                 finalPriceCents: price.value.finalPriceCents,
                 confirmedAt: new Date(),
                 paymentId: pix.paymentId,
+                paymentMethod: "MERCADO_PAGO",
                 paymentStatus: pix.status,
                 paymentQrCodeBase64: pix.qrCodeBase64,
                 paymentCopyPaste: pix.copyPaste,
@@ -468,6 +486,106 @@ createResponder({
             const paymentMessage = await channel.send(pixMessage);
             await savePaymentMessageId(interaction.channelId, paymentMessage.id);
         }
+    },
+});
+
+createResponder({
+    customId: "ticket/confirm-manual",
+    types: [ResponderType.Button],
+    cache: "cached",
+    async run(interaction) {
+        const order = await getChannelOrder(interaction.channelId);
+        if (!order) {
+            await interaction.reply({ flags: ["Ephemeral"], content: "Este canal nao possui um ticket ativo." });
+            return;
+        }
+        if (!order.responsibleAdminId) {
+            await interaction.reply({ flags: ["Ephemeral"], content: "Um admin precisa assumir este pedido antes de confirmar." });
+            return;
+        }
+        if (order.responsibleAdminId !== interaction.user.id) {
+            await interaction.reply({ flags: ["Ephemeral"], content: "Apenas o admin responsavel pode confirmar este pedido." });
+            return;
+        }
+        if (order.status !== "IN_REVIEW") {
+            await interaction.reply({ flags: ["Ephemeral"], content: "Este pedido nao pode ser confirmado agora." });
+            return;
+        }
+
+        const details = getOrderDetails(order);
+        if (!details) {
+            await interaction.reply({ flags: ["Ephemeral"], content: "O pedido ainda nao possui todas as informacoes necessarias." });
+            return;
+        }
+
+        await interaction.deferUpdate();
+
+        const config = await getOrCreateBotConfig(interaction.guildId);
+        if (!config.fallbackPixKey) {
+            await interaction.followUp({ flags: ["Ephemeral"], content: "Configure a chave PIX manual em /config antes de usar PIX manual." });
+            return;
+        }
+        if (!config.pendingPaymentCategoryId) {
+            await interaction.followUp({ flags: ["Ephemeral"], content: "A categoria de Pendentes ainda nao foi configurada em /config." });
+            return;
+        }
+
+        const pendingCategory = await interaction.guild.channels.fetch(config.pendingPaymentCategoryId).catch(() => null);
+        if (!pendingCategory || pendingCategory.type !== ChannelType.GuildCategory) {
+            await interaction.followUp({ flags: ["Ephemeral"], content: "A categoria de Pendentes configurada nao foi encontrada." });
+            return;
+        }
+
+        const price = calculateCardOrderPrice(details.cardType, details.cardCount, config);
+        if (!price.ok) {
+            await interaction.followUp({ flags: ["Ephemeral"], content: price.error });
+            return;
+        }
+
+        const channel = await interaction.guild.channels.fetch(interaction.channelId).catch(() => null);
+        if (!channel || channel.type !== ChannelType.GuildText) {
+            await interaction.followUp({ flags: ["Ephemeral"], content: "Nao foi possivel encontrar o canal do ticket." });
+            return;
+        }
+
+        const user = await interaction.client.users.fetch(order.userId).catch(() => null);
+        const nextChannelName = formatTicketChannelName("pending", user?.username ?? "usuario");
+
+        await startManualPixPayment({
+            interaction,
+            order,
+            details,
+            price: price.value,
+            pendingCategoryId: pendingCategory.id,
+            channel,
+            nextChannelName,
+            fallbackPixKey: config.fallbackPixKey,
+        });
+    },
+});
+
+createResponder({
+    customId: "ticket/confirm-payment",
+    types: [ResponderType.Button],
+    cache: "cached",
+    async run(interaction) {
+        const order = await getChannelOrder(interaction.channelId);
+        if (!order) {
+            await interaction.reply({ flags: ["Ephemeral"], content: "Este canal nao possui um ticket ativo." });
+            return;
+        }
+        if (order.status !== "PENDING_PAYMENT" || order.paymentMethod !== "MANUAL") {
+            await interaction.reply({ flags: ["Ephemeral"], content: "Este pedido nao esta aguardando confirmacao manual de pagamento." });
+            return;
+        }
+        if (!order.responsibleAdminId || order.responsibleAdminId !== interaction.user.id) {
+            await interaction.reply({ flags: ["Ephemeral"], content: "Apenas o admin responsavel pode confirmar este pagamento." });
+            return;
+        }
+
+        await interaction.deferUpdate();
+        await approveTicketOrderPayment(order, interaction.client, "manual_confirmed");
+        await interaction.followUp({ flags: ["Ephemeral"], content: "Pagamento manual confirmado. O pedido foi movido para aguardando entrega." }).catch(() => null);
     },
 });
 
@@ -538,6 +656,53 @@ async function savePaymentMessageId(channelId: string, paymentMessageId: string)
         where: { channelId },
         data: { paymentMessageId },
     });
+}
+
+async function startManualPixPayment({
+    interaction,
+    order,
+    details,
+    price,
+    pendingCategoryId,
+    channel,
+    nextChannelName,
+    fallbackPixKey,
+}: {
+    interaction: ButtonInteraction<"cached">;
+    order: { userId: string; responsibleAdminId: string | null };
+    details: NonNullable<ReturnType<typeof getOrderDetails>>;
+    price: CardOrderPrice;
+    pendingCategoryId: string;
+    channel: TextChannel;
+    nextChannelName: string;
+    fallbackPixKey: string;
+}) {
+    await channel.setParent(pendingCategoryId, { lockPermissions: false, reason: "Pedido confirmado e aguardando pagamento manual" });
+    await ensureTicketOwnerPermissions(channel, order.userId, "Manter acesso do usuario ao mover categoria");
+    await channel.setName(nextChannelName, "Pedido confirmado e aguardando pagamento manual");
+
+    await prisma.ticketOrder.update({
+        where: { channelId: interaction.channelId },
+        data: {
+            status: "PENDING_PAYMENT",
+            sheetCount: price.sheetCount,
+            materialCostCents: price.materialCostCents,
+            profitMarginPercent: price.profitMarginPercent,
+            finalPriceCents: price.finalPriceCents,
+            confirmedAt: new Date(),
+            paymentId: null,
+            paymentMethod: "MANUAL",
+            paymentStatus: "manual_pending",
+            paymentQrCodeBase64: null,
+            paymentCopyPaste: fallbackPixKey,
+            paymentExpiresAt: null,
+        },
+    });
+
+    await interaction.editReply(renderOrderConfirmed(order.userId, interaction.user.id, details, price));
+
+    const paymentMessage = await channel.send(renderManualPixPayment(order.userId, interaction.user.id, details, price, fallbackPixKey));
+    await savePaymentMessageId(interaction.channelId, paymentMessage.id);
 }
 
 function canCancelTicket(userId: string, orderUserId: string, permissions: { has(permission: bigint): boolean }) {
