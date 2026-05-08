@@ -227,7 +227,7 @@ export function createConfigFallbackPixKeyModal(config: BotConfigView) {
         "Editar PIX manual",
         createLabel({
             label: "Chave PIX manual",
-            description: "Usada quando o Mercado Pago falhar ou quando o admin escolher PIX manual. Deixe vazio para desativar.",
+            description: "Usada quando Mercado Pago falhar ou admin escolher PIX manual. Deixe vazio para desativar.",
             component: createTextInput({
                 customId: "fallbackPixKey",
                 required: false,
