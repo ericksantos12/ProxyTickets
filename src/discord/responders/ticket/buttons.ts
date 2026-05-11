@@ -607,15 +607,13 @@ createResponder({
         }
 
         try {
-            await interaction.update(renderOrderConcluded(order.userId, order.responsibleAdminId, order.finalPriceCents));
+            await interaction.deferUpdate();
 
             const channel = await interaction.guild.channels.fetch(interaction.channelId).catch(() => null);
-            if (!channel || channel.type !== ChannelType.GuildText) {
+            const channelFound = channel && channel.type === ChannelType.GuildText;
+            if (!channelFound) {
                 console.error(`Failed to conclude ticket order for ${interaction.channelId}: ticket channel not found.`);
-                await interaction.followUp({ flags: ["Ephemeral"], content: "Nao foi possivel encontrar o canal do ticket." }).catch(() => null);
-                return;
             }
-
 
             await prisma.ticketOrder.update({
                 where: { channelId: interaction.channelId },
@@ -625,12 +623,23 @@ createResponder({
                 },
             });
 
-            await removeTicketOwnerPermissions(channel, order.userId, "Pedido concluido e entregue").catch(async error => {
-                console.error(`Failed to hide concluded ticket channel ${interaction.channelId} from ${order.userId}:`, error);
-                await interaction.followUp({ flags: ["Ephemeral"], content: "Pedido concluido, mas nao consegui ocultar o canal do cliente. Verifique a permissao Manage Roles do bot." }).catch(() => null);
+            const warnings: string[] = [];
+            if (channelFound) {
+                await removeTicketOwnerPermissions(channel, order.userId, "Pedido concluido e entregue").catch(error => {
+                    console.error(`Failed to hide concluded ticket channel ${interaction.channelId} from ${order.userId}:`, error);
+                    warnings.push("Nao consegui ocultar o canal do cliente. Verifique a permissao Manage Roles do bot.");
+                });
+            } else {
+                warnings.push("Nao consegui encontrar o canal do ticket.");
+            }
+
+            await interaction.editReply(renderOrderConcluded(order.userId, order.responsibleAdminId, order.finalPriceCents)).catch(error => {
+                console.error(`Failed to update concluded ticket message for ${interaction.channelId}:`, error);
+                warnings.push("Nao consegui atualizar a mensagem do pedido.");
             });
 
-            await interaction.followUp({ flags: ["Ephemeral"], content: "Pedido concluido. O canal ficara visivel para admins por 24 horas." }).catch(() => null);
+            const warningText = warnings.length ? `\n\nAvisos:\n- ${warnings.join("\n- ")}` : "";
+            await interaction.followUp({ flags: ["Ephemeral"], content: `Pedido concluido. O canal ficara visivel para admins por 24 horas.${warningText}` }).catch(() => null);
         } catch (error) {
             console.error(`Failed to conclude ticket order for ${interaction.channelId}:`, error);
         }

@@ -8,13 +8,14 @@ const ticketChannelPrefixes: Record<TicketChannelStage, string> = {
     concluded: "✅",
 };
 const ticketChannelSeparator = "│";
+const ticketDateSeparator = "／";
 
 export function formatTicketChannelName(stage: TicketChannelStage, nickname: string, date = new Date()): string {
     const prefix = ticketChannelPrefixes[stage];
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
 
-    return `${prefix}${ticketChannelSeparator}${sanitizeTicketNickname(nickname)}${ticketChannelSeparator}${day}/${month}`;
+    return `${prefix}${ticketChannelSeparator}${sanitizeTicketNickname(nickname)}${ticketChannelSeparator}${day}${ticketDateSeparator}${month}`;
 }
 
 export function replaceChannelStageEmoji(currentName: string, stage: TicketChannelStage): string {
