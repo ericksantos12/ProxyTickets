@@ -616,12 +616,6 @@ createResponder({
                 return;
             }
 
-            const nextChannelName = replaceChannelStageEmoji(channel.name, "concluded");
-            await channel.setName(nextChannelName, "Pedido concluido e entregue").catch(async error => {
-                console.error(`Failed to rename concluded ticket channel ${interaction.channelId} to ${nextChannelName}:`, error);
-                await interaction.followUp({ flags: ["Ephemeral"], content: "Pedido marcado como concluido, mas nao consegui renomear o canal. Verifique a permissao Manage Channels do bot." }).catch(() => null);
-                throw error;
-            });
 
             await prisma.ticketOrder.update({
                 where: { channelId: interaction.channelId },

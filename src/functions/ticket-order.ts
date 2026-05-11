@@ -4,7 +4,7 @@ export type TicketOrderCardTypeInput = "photo-laminated" | "foil-card";
 const ticketChannelPrefixes: Record<TicketChannelStage, string> = {
     new: "⌛",
     pending: "🛒",
-    awaiting: "✏️",
+    awaiting: "✅",
     concluded: "✅",
 };
 const ticketChannelSeparator = "│";
