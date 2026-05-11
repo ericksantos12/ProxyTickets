@@ -6,6 +6,7 @@ import { ChannelType, PermissionFlagsBits, type ButtonInteraction, type TextChan
 import { createTicketDetailsModal, renderCancelConfirmation, renderCancelConfirmed, renderCancelKept, renderCardTypeSelection, renderInitialTicketMessage, renderManualPixPayment, renderOrderConcluded, renderOrderConfirmed, renderOrderReview, renderPendingConfirmation, renderPixPayment, renderSelectedCardType } from "../../menus/ticket-order.js";
 import { approveTicketOrderPayment } from "../../shared/payment-approval.js";
 import { ensureTicketOwnerPermissions, removeTicketOwnerPermissions } from "../../shared/ticket-permissions.js";
+import { sendNewTicketNotification, sendOrderDetailsNotification } from "../../shared/ticket-notifications.js";
 
 createResponder({
     customId: "ticket/create",
@@ -47,6 +48,12 @@ createResponder({
             });
 
             await channel.send(renderInitialTicketMessage(interaction.user.id));
+            await sendNewTicketNotification({
+                client: interaction.client,
+                guildId: interaction.guildId,
+                channelId: channel.id,
+                userId: interaction.user.id,
+            });
             await interaction.editReply(`Ticket criado: ${channel}`);
         } catch (error) {
             await channel.delete("Falha ao inicializar ticket").catch(() => null);
@@ -306,6 +313,15 @@ createResponder({
         await interaction.update(order.responsibleAdminId
             ? renderOrderReview(order.userId, order.responsibleAdminId, details, price.value)
             : renderPendingConfirmation(order.userId, details, price.value));
+        await sendOrderDetailsNotification({
+            client: interaction.client,
+            guildId: interaction.guildId,
+            channelId: interaction.channelId,
+            userId: order.userId,
+            responsibleAdminId: order.responsibleAdminId,
+            details,
+            price: price.value,
+        });
     },
 });
 

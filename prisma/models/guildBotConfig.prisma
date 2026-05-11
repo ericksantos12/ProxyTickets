@@ -27,6 +27,9 @@ model GuildBotConfig {
 
     fallbackPixKey String?
 
+    notificationChannelId String?
+    notificationRoleIds   String[]
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 

@@ -67,6 +67,7 @@ export type GuildBotConfigMinAggregateOutputType = {
   pendingPaymentCategoryId: string | null
   awaitingDeliveryCategoryId: string | null
   fallbackPixKey: string | null
+  notificationChannelId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -89,6 +90,7 @@ export type GuildBotConfigMaxAggregateOutputType = {
   pendingPaymentCategoryId: string | null
   awaitingDeliveryCategoryId: string | null
   fallbackPixKey: string | null
+  notificationChannelId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -111,6 +113,8 @@ export type GuildBotConfigCountAggregateOutputType = {
   pendingPaymentCategoryId: number
   awaitingDeliveryCategoryId: number
   fallbackPixKey: number
+  notificationChannelId: number
+  notificationRoleIds: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -159,6 +163,7 @@ export type GuildBotConfigMinAggregateInputType = {
   pendingPaymentCategoryId?: true
   awaitingDeliveryCategoryId?: true
   fallbackPixKey?: true
+  notificationChannelId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -181,6 +186,7 @@ export type GuildBotConfigMaxAggregateInputType = {
   pendingPaymentCategoryId?: true
   awaitingDeliveryCategoryId?: true
   fallbackPixKey?: true
+  notificationChannelId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -203,6 +209,8 @@ export type GuildBotConfigCountAggregateInputType = {
   pendingPaymentCategoryId?: true
   awaitingDeliveryCategoryId?: true
   fallbackPixKey?: true
+  notificationChannelId?: true
+  notificationRoleIds?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -312,6 +320,8 @@ export type GuildBotConfigGroupByOutputType = {
   pendingPaymentCategoryId: string | null
   awaitingDeliveryCategoryId: string | null
   fallbackPixKey: string | null
+  notificationChannelId: string | null
+  notificationRoleIds: string[]
   createdAt: Date
   updatedAt: Date
   _count: GuildBotConfigCountAggregateOutputType | null
@@ -357,6 +367,8 @@ export type GuildBotConfigWhereInput = {
   pendingPaymentCategoryId?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
   awaitingDeliveryCategoryId?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
   fallbackPixKey?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
+  notificationChannelId?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
+  notificationRoleIds?: Prisma.StringNullableListFilter<"GuildBotConfig">
   createdAt?: Prisma.DateTimeFilter<"GuildBotConfig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"GuildBotConfig"> | Date | string
   guild?: Prisma.XOR<Prisma.GuildScalarRelationFilter, Prisma.GuildWhereInput>
@@ -380,6 +392,8 @@ export type GuildBotConfigOrderByWithRelationInput = {
   pendingPaymentCategoryId?: Prisma.SortOrder
   awaitingDeliveryCategoryId?: Prisma.SortOrder
   fallbackPixKey?: Prisma.SortOrder
+  notificationChannelId?: Prisma.SortOrder
+  notificationRoleIds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   guild?: Prisma.GuildOrderByWithRelationInput
@@ -406,6 +420,8 @@ export type GuildBotConfigWhereUniqueInput = Prisma.AtLeast<{
   pendingPaymentCategoryId?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
   awaitingDeliveryCategoryId?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
   fallbackPixKey?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
+  notificationChannelId?: Prisma.StringNullableFilter<"GuildBotConfig"> | string | null
+  notificationRoleIds?: Prisma.StringNullableListFilter<"GuildBotConfig">
   createdAt?: Prisma.DateTimeFilter<"GuildBotConfig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"GuildBotConfig"> | Date | string
   guild?: Prisma.XOR<Prisma.GuildScalarRelationFilter, Prisma.GuildWhereInput>
@@ -429,6 +445,8 @@ export type GuildBotConfigOrderByWithAggregationInput = {
   pendingPaymentCategoryId?: Prisma.SortOrder
   awaitingDeliveryCategoryId?: Prisma.SortOrder
   fallbackPixKey?: Prisma.SortOrder
+  notificationChannelId?: Prisma.SortOrder
+  notificationRoleIds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.GuildBotConfigCountOrderByAggregateInput
@@ -459,6 +477,8 @@ export type GuildBotConfigScalarWhereWithAggregatesInput = {
   pendingPaymentCategoryId?: Prisma.StringNullableWithAggregatesFilter<"GuildBotConfig"> | string | null
   awaitingDeliveryCategoryId?: Prisma.StringNullableWithAggregatesFilter<"GuildBotConfig"> | string | null
   fallbackPixKey?: Prisma.StringNullableWithAggregatesFilter<"GuildBotConfig"> | string | null
+  notificationChannelId?: Prisma.StringNullableWithAggregatesFilter<"GuildBotConfig"> | string | null
+  notificationRoleIds?: Prisma.StringNullableListFilter<"GuildBotConfig">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"GuildBotConfig"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"GuildBotConfig"> | Date | string
 }
@@ -480,6 +500,8 @@ export type GuildBotConfigCreateInput = {
   pendingPaymentCategoryId?: string | null
   awaitingDeliveryCategoryId?: string | null
   fallbackPixKey?: string | null
+  notificationChannelId?: string | null
+  notificationRoleIds?: Prisma.GuildBotConfigCreatenotificationRoleIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
   guild: Prisma.GuildCreateNestedOneWithoutBotConfigInput
@@ -503,6 +525,8 @@ export type GuildBotConfigUncheckedCreateInput = {
   pendingPaymentCategoryId?: string | null
   awaitingDeliveryCategoryId?: string | null
   fallbackPixKey?: string | null
+  notificationChannelId?: string | null
+  notificationRoleIds?: Prisma.GuildBotConfigCreatenotificationRoleIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -523,6 +547,8 @@ export type GuildBotConfigUpdateInput = {
   pendingPaymentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awaitingDeliveryCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fallbackPixKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notificationChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notificationRoleIds?: Prisma.GuildBotConfigUpdatenotificationRoleIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   guild?: Prisma.GuildUpdateOneRequiredWithoutBotConfigNestedInput
@@ -545,6 +571,8 @@ export type GuildBotConfigUncheckedUpdateInput = {
   pendingPaymentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awaitingDeliveryCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fallbackPixKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notificationChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notificationRoleIds?: Prisma.GuildBotConfigUpdatenotificationRoleIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -567,6 +595,8 @@ export type GuildBotConfigCreateManyInput = {
   pendingPaymentCategoryId?: string | null
   awaitingDeliveryCategoryId?: string | null
   fallbackPixKey?: string | null
+  notificationChannelId?: string | null
+  notificationRoleIds?: Prisma.GuildBotConfigCreatenotificationRoleIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -587,6 +617,8 @@ export type GuildBotConfigUpdateManyMutationInput = {
   pendingPaymentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awaitingDeliveryCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fallbackPixKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notificationChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notificationRoleIds?: Prisma.GuildBotConfigUpdatenotificationRoleIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -608,6 +640,8 @@ export type GuildBotConfigUncheckedUpdateManyInput = {
   pendingPaymentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awaitingDeliveryCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fallbackPixKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notificationChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notificationRoleIds?: Prisma.GuildBotConfigUpdatenotificationRoleIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -615,6 +649,14 @@ export type GuildBotConfigUncheckedUpdateManyInput = {
 export type GuildBotConfigNullableScalarRelationFilter = {
   is?: Prisma.GuildBotConfigWhereInput | null
   isNot?: Prisma.GuildBotConfigWhereInput | null
+}
+
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type GuildBotConfigCountOrderByAggregateInput = {
@@ -635,6 +677,8 @@ export type GuildBotConfigCountOrderByAggregateInput = {
   pendingPaymentCategoryId?: Prisma.SortOrder
   awaitingDeliveryCategoryId?: Prisma.SortOrder
   fallbackPixKey?: Prisma.SortOrder
+  notificationChannelId?: Prisma.SortOrder
+  notificationRoleIds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -669,6 +713,7 @@ export type GuildBotConfigMaxOrderByAggregateInput = {
   pendingPaymentCategoryId?: Prisma.SortOrder
   awaitingDeliveryCategoryId?: Prisma.SortOrder
   fallbackPixKey?: Prisma.SortOrder
+  notificationChannelId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -691,6 +736,7 @@ export type GuildBotConfigMinOrderByAggregateInput = {
   pendingPaymentCategoryId?: Prisma.SortOrder
   awaitingDeliveryCategoryId?: Prisma.SortOrder
   fallbackPixKey?: Prisma.SortOrder
+  notificationChannelId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -739,6 +785,10 @@ export type GuildBotConfigUncheckedUpdateOneWithoutGuildNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.GuildBotConfigUpdateToOneWithWhereWithoutGuildInput, Prisma.GuildBotConfigUpdateWithoutGuildInput>, Prisma.GuildBotConfigUncheckedUpdateWithoutGuildInput>
 }
 
+export type GuildBotConfigCreatenotificationRoleIdsInput = {
+  set: string[]
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -758,6 +808,11 @@ export type NullableStringFieldUpdateOperationsInput = {
   unset?: boolean
 }
 
+export type GuildBotConfigUpdatenotificationRoleIdsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
 export type GuildBotConfigCreateWithoutGuildInput = {
   oid?: string
   paperPackPriceCents?: number | null
@@ -775,6 +830,8 @@ export type GuildBotConfigCreateWithoutGuildInput = {
   pendingPaymentCategoryId?: string | null
   awaitingDeliveryCategoryId?: string | null
   fallbackPixKey?: string | null
+  notificationChannelId?: string | null
+  notificationRoleIds?: Prisma.GuildBotConfigCreatenotificationRoleIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -796,6 +853,8 @@ export type GuildBotConfigUncheckedCreateWithoutGuildInput = {
   pendingPaymentCategoryId?: string | null
   awaitingDeliveryCategoryId?: string | null
   fallbackPixKey?: string | null
+  notificationChannelId?: string | null
+  notificationRoleIds?: Prisma.GuildBotConfigCreatenotificationRoleIdsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -832,6 +891,8 @@ export type GuildBotConfigUpdateWithoutGuildInput = {
   pendingPaymentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awaitingDeliveryCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fallbackPixKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notificationChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notificationRoleIds?: Prisma.GuildBotConfigUpdatenotificationRoleIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -852,6 +913,8 @@ export type GuildBotConfigUncheckedUpdateWithoutGuildInput = {
   pendingPaymentCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awaitingDeliveryCategoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fallbackPixKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notificationChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notificationRoleIds?: Prisma.GuildBotConfigUpdatenotificationRoleIdsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -876,6 +939,8 @@ export type GuildBotConfigSelect<ExtArgs extends runtime.Types.Extensions.Intern
   pendingPaymentCategoryId?: boolean
   awaitingDeliveryCategoryId?: boolean
   fallbackPixKey?: boolean
+  notificationChannelId?: boolean
+  notificationRoleIds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
@@ -901,11 +966,13 @@ export type GuildBotConfigSelectScalar = {
   pendingPaymentCategoryId?: boolean
   awaitingDeliveryCategoryId?: boolean
   fallbackPixKey?: boolean
+  notificationChannelId?: boolean
+  notificationRoleIds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type GuildBotConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"oid" | "guildId" | "paperPackPriceCents" | "paperPackSheetCount" | "laminationPackPriceCents" | "laminationPackSheetCount" | "holographicStickerPackPriceCents" | "holographicStickerPackSheetCount" | "cardstockPackPriceCents" | "cardstockPackSheetCount" | "photoLaminatedProductionEnabled" | "foilCardProductionEnabled" | "profitMarginPercent" | "newTicketsCategoryId" | "pendingPaymentCategoryId" | "awaitingDeliveryCategoryId" | "fallbackPixKey" | "createdAt" | "updatedAt", ExtArgs["result"]["guildBotConfig"]>
+export type GuildBotConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"oid" | "guildId" | "paperPackPriceCents" | "paperPackSheetCount" | "laminationPackPriceCents" | "laminationPackSheetCount" | "holographicStickerPackPriceCents" | "holographicStickerPackSheetCount" | "cardstockPackPriceCents" | "cardstockPackSheetCount" | "photoLaminatedProductionEnabled" | "foilCardProductionEnabled" | "profitMarginPercent" | "newTicketsCategoryId" | "pendingPaymentCategoryId" | "awaitingDeliveryCategoryId" | "fallbackPixKey" | "notificationChannelId" | "notificationRoleIds" | "createdAt" | "updatedAt", ExtArgs["result"]["guildBotConfig"]>
 export type GuildBotConfigInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   guild?: boolean | Prisma.GuildDefaultArgs<ExtArgs>
 }
@@ -933,6 +1000,8 @@ export type $GuildBotConfigPayload<ExtArgs extends runtime.Types.Extensions.Inte
     pendingPaymentCategoryId: string | null
     awaitingDeliveryCategoryId: string | null
     fallbackPixKey: string | null
+    notificationChannelId: string | null
+    notificationRoleIds: string[]
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["guildBotConfig"]>
@@ -1345,6 +1414,8 @@ export interface GuildBotConfigFieldRefs {
   readonly pendingPaymentCategoryId: Prisma.FieldRef<"GuildBotConfig", 'String'>
   readonly awaitingDeliveryCategoryId: Prisma.FieldRef<"GuildBotConfig", 'String'>
   readonly fallbackPixKey: Prisma.FieldRef<"GuildBotConfig", 'String'>
+  readonly notificationChannelId: Prisma.FieldRef<"GuildBotConfig", 'String'>
+  readonly notificationRoleIds: Prisma.FieldRef<"GuildBotConfig", 'String[]'>
   readonly createdAt: Prisma.FieldRef<"GuildBotConfig", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"GuildBotConfig", 'DateTime'>
 }

@@ -16,6 +16,8 @@ export type BotConfigUpdateData = {
     pendingPaymentCategoryId?: string;
     awaitingDeliveryCategoryId?: string;
     fallbackPixKey?: string | null;
+    notificationChannelId?: string;
+    notificationRoleIds?: string[];
 };
 
 export async function getOrCreateBotConfig(guildId: string) {

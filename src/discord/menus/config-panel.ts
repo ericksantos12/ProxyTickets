@@ -1,8 +1,8 @@
 import { calculateUnitPriceCents, formatCurrencyFromCents, formatPriceInput } from "#functions";
 import { createContainer, createLabel, createModal, createRow, createSection, createTextInput, Separator } from "@magicyan/discord";
-import { ButtonBuilder, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, type Guild, type InteractionReplyOptions, TextInputStyle } from "discord.js";
+import { ButtonBuilder, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, RoleSelectMenuBuilder, type Guild, type InteractionReplyOptions, TextInputStyle } from "discord.js";
 
-export const configPanelPages = ["production", "ticket-categories", "payment", "paper", "foil"] as const;
+export const configPanelPages = ["production", "ticket-categories", "payment", "notifications", "paper", "foil"] as const;
 
 export type ConfigPanelPage = typeof configPanelPages[number];
 
@@ -22,6 +22,8 @@ export type BotConfigView = {
     pendingPaymentCategoryId: string | null;
     awaitingDeliveryCategoryId: string | null;
     fallbackPixKey: string | null;
+    notificationChannelId: string | null;
+    notificationRoleIds: string[];
 };
 
 export const configPanelSections = ["default", "lamination", "holographic-sticker", "cardstock"] as const;
@@ -97,6 +99,11 @@ export const pageDefinitions: Record<ConfigPanelPage, PageDefinition> = {
         title: "Pagamento",
         sections: [],
     },
+    notifications: {
+        id: "notifications",
+        title: "Notificacoes",
+        sections: [],
+    },
 };
 
 export function isConfigPanelPage(page: string): page is ConfigPanelPage {
@@ -128,6 +135,8 @@ export function renderConfigPanel<R = InteractionReplyOptions>(page: ConfigPanel
             ? renderTicketCategorySections(config, guild)
             : visiblePage === "payment"
                 ? renderPaymentSections(config)
+                : visiblePage === "notifications"
+                    ? renderNotificationSections(config, guild)
             : definition.sections.map(section => renderMaterialSection(visiblePage, section, config));
     const combinedUnitPriceCents = visiblePage === "paper" || visiblePage === "foil"
         ? definition.sections.reduce<number | null>((total, section) => {
@@ -265,8 +274,42 @@ export function getVisibleConfigPanelPages(config: BotConfigView): ConfigPanelPa
         "production",
         "ticket-categories",
         "payment",
+        "notifications",
         ...(isEnabled(config.photoLaminatedProductionEnabled) ? ["paper" as const] : []),
         ...(isEnabled(config.foilCardProductionEnabled) ? ["foil" as const] : []),
+    ];
+}
+
+function renderNotificationSections(config: BotConfigView, guild?: Guild) {
+    return [
+        [
+            "**Canal de notificacoes**",
+            "Recebe os embeds de novo ticket, pedido preenchido e pagamento confirmado.",
+            `**Canal:** ${formatNotificationChannel(config.notificationChannelId, guild)}`,
+        ].join("\n"),
+        createRow(
+            new ChannelSelectMenuBuilder({
+                customId: "config/notification-channel",
+                placeholder: "Selecionar canal de notificacoes",
+                channelTypes: [ChannelType.GuildText],
+                minValues: 1,
+                maxValues: 1,
+            }),
+        ),
+        Separator.Default,
+        [
+            "**Cargos notificados em novos tickets**",
+            "Estes cargos serao mencionados apenas quando um novo ticket for criado.",
+            `**Cargos:** ${formatNotificationRoles(config.notificationRoleIds, guild)}`,
+        ].join("\n"),
+        createRow(
+            new RoleSelectMenuBuilder({
+                customId: "config/notification-roles",
+                placeholder: "Selecionar cargos para novos tickets",
+                minValues: 1,
+                maxValues: 10,
+            }),
+        ),
     ];
 }
 
@@ -402,6 +445,29 @@ function formatTicketCategory(categoryId: string | null, guild?: Guild) {
     }
 
     return `${channel.name} (\`${categoryId}\`)`;
+}
+
+function formatNotificationChannel(channelId: string | null, guild?: Guild) {
+    if (!channelId) {
+        return "Nao configurado";
+    }
+
+    const channel = guild?.channels.cache.get(channelId);
+    if (!channel || channel.type !== ChannelType.GuildText) {
+        return "Canal nao encontrado";
+    }
+
+    return `${channel.name} (\`${channelId}\`)`;
+}
+
+function formatNotificationRoles(roleIds: string[], guild?: Guild) {
+    if (roleIds.length === 0) {
+        return "Nao configurado";
+    }
+
+    return roleIds
+        .map(roleId => guild?.roles.cache.get(roleId)?.name ?? `Cargo nao encontrado (\`${roleId}\`)`)
+        .join(", ");
 }
 
 export function getSectionDefinition(page: ConfigPanelPage, sectionId: ConfigPanelSection) {

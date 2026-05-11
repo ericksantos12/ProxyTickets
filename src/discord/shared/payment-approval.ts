@@ -3,6 +3,7 @@ import { replaceChannelStageEmoji } from "#functions";
 import { ChannelType, type Client, type TextChannel } from "discord.js";
 import { renderPixPaymentConfirmed } from "../menus/ticket-order.js";
 import { ensureTicketOwnerPermissions } from "./ticket-permissions.js";
+import { sendPaymentConfirmedNotification } from "./ticket-notifications.js";
 
 export async function approveTicketOrderPayment(order: {
     channelId: string;
@@ -22,6 +23,14 @@ export async function approveTicketOrderPayment(order: {
                 paidAt: new Date(),
             },
         });
+        await sendPaymentConfirmedNotification({
+            client,
+            guildId: order.guildId,
+            channelId: order.channelId,
+            userId: order.userId,
+            responsibleAdminId: order.responsibleAdminId,
+            finalPriceCents: order.finalPriceCents,
+        });
         return;
     }
 
@@ -36,6 +45,14 @@ export async function approveTicketOrderPayment(order: {
 
     await moveToAwaitingDelivery(order, channel);
     await editPaymentMessageAsConfirmed(order, channel);
+    await sendPaymentConfirmedNotification({
+        client,
+        guildId: order.guildId,
+        channelId: order.channelId,
+        userId: order.userId,
+        responsibleAdminId: order.responsibleAdminId,
+        finalPriceCents: order.finalPriceCents,
+    });
 }
 
 async function getTicketChannel(order: { channelId: string; guildId: string }, client: Client) {
