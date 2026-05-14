@@ -14,25 +14,6 @@ export async function approveTicketOrderPayment(order: {
     finalPriceCents: number | null;
 }, client: Client, paymentStatus: string | undefined) {
     const channel = await getTicketChannel(order, client);
-    if (!channel) {
-        await prisma.ticketOrder.update({
-            where: { channelId: order.channelId },
-            data: {
-                status: "AWAITING_DELIVERY",
-                paymentStatus,
-                paidAt: new Date(),
-            },
-        });
-        await sendPaymentConfirmedNotification({
-            client,
-            guildId: order.guildId,
-            channelId: order.channelId,
-            userId: order.userId,
-            responsibleAdminId: order.responsibleAdminId,
-            finalPriceCents: order.finalPriceCents,
-        });
-        return;
-    }
 
     await prisma.ticketOrder.update({
         where: { channelId: order.channelId },
@@ -43,8 +24,6 @@ export async function approveTicketOrderPayment(order: {
         },
     });
 
-    await moveToAwaitingDelivery(order, channel);
-    await editPaymentMessageAsConfirmed(order, channel);
     await sendPaymentConfirmedNotification({
         client,
         guildId: order.guildId,
@@ -52,6 +31,17 @@ export async function approveTicketOrderPayment(order: {
         userId: order.userId,
         responsibleAdminId: order.responsibleAdminId,
         finalPriceCents: order.finalPriceCents,
+    }).catch(error => {
+        console.error(`Failed to send payment confirmed notification for ${order.channelId}:`, error);
+    });
+
+    if (!channel) return;
+
+    await moveToAwaitingDelivery(order, channel).catch(error => {
+        console.error(`Failed to move paid ticket ${order.channelId} to awaiting delivery:`, error);
+    });
+    await editPaymentMessageAsConfirmed(order, channel).catch(error => {
+        console.error(`Failed to edit payment message for ${order.channelId}:`, error);
     });
 }
 

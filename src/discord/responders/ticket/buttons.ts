@@ -53,6 +53,8 @@ createResponder({
                 guildId: interaction.guildId,
                 channelId: channel.id,
                 userId: interaction.user.id,
+            }).catch(error => {
+                console.error(`Failed to send new ticket notification for ${channel.id}:`, error);
             });
             await interaction.editReply(`Ticket criado: ${channel}`);
         } catch (error) {
@@ -321,6 +323,8 @@ createResponder({
             responsibleAdminId: order.responsibleAdminId,
             details,
             price: price.value,
+        }).catch(error => {
+            console.error(`Failed to send order details notification for ${interaction.channelId}:`, error);
         });
     },
 });

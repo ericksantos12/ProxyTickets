@@ -19,22 +19,23 @@ export async function sendNewTicketNotification(data: {
     if (!targetChannel) return;
 
     const config = await prisma.guildBotConfig.findUnique({ where: { guildId: data.guildId } });
-    const roleMentions = config?.notificationRoleIds.map(roleId => `<@&${roleId}>`).join(" ") ?? "";
+    const notificationRoleIds = config?.notificationRoleIds ?? [];
+    const roleMentions = notificationRoleIds.map(roleId => `<@&${roleId}>`).join(" ");
 
     const container = createContainer("Blue",
         "# Novo ticket criado",
         Separator.Default,
         [
+            ...(roleMentions ? [roleMentions] : []),
             `**Cliente:** <@${data.userId}>`,
             `**Canal:** <#${data.channelId}>`,
         ].join("\n"),
     );
 
     await targetChannel.send({
-        content: roleMentions || undefined,
         flags: ["IsComponentsV2"],
         components: [container],
-        allowedMentions: { roles: config?.notificationRoleIds ?? [] },
+        allowedMentions: { roles: notificationRoleIds },
     }).catch(error => {
         console.error(`Failed to send new ticket notification for ${data.channelId}:`, error);
     });
@@ -67,7 +68,6 @@ export async function sendOrderDetailsNotification(data: {
     );
 
     await targetChannel.send({
-        content: data.responsibleAdminId ? `<@${data.responsibleAdminId}>` : undefined,
         flags: ["IsComponentsV2"],
         components: [container],
         allowedMentions: { users: data.responsibleAdminId ? [data.responsibleAdminId] : [] },
@@ -99,7 +99,6 @@ export async function sendPaymentConfirmedNotification(data: {
     );
 
     await targetChannel.send({
-        content: data.responsibleAdminId ? `<@${data.responsibleAdminId}>` : undefined,
         flags: ["IsComponentsV2"],
         components: [container],
         allowedMentions: { users: data.responsibleAdminId ? [data.responsibleAdminId] : [] },
