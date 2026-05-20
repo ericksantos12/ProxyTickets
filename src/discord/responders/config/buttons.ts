@@ -2,7 +2,7 @@ import { createResponder } from "#base";
 import { getOrCreateBotConfig, updateBotConfig } from "#functions";
 import { ResponderType } from "@constatic/base";
 import { createContainer } from "@magicyan/discord";
-import { PermissionFlagsBits } from "discord.js";
+import { ChannelType, PermissionFlagsBits } from "discord.js";
 import { createConfigEditModal, createConfigFallbackPixKeyModal, createConfigProfitMarginModal, getVisibleConfigPanelPage, isConfigPanelPage, isConfigPanelSection, isProductionType, isTicketCategoryType, renderConfigPanel, type ConfigPanelPage, type ConfigPanelSection, type ProductionType, type TicketCategoryType } from "../../menus/config-panel.js";
 
 createResponder({
@@ -196,6 +196,54 @@ createResponder({
         const config = await updateBotConfig(interaction.guildId, getTicketCategoryUpdateData(type, selectedCategoryId));
 
         await interaction.update(renderConfigPanel("ticket-categories", config, "Categoria de ticket atualizada.", interaction.guild));
+    },
+});
+
+createResponder({
+    customId: "config/notification-channel",
+    types: [ResponderType.ChannelSelect],
+    cache: "cached",
+    async run(interaction) {
+        if (!canManageGuild(interaction.memberPermissions)) {
+            await replyPermissionError(interaction);
+            return;
+        }
+
+        const selectedChannelId = interaction.values[0];
+        if (!selectedChannelId) {
+            await interaction.update(renderConfigPanel("notifications", await getOrCreateBotConfig(interaction.guildId), "Selecione um canal valido.", interaction.guild));
+            return;
+        }
+
+        const channel = await interaction.guild.channels.fetch(selectedChannelId).catch(() => null);
+        if (!channel || channel.type !== ChannelType.GuildText) {
+            await interaction.update(renderConfigPanel("notifications", await getOrCreateBotConfig(interaction.guildId), "Selecione um canal de texto valido.", interaction.guild));
+            return;
+        }
+
+        const config = await updateBotConfig(interaction.guildId, {
+            notificationChannelId: selectedChannelId,
+        });
+
+        await interaction.update(renderConfigPanel("notifications", config, "Canal de notificacoes atualizado.", interaction.guild));
+    },
+});
+
+createResponder({
+    customId: "config/notification-roles",
+    types: [ResponderType.RoleSelect],
+    cache: "cached",
+    async run(interaction) {
+        if (!canManageGuild(interaction.memberPermissions)) {
+            await replyPermissionError(interaction);
+            return;
+        }
+
+        const config = await updateBotConfig(interaction.guildId, {
+            notificationRoleIds: interaction.values,
+        });
+
+        await interaction.update(renderConfigPanel("notifications", config, "Cargos de notificacao atualizados.", interaction.guild));
     },
 });
 

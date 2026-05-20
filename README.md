@@ -20,10 +20,13 @@ GUILD_ID=
 MP_ACCESS_TOKEN=
 MP_SANDBOX=true
 MP_TEST_PAYER_EMAIL=test@testuser.com
+API_TOKEN=
+API_HOST=0.0.0.0
+API_PORT=3000
 ```
 
-- `BOT_TOKEN`, `DATABASE_URL` e `MP_ACCESS_TOKEN` sao obrigatorias.
-- `WEBHOOK_LOGS_URL`, `GUILD_ID`, `MP_SANDBOX` e `MP_TEST_PAYER_EMAIL` sao opcionais.
+- `BOT_TOKEN`, `DATABASE_URL`, `MP_ACCESS_TOKEN` e `API_TOKEN` sao obrigatorias.
+- `WEBHOOK_LOGS_URL`, `GUILD_ID`, `MP_SANDBOX`, `MP_TEST_PAYER_EMAIL`, `API_HOST` e `API_PORT` sao opcionais.
 
 ### Detalhes do .env
 
@@ -35,6 +38,9 @@ MP_TEST_PAYER_EMAIL=test@testuser.com
 - `MP_ACCESS_TOKEN`: Access Token do Mercado Pago.
 - `MP_SANDBOX`: quando `true`, envia `X-Test-Token` nas chamadas do Mercado Pago. Use `false` somente em producao.
 - `MP_TEST_PAYER_EMAIL`: email usado como pagador em sandbox pela Orders API. Padrao: `test@testuser.com`.
+- `API_TOKEN`: token secreto usado nas rotas protegidas da API HTTP de pedidos.
+- `API_HOST`: host de escuta da API HTTP. Padrao: `0.0.0.0`.
+- `API_PORT`: porta de escuta da API HTTP. Padrao: `3000`.
 
 ## Fluxo principal
 
@@ -58,6 +64,48 @@ MP_TEST_PAYER_EMAIL=test@testuser.com
 - `npm run check`: typecheck
 - `npm run build`: build com tsup
 - `npm start`: executa o build
+
+## API HTTP de Pedidos
+
+O bot expoe uma API read-only usando Fastify para consulta de pedidos (`TicketOrder`).
+
+### Variaveis de ambiente da API
+
+- `API_TOKEN` (obrigatorio): token secreto usado no header `Authorization: Bearer <token>`.
+- `API_HOST` (opcional): host de escuta. Padrao: `0.0.0.0`.
+- `API_PORT` (opcional): porta de escuta. Padrao: `3000`.
+
+### Endpoints
+
+| Metodo | Rota | Autenticacao | Descricao |
+|--------|------|--------------|-----------|
+| GET | `/health` | Publica | Healthcheck da API |
+| GET | `/orders/in-progress` | Bearer Token | Pedidos ativos (exceto CONCLUDED e CANCELLED) |
+| GET | `/orders/cancelled` | Bearer Token | Pedidos com status CANCELLED |
+| GET | `/orders/concluded` | Bearer Token | Pedidos com status CONCLUDED |
+| GET | `/orders?status=...` | Bearer Token | Lista todos ou filtra por status |
+
+### Exemplos de requisicao
+
+```bash
+# Healthcheck (publico)
+curl http://localhost:3000/health
+
+# Listar pedidos em andamento
+curl -H "Authorization: Bearer $API_TOKEN" http://localhost:3000/orders/in-progress
+
+# Listar pedidos concluidos
+curl -H "Authorization: Bearer $API_TOKEN" http://localhost:3000/orders/concluded
+
+# Listar pedidos cancelados
+curl -H "Authorization: Bearer $API_TOKEN" http://localhost:3000/orders/cancelled
+
+# Listar todos os pedidos
+curl -H "Authorization: Bearer $API_TOKEN" http://localhost:3000/orders
+
+# Filtrar por status especifico
+curl -H "Authorization: Bearer $API_TOKEN" "http://localhost:3000/orders?status=PENDING_PAYMENT"
+```
 
 ## Estrutura
 

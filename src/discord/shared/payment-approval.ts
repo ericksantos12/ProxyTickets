@@ -3,6 +3,7 @@ import { replaceChannelStageEmoji } from "#functions";
 import { ChannelType, type Client, type TextChannel } from "discord.js";
 import { renderPixPaymentConfirmed } from "../menus/ticket-order.js";
 import { ensureTicketOwnerPermissions } from "./ticket-permissions.js";
+import { sendPaymentConfirmedNotification } from "./ticket-notifications.js";
 
 export async function approveTicketOrderPayment(order: {
     channelId: string;
@@ -13,17 +14,6 @@ export async function approveTicketOrderPayment(order: {
     finalPriceCents: number | null;
 }, client: Client, paymentStatus: string | undefined) {
     const channel = await getTicketChannel(order, client);
-    if (!channel) {
-        await prisma.ticketOrder.update({
-            where: { channelId: order.channelId },
-            data: {
-                status: "AWAITING_DELIVERY",
-                paymentStatus,
-                paidAt: new Date(),
-            },
-        });
-        return;
-    }
 
     await prisma.ticketOrder.update({
         where: { channelId: order.channelId },
@@ -34,8 +24,25 @@ export async function approveTicketOrderPayment(order: {
         },
     });
 
-    await moveToAwaitingDelivery(order, channel);
-    await editPaymentMessageAsConfirmed(order, channel);
+    await sendPaymentConfirmedNotification({
+        client,
+        guildId: order.guildId,
+        channelId: order.channelId,
+        userId: order.userId,
+        responsibleAdminId: order.responsibleAdminId,
+        finalPriceCents: order.finalPriceCents,
+    }).catch(error => {
+        console.error(`Failed to send payment confirmed notification for ${order.channelId}:`, error);
+    });
+
+    if (!channel) return;
+
+    await moveToAwaitingDelivery(order, channel).catch(error => {
+        console.error(`Failed to move paid ticket ${order.channelId} to awaiting delivery:`, error);
+    });
+    await editPaymentMessageAsConfirmed(order, channel).catch(error => {
+        console.error(`Failed to edit payment message for ${order.channelId}:`, error);
+    });
 }
 
 async function getTicketChannel(order: { channelId: string; guildId: string }, client: Client) {

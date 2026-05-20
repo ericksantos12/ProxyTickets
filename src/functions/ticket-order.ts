@@ -8,7 +8,7 @@ const ticketChannelPrefixes: Record<TicketChannelStage, string> = {
     concluded: "✅",
 };
 const ticketChannelSeparator = "│";
-const ticketDateSeparator = "／";
+const ticketDateSeparator = "-";
 
 export function formatTicketChannelName(stage: TicketChannelStage, nickname: string, date = new Date()): string {
     const prefix = ticketChannelPrefixes[stage];

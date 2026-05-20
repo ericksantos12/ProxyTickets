@@ -844,6 +844,8 @@ export const GuildBotConfigScalarFieldEnum = {
   pendingPaymentCategoryId: 'pendingPaymentCategoryId',
   awaitingDeliveryCategoryId: 'awaitingDeliveryCategoryId',
   fallbackPixKey: 'fallbackPixKey',
+  notificationChannelId: 'notificationChannelId',
+  notificationRoleIds: 'notificationRoleIds',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
